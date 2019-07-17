@@ -19,11 +19,11 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/ateey002/discord-bot---tiktok-mod.git"
+    "url": "git+https://github.com/Metab0i/Mora--bot.git"
   },
   "keywords": [],
   "bugs": {
-    "url": "https://gitlab.com/ateey002/discord-bot---tiktok-mod/issues"
+    "url": "--/issues"
   },
-  "homepage": "https://gitlab.com/ateey002/discord-bot---tiktok-mod#readme"
+  "homepage": "--#readme"
 }
