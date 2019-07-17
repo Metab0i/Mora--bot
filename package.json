@@ -1,0 +1,29 @@
+{
+  "name": "nibtok---bot",
+  "version": "1.0.0",
+  "description": "Gets very angry if you are not progressive",
+  "main": "tiktokmod.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Metaboi",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "forever": "^0.15.3",
+    "jimp": "^0.6.0",
+    "pg": "^7.8.0",
+    "request": "^2.88.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/ateey002/discord-bot---tiktok-mod.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://gitlab.com/ateey002/discord-bot---tiktok-mod/issues"
+  },
+  "homepage": "https://gitlab.com/ateey002/discord-bot---tiktok-mod#readme"
+}
