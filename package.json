@@ -1,8 +1,8 @@
 {
-  "name": "nibtok---bot",
+  "name": "Mora-bot",
   "version": "1.0.0",
-  "description": "Gets very angry if you are not progressive",
-  "main": "tiktokmod.js",
+  "description": "Discord bot.",
+  "main": "Mora---main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
