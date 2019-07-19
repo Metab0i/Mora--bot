@@ -8,6 +8,7 @@ const settings = require('./json files/settings.json');
 
 //DB essentials (psql)
 const Pool = require('pg').Pool;
+
 var config = {
   host: 'DB_Address',
   user: 'user_name',

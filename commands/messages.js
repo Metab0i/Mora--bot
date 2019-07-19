@@ -13,6 +13,39 @@ const Discord = require('discord.js');
  * 
  */
 
+ /**
+  * @name populateChannelJSON(...)
+  * @param {JSON} json_channels 
+  * @param {Guild} guild 
+  * @param {POOL} pool 
+  * @description : Assistant function, populates Json with missing channels and updates the db 
+  */
+  function populateChannelJSON(json_channels, guild, pool){
+    var object = new Object();
+    var check = false;
+
+    for(var i = 0; i < guild.channels.size; i++){
+
+      if(!JSON.stringify(json_channels).includes(guild.channels.array()[i].id) && guild.channels.array()[i].type == "text"){
+        object["no_message"] = 0;
+        json_channels[guild.channels.array()[i].id] = object;
+
+        check = true;
+      }
+      
+    }
+
+    if(check){
+      pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_channels), guild.id])
+      .then((result)=>{
+        console.log("Updated the table, it was a success");
+      })
+      .catch((err)=>{
+        console.log("it was a failure");
+      });
+    }
+  }
+
 module.exports = {
   /**
    * --------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -478,19 +511,25 @@ module.exports = {
           if(msg.content.toLowerCase() === "!outststats"){
             var str = "";
             var count = 0;
+            
+            populateChannelJSON(json_count, msg.guild, pool);
+            console.log(JSON.stringify(json_count));
+            console.log(msg.guild.name);
 
             for(var channel in json_count){
               //console.log(msg.guild.channels.get(channel).name.toString());
+
               str += "```**" + msg.guild.channels.get(channel).name + ":** ```";
 
-              var total_channelCount = 0;
+              var total_stubCount = 0;
 
               for(var trackable in json_count[channel]){
-                total_channelCount += json_count[channel][trackable];
+                total_stubCount += json_count[channel][trackable];
                 //str += " ⑃ *" + trackable + "*: " + json_count[channel][trackable] + " ⑃ ";
                 totalWords += json_count[channel][trackable];
               }
-              str += " ∘ *Stubs used:* **" + total_channelCount + "** ∘ ";
+
+              str += " ∘ *Stubs used:* **" + total_stubCount + "** ∘ ";
 
               str += "\n\n";
 
