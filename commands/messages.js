@@ -5,6 +5,8 @@ const Discord = require('discord.js');
  * commands
  * 
  * The list of functions:
+ * - populateChannelJSON
+ * 
  * - logResponse 
  * - outputResponse
  * - trackStats
@@ -13,38 +15,57 @@ const Discord = require('discord.js');
  * 
  */
 
- /**
-  * @name populateChannelJSON(...)
-  * @param {JSON} json_channels 
-  * @param {Guild} guild 
-  * @param {POOL} pool 
-  * @description : Assistant function, populates Json with missing channels and updates the db 
-  */
-  function populateChannelJSON(json_channels, guild, pool){
-    var object = new Object();
-    var check = false;
-
-    for(var i = 0; i < guild.channels.size; i++){
-
-      if(!JSON.stringify(json_channels).includes(guild.channels.array()[i].id) && guild.channels.array()[i].type == "text"){
-        object["no_message"] = 0;
-        json_channels[guild.channels.array()[i].id] = object;
-
-        check = true;
-      }
-      
-    }
-
-    if(check){
-      pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_channels), guild.id])
-      .then((result)=>{
-        console.log("Updated the table, it was a success");
-      })
-      .catch((err)=>{
-        console.log("it was a failure");
-      });
+/**
+* @name populateChannelJSON(...)
+* @param {JSON} json_channels 
+* @param {Guild} guild 
+* @param {POOL} pool 
+* @description : Assistant function, maintains consistency of server channels amount with DB.
+*/
+function populateChannelJSON(json_channels, guild, pool){
+  var object = new Object();
+  var check = false;
+  var count_channels = 0;
+  var channels_str = "|";
+  
+  for(var i = 1; i < guild.channels.size; i++){
+    if(guild.channels.array()[i].type == "text"){
+      channels_str += guild.channels.array()[i].id + "|";
+      count_channels++;
     }
   }
+
+  if(Object.keys(json_channels).length >= count_channels){
+    for(var key in json_channels){
+      if(!channels_str.includes(key)) delete json_channels[key]
+    }
+
+    check = true;
+  }
+
+  for(var i = 0; i < guild.channels.size; i++){
+    if(!JSON.stringify(json_channels).includes(guild.channels.array()[i].id) && guild.channels.array()[i].type == "text"){
+      object["no_message"] = 0;
+      json_channels[guild.channels.array()[i].id] = object;
+      
+      check = true;
+    }
+  }
+
+  if(check == true){
+    pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_channels), guild.id])
+    .then((result)=>{
+      console.log("Updated the table, it was a success");
+    })
+    .catch((err)=>{
+      console.log("it was a failure");
+    });
+  }
+
+}
+
+
+
 
 module.exports = {
   /**
@@ -435,7 +456,7 @@ module.exports = {
    * @param {DISCORDJS} client 
    * @param {message} msg 
    * @param {PSQL} pool 
-   * @description : outputs a stubby or stubby media that was called. Also keeps track of the number of times it was said. 
+   * @description : outputs a stubby or stubby media that was called. Also keeps track of the number of times it was used. 
    *
    */
   outputStubs: function(client, msg, pool){
@@ -513,8 +534,6 @@ module.exports = {
             var count = 0;
             
             populateChannelJSON(json_count, msg.guild, pool);
-            console.log(JSON.stringify(json_count));
-            console.log(msg.guild.name);
 
             for(var channel in json_count){
               //console.log(msg.guild.channels.get(channel).name.toString());
