@@ -27,8 +27,6 @@ client.on('ready', () => {
   client.channels.get();
   client.user.setStatus("online");
   client.user.setActivity(client.guilds.size + ' SVRs|@ me.', { type: 'WATCHING' });
-
-  //db_functions.updateGuildName(client, pool);
 });
 
 /**
@@ -40,21 +38,9 @@ client.on("guildCreate", function(guild){
 });
 
 /**
- * Event: On guild update
- * Functionality: every time a guild gets updated
+ * Events: channel create, delete
+ * Functionality: every time a channel gets created or deleted, it emits a call to a function
  */
-client.on("guildUpdate", function(oldGuild, newGuild){
-  //db_functions.updateGuildName(client, pool, newGuild);
-});
-
-/**
- * Events: channel update, create, delete
- * Functionality: every time a channel gets created, updated or deleted, it emits a call to a function
- */
-client.on("channelUpdate", function(oldChannel, newChannel){
-  //console.log(`channelUpdate -> a channel is updated - e.g. name change, topic change`);
-  //db_functions.updateChannelName(client, pool, oldChannel, newChannel);
-});
 
 client.on("channelDelete", function(channel){
   db_functions.deleteChannel(pool, channel);
