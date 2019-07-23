@@ -65,8 +65,6 @@ function populateChannelJSON(json_channels, guild, pool){
 }
 
 
-
-
 module.exports = {
   /**
    * --------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -76,6 +74,7 @@ module.exports = {
    * @description : Logs stubs and assigns messages/media called "stubbies (or stubby in singular form). Allows to store practically anything. And later, display them by calling
    *                a specific stub.
    * @note : Limit stubby amount. 92 of text and 92 of various media. 184 spaces per stub total. 
+   * @TODO : Get rid of stubbies, the whole thing is inconvinient and no one is gonna use it anyway. 
    */
   logResponse: function(client,msg,pool){
     if(msg.author.bot == true) return;
@@ -103,6 +102,9 @@ module.exports = {
           json_content = result.rows[0].content_response;
           json_count = result.rows[0].count_stats;
           json_userLimit = result.rows[0].words_peruser;
+
+          //maintain consistency of db with server
+          populateChannelJSON(json_count, msg.guild, pool);
 
           //if it's the first record, remove no_message template
           if(JSON.stringify(json_content).includes("no_message")) delete json_content.no_message;
@@ -146,7 +148,7 @@ module.exports = {
             });
           }
           
-          if(msg.embeds.length > 0 ){
+          if(msg.embeds.length > 0){
             msg.embeds.forEach(function(value){
               !json_content[msgRecord]['attachments'].includes(value.url) ? json_content[msgRecord]['attachments'].push(value.url) : media_present = true; 
             })
@@ -528,6 +530,14 @@ module.exports = {
       pool.query('SELECT count_stats FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
         .then((result)=>{
           json_count = result.rows[0].count_stats;
+
+          //create 2 filters, one for forwards the other one for backwards
+          const backwardsFilter = (reaction, usr) => reaction.emoji.name === '⏪' && usr.id === msg.author.id;
+          const forwardsFilter = (reaction, usr) => reaction.emoji.name === '⏩' && usr.id === msg.author.id;
+
+          //create 2 collectors of reactions, set filters ^
+          const backwards = message.createReactionCollector(backwardsFilter, { time: 120000 });
+          const forwards = message.createReactionCollector(forwardsFilter, { time: 120000 }); 
           
           if(msg.content.toLowerCase() === "!outststats"){
             var str = "";
@@ -570,22 +580,13 @@ module.exports = {
               .setColor(12269369)
               .setFooter(`Page ${page} of ${pages.length}`)
               .setDescription("\nPress ⏪ or ⏩ twice to list through, you only have 120s to interact with the table. If you wish to see more details for a channel, use --showstats current.\nTo Initiate the table, press ⏩.\n\n__Only one user at a time may use the list.__\n\n *Current Table User is displayed above ^.*");
-              // console.log("I passed this stage");
             
             //send the created embed, afterwards leave reactions on a current message
             //instead of this, pass an array of things, for example, 0 would be title, 1 would be descriptin and etc etc.
             msg.channel.send(embed).then(message =>{
               message.react('⏪').then( r => {
                 message.react('⏩');
-                
-                //create 2 filters, one for forwards the other one for backwards
-                const backwardsFilter = (reaction, usr) => reaction.emoji.name === '⏪' && usr.id === msg.author.id;
-                const forwardsFilter = (reaction, usr) => reaction.emoji.name === '⏩' && usr.id === msg.author.id;
-                
-                //create 2 collectors of reactions, set filters ^
-                const backwards = message.createReactionCollector(backwardsFilter, { time: 120000 });
-                const forwards = message.createReactionCollector(forwardsFilter, { time: 120000 }); 
-                
+
                 //on action, change the values:
                 backwards.on('collect', r => { 
                   message.reactions.forEach(function(value){
@@ -654,14 +655,6 @@ module.exports = {
             msg.channel.send(diffEmbed).then(message =>{
               message.react('⏪').then( r => {
                 message.react('⏩');
-
-                //create 2 filters, one for forwards the other one for backwards
-                const backwardsFilter = (reaction, usr) => reaction.emoji.name === '⏪' && usr.id === msg.author.id;
-                const forwardsFilter = (reaction, usr) => reaction.emoji.name === '⏩' && usr.id === msg.author.id;
-                
-                //create 2 collectors of reactions, set filters ^
-                const backwards = message.createReactionCollector(backwardsFilter, { time: 120000 });
-                const forwards = message.createReactionCollector(forwardsFilter, { time: 120000 }); 
                 
                 //on action, change the values:
                 backwards.on('collect', r => { 
