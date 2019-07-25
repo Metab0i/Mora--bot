@@ -16,6 +16,8 @@ var config = {
   database: 'db_name'  
 };
 
+
+
 const pool = new Pool(config);
 
 /**
