@@ -177,8 +177,6 @@ module.exports = {
             !JSON.stringify(json_userLimit).includes(msgRecord) ? obj.push(msgRecord) : null;
           }
 
-          //implement the stubby count here!
-
           if(user_check){
             msg.channel.send(json_userLimit[msg.author.id].length >= stubMax ? "`You exceed the maximum amount of stubs! Remove some, and try again.`" : "`No more than 2 stubbies allowed per stub!`");
             msg.delete(30000);
@@ -218,9 +216,13 @@ module.exports = {
 
   /**
    * --------------------------------------------------------------------------------------------------------------------------------------------------------------
+   * @name deleteStubs(...)
+   * 
    * @param {Discord} client 
    * @param {Message} msg 
    * @param {PSQL} pool 
+   * 
+   * @description : Deletes stubs and stubbies on request
    */
   deleteStubs: function(client, msg, pool){
     if(msg.author.bot == true) return;
@@ -423,9 +425,11 @@ module.exports = {
   /**
    * --------------------------------------------------------------------------------------------------------------------------------------------------------------
    * @name outputStubs(...)
+   * 
    * @param {DISCORDJS} client 
    * @param {message} msg 
    * @param {PSQL} pool 
+   * 
    * @description : outputs a stubby or stubby media that was called. Also keeps track of the number of times it was used. 
    *
    */
@@ -509,8 +513,6 @@ module.exports = {
    * @param {Object} pool 
    * @description : Shows statistics of words that were selected to be tracked (how many times it was said in a particular channel of the guild)
    *                side note-> Does not show response messages. [refer to logResponse]
-   * @extra : Make it so when displaying all channels, instead of displaying every single word and the amount, display total for each channel and if user wants to see specifics simply 
-   *          tell them to try --showstats current
    */
   showStats: function(client, msg, pool){
     if(msg.author.bot == true) return;
