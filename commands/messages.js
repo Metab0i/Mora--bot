@@ -74,12 +74,15 @@ module.exports = {
    * @note : Limit stubby amount. 92 of text and 92 of various media. 184 spaces per stub total. 
    * @TODO : Get rid of stubbies, the whole thing is inconvinient and no one is gonna use it anyway. 
    */
-  logResponse: function(client,msg,pool){
+  logResponse: function(prefix,msg,pool){
     if(msg.author.bot == true) return;
 
-    if(/^!stubs "(.*?)"/.test(msg.content.toLowerCase())){
+    //RegEx definition
+    var stubs = new RegExp("^" + prefix + "stubs \"(.*?)\"", "g");
+
+    if(stubs.test(msg.content.toLowerCase())){
       var stubMax = 92;
-      var stubbyMax = 2;
+      var stubbyMax = 5;
 
       var json_count;
       var json_content;
@@ -121,7 +124,7 @@ module.exports = {
 
           //Logical XOR. Checks if response is empty or contains just white spaces or an empty string, or if it already exists.
           if((msgResponse != null ? !/^ *$/.test(msgResponse) : /^ *$/.test(msgResponse)) && !json_content[msgRecord]['res_messages'].includes(msgResponse)){
-            json_content[msgRecord]['res_messages'].push(msgResponse);
+            json_content[msgRecord]['res_messages'] = msgResponse;
           }else{
             if(json_content[msgRecord]['res_messages'].includes(msgResponse)){
               msg.channel.send("`This stubby already exists. Try again.`");
@@ -171,8 +174,8 @@ module.exports = {
           }else{
             var obj = json_userLimit[msg.author.id];
             obj.length >= stubMax ? user_check = true : null;
-            json_content[msgRecord]['res_messages'].length >= stubbyMax ? user_check = true : null;
-            json_content[msgRecord]['attachments'].length >= stubbyMax ? user_check = true : null;
+
+            json_content[msgRecord]['attachments'].length > stubbyMax ? user_check = true : null;
 
             !JSON.stringify(json_userLimit).includes(msgRecord) ? obj.push(msgRecord) : null;
           }
@@ -224,13 +227,18 @@ module.exports = {
    * 
    * @description : Deletes stubs and stubbies on request
    */
-  deleteStubs: function(client, msg, pool){
+  deleteStubs: function(prefix, msg, pool){
     if(msg.author.bot == true) return;
     
     var stubMax = 92;
-    var stubbyMax = 2;
 
-    if(/^!rmstub "(.*?)"/.test(msg.content.toLowerCase())){
+    //RegEx definition 
+    var rmstub = new RegExp("^" + prefix + "rmstub \"(.*?)\"", "g");
+    var rmstubby = new RegExp("^" + prefix + "rmstubby \"(.*?)\" \"(.*?)\"", "g");
+    var rmmedia = new RegExp("^" + prefix + "rmmedia \"(.*?)\"", "g");
+    
+
+    if(rmstub.test(msg.content.toLowerCase())){
       var json_count;
       var json_content;
       var json_userLimit;
@@ -311,7 +319,8 @@ module.exports = {
           return console.error('Error executing query', err.stack);
         })
     }
-    else if(/^!rmallstubs/.test(msg.content.toLowerCase())){
+
+    else if(prefix + "rmallstubs" == msg.content.toLowerCase()){
       var json_count;
       var json_content;
       var json_userLimit;
@@ -339,6 +348,7 @@ module.exports = {
 
             //deletes from content
             delete json_content[item];
+
           });
 
           json_userLimit[msg.author.id] = [];
@@ -361,7 +371,58 @@ module.exports = {
           return console.error('Error executing query', err.stack);
         })
     }
-    else if(/^!rmsst "(.*?)" "(.*?)"/.test(msg.content.toLowerCase())){
+
+    else if(rmmedia.test(msg.content.toLowerCase())){
+      var json_count;
+      var json_content;
+      var json_userLimit;
+
+      msg.channel.startTyping();
+
+      var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
+
+      pool.query('SELECT content_response, count_stats, words_peruser FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
+      .then((result)=>{
+        //instantiate the variables
+        json_content = result.rows[0].content_response;
+        json_count = result.rows[0].count_stats;
+        json_userLimit = result.rows[0].words_peruser;
+
+        //checks if stub even exists
+        if(!JSON.stringify(json_userLimit[msg.author.id]).includes(msgRecord)){
+          msg.channel.send("`" + msg.author.username + " doesn't own the stub or this stub doesn't exist.`");
+          msg.channel.stopTyping();
+          return;
+        }
+        
+        //checks if embeds are full to begin with
+        if(json_content[msgRecord]['attachments'].length == 0){
+          msg.channel.send("`No media/attachments/emdeds present on this stub.`");
+          msg.channel.stopTyping();
+          return;
+        }
+
+        json_content[msgRecord]['attachments'] = [];
+        
+        pool.query('UPDATE words SET count_stats = $1, content_response = $2, words_peruser = $3 FROM guilds WHERE(guilds.gid = $4 AND guilds.uugid = words.uugid)',[JSON.stringify(json_count), JSON.stringify(json_content), JSON.stringify(json_userLimit), msg.channel.guild.id])
+            .then((result) =>{
+              msg.channel.send("`Embeds were successfully wiped.`");
+              msg.channel.stopTyping();
+            })
+            .catch((err)=>{
+              console.error('Error executing query', err.stack);
+              return;
+            });
+
+      })
+      .catch((err)=>{
+        //msg.channel.send(`\`${err.message}\``);
+        msg.channel.stopTyping();
+        return console.error('Error executing query', err.stack);
+      });
+    }
+
+    else if(rmstubby.test(msg.content.toLowerCase())){
       var json_count;
       var json_content;
       var json_userLimit;
@@ -403,7 +464,7 @@ module.exports = {
         
         pool.query('UPDATE words SET count_stats = $1, content_response = $2, words_peruser = $3 FROM guilds WHERE(guilds.gid = $4 AND guilds.uugid = words.uugid)',[JSON.stringify(json_count), JSON.stringify(json_content), JSON.stringify(json_userLimit), msg.channel.guild.id])
             .then((result) =>{
-              msg.channel.send("`\'" + msgResponse + "\' - stubby was successfully removed. TEST: " + (stubMax - json_userLimit[msg.author.id].length)+ "`");
+              msg.channel.send("`\'" + msgResponse + "\' - stubby was successfully removed.`");
               msg.channel.stopTyping();
               msg.delete(60000);
             })
@@ -431,13 +492,17 @@ module.exports = {
    * @param {PSQL} pool 
    * 
    * @description : outputs a stubby or stubby media that was called. Also keeps track of the number of times it was used. 
+   * @notes : Accommodate for a case when embeds aren't allowed. 
    *
    */
-  outputStubs: function(client, msg, pool){
+  outputStubs: function(prefix, msg, pool){
     if(msg.author.bot == true) return;
     
+    //regEx definition
+    var msg_check = new RegExp("^" + prefix + "sst \"(.*?)\"", "g");
+
     //logical XOR
-    if(/^!sst "(.*?)"/.test(msg.content.toLowerCase())){
+    if(msg_check.test(msg.content.toLowerCase())){
       var json_count;
       var json_content;
 
@@ -449,44 +514,42 @@ module.exports = {
         .then((result)=>{
           json_content = result.rows[0].content_response;
           json_count = result.rows[0].count_stats;
+          var media_ar = [];
 
-          if(/^!sst "(.*?)"/.test(msg.content.toLowerCase())){
-            var embed = new Discord.RichEmbed()
-              .setColor('#ef2d56');
+          var embed = new Discord.RichEmbed()
+            .setColor('#ef2d56')
+            .setTitle("Stub: *" + msgStub + "*");
 
-            for(var i = 0; i < json_content[msgStub]['res_messages'].length; i++){
-              embed.addField("`text`:","```" + json_content[msgStub]['res_messages'][i] + "```");
-              //msg.channel.send(json_content[msgResponse]['res_messages'][i]);
+          embed.addField("`text`:","```" + json_content[msgStub]['res_messages'] + "```");
+
+          for(var k = 0; k < json_content[msgStub]['attachments'].length; k++){
+            var checkIf_image = path.extname(json_content[msgStub]['attachments'][k]);
+
+            if(checkIf_image.toLowerCase().includes("png")){
+              embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
+                    //.setImage(json_content[msgStub]['attachments'][k]);
+              media_ar.push(json_content[msgStub]['attachments'][k]);
             }
-
-            for(var k = 0; k < json_content[msgStub]['attachments'].length; k++){
-              var checkIf_image = path.extname(json_content[msgStub]['attachments'][k]);
-              console.log("its : " + checkIf_image);
-
-              if(checkIf_image.toLowerCase().includes("png")){
-                embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
-                     .setImage(json_content[msgStub]['attachments'][k]);
-              }
-              else if(checkIf_image.toLowerCase().includes("jpg") || checkIf_image.toLowerCase().includes("jpeg")){
-                embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
-                     .setImage(json_content[msgStub]['attachments'][k]);
-              }
-              else if(checkIf_image.toLowerCase().includes("image")){
-                embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
-                     .setImage(json_content[msgStub]['attachments'][k]);
-              }
-              else if(checkIf_image.toLowerCase().includes("gif")){
-                embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
-                     .setImage(json_content[msgStub]['attachments'][k]);
-              }
-              else{
-                embed.addField("`" + (k+1) + ") link: `", json_content[msgStub]['attachments'][k])
-              }
+            else if(checkIf_image.toLowerCase().includes("jpg") || checkIf_image.toLowerCase().includes("jpeg")){
+              embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
+              media_ar.push(json_content[msgStub]['attachments'][k]);              
             }
-
-            msg.channel.send(embed);
-
+            else if(checkIf_image.toLowerCase().includes("image")){
+              embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
+              media_ar.push(json_content[msgStub]['attachments'][k]);
+            }
+            else if(checkIf_image.toLowerCase().includes("gif")){
+              embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
+              media_ar.push(json_content[msgStub]['attachments'][k]);              
+            }
+            else{
+              embed.addField("`" + (k+1) + ") link: `", json_content[msgStub]['attachments'][k])
+            }
           }
+          
+          //pick a random image to display
+          embed.setImage(media_ar[Math.floor((Math.random() * media_ar.length) + 0)]);
+          msg.channel.send(embed);
           
           //add +1 to the count json_count
           json_count[msg.channel.id][msgStub] += 1;
@@ -514,7 +577,7 @@ module.exports = {
    * @description : Shows statistics of words that were selected to be tracked (how many times it was said in a particular channel of the guild)
    *                side note-> Does not show response messages. [refer to logResponse]
    */
-  showStats: function(client, msg, pool){
+  showStats: function(prefix, msg, pool){
     if(msg.author.bot == true) return;
 
     let pages = [];
@@ -523,9 +586,9 @@ module.exports = {
     var json_count;
 
     //logcial XOR
-    if(msg.content.toLowerCase() === ("!outststats") ? 
-      msg.content.toLowerCase() !== ("!outststats current") : 
-        msg.content.toLowerCase() === ("!outststats current")){
+    if(msg.content.toLowerCase() === (prefix + "stubstats") ? 
+      msg.content.toLowerCase() !== (prefix + "stubstats this") : 
+        msg.content.toLowerCase() === (prefix + "stubstats this")){
 
       msg.channel.startTyping();
 
@@ -539,7 +602,7 @@ module.exports = {
           const backwardsFilter = (reaction, usr) => reaction.emoji.name === '⏪' && usr.id === msg.author.id;
           const forwardsFilter = (reaction, usr) => reaction.emoji.name === '⏩' && usr.id === msg.author.id;
           
-          if(msg.content.toLowerCase() === "!outststats"){
+          if(msg.content.toLowerCase() === (prefix + "stubstats")){
             var str = "";
             var count = 0;
             
@@ -624,7 +687,7 @@ module.exports = {
               })
             })
 
-          }else if(msg.content.toLowerCase() === "!outststats current"){
+          }else if(msg.content.toLowerCase() === (prefix + "stubstats this")){
             var index = 1;
             str = "";
             count = 0;

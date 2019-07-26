@@ -6,6 +6,9 @@ const messages = require('./commands/messages');
 const db_functions = require('./commands/database');
 const settings = require('./json files/settings.json');
 
+//prefix
+const prefix = "%";
+
 //DB essentials (psql)
 const Pool = require('pg').Pool;
 
@@ -15,8 +18,6 @@ var config = {
   password: 'p@ssword',
   database: 'db_name'  
 };
-
-
 
 const pool = new Pool(config);
 
@@ -64,10 +65,10 @@ client.on('message', msg => {
 
   messages.distortText(client, msg);
 
-  messages.logResponse(client,msg,pool);
-  messages.deleteStubs(client,msg,pool);
-  messages.outputStubs(client,msg,pool);
-  messages.showStats(client, msg, pool);
+  messages.logResponse(prefix,msg,pool);
+  messages.deleteStubs(prefix,msg,pool);
+  messages.outputStubs(prefix,msg,pool);
+  messages.showStats(prefix, msg, pool);
 });
 
 client.login(settings.token);
