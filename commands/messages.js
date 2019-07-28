@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
-const path = require('path')
+const path = require('path');
+const usedCommand = new Set();
 
 /**
  * Module Exports, contains main functionality of simple text based
@@ -7,6 +8,7 @@ const path = require('path')
  * 
  * The list of functions:
  * - populateChannelJSON
+ * - userTimeOut
  * 
  * - logResponse 
  * - outputResponse
@@ -16,11 +18,15 @@ const path = require('path')
  * 
  */
 
+// ========================================================== Assistance functions ==========================================================
+
 /**
 * @name populateChannelJSON(...)
+*
 * @param {JSON} json_channels 
 * @param {Guild} guild 
 * @param {POOL} pool 
+*
 * @description : Assistant function, maintains consistency of server channels amount with DB.
 */
 function populateChannelJSON(json_channels, guild, pool){
@@ -62,13 +68,35 @@ function populateChannelJSON(json_channels, guild, pool){
 
 }
 
+/**
+ * @name userTimeOut(...)
+ * 
+ * @param {Message} msg 
+ * 
+ * @description : Timer to avoid spamming.
+ */
+function userTimeOut(msg){
+  if(usedCommand.has(msg.author.id)){
+    msg.channel.send("`Wait for 3 seconds before using commands again.`");
+    return true;
+  }
+  else{
+    usedCommand.add(msg.author.id);
+    setTimeout(() => {
+      usedCommand.delete(msg.author.id);
+    }, 6000);
+  }
+}
+
+// ========================================================== Module exports ==========================================================
 
 module.exports = {
   /**
-   * --------------------------------------------------------------------------------------------------------------------------------------------------------------
    * @name logResponse(msg,pool); 
+   * 
    * @param {String} msg 
    * @param {Object} pool 
+   * 
    * @description : Logs stubs and assigns messages/media called "stubbies (or stubby in singular form). Allows to store practically anything. And later, display them by calling
    *                a specific stub.
    * @note : Limit stubby amount. 92 of text and 92 of various media. 184 spaces per stub total. 
@@ -92,6 +120,8 @@ module.exports = {
         "attachments" : []
       }
 
+      //Timer initiation.
+      if(userTimeOut(msg) == true) return;
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -216,9 +246,9 @@ module.exports = {
     }    
   },
 
+  //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   /**
-   * --------------------------------------------------------------------------------------------------------------------------------------------------------------
    * @name deleteStubs(...)
    * 
    * @param {Discord} client 
@@ -243,6 +273,8 @@ module.exports = {
       var json_content;
       var json_userLimit;
 
+      //User timer
+      if(userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -325,6 +357,8 @@ module.exports = {
       var json_content;
       var json_userLimit;
 
+      //User timer
+      if(userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -376,7 +410,9 @@ module.exports = {
       var json_count;
       var json_content;
       var json_userLimit;
-
+      
+      //User timer
+      if(userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -426,7 +462,9 @@ module.exports = {
       var json_count;
       var json_content;
       var json_userLimit;
-
+      
+      //User timer
+      if(userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -482,9 +520,9 @@ module.exports = {
     }
   },
 
-
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------
+  
   /**
-   * --------------------------------------------------------------------------------------------------------------------------------------------------------------
    * @name outputStubs(...)
    * 
    * @param {DISCORDJS} client 
@@ -506,6 +544,8 @@ module.exports = {
       var json_count;
       var json_content;
 
+      //User time out
+      if(userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgStub = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -568,9 +608,9 @@ module.exports = {
     }
   },
 
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   /**
-   * --------------------------------------------------------------------------------------------------------------------------------------------------------------
    * @name showStats(msg,pool);
    * @param {String} msg 
    * @param {Object} pool 
@@ -590,6 +630,8 @@ module.exports = {
       msg.content.toLowerCase() !== (prefix + "stubstats this") : 
         msg.content.toLowerCase() === (prefix + "stubstats this")){
 
+      //User time out
+      if(userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       pool.query('SELECT count_stats FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
@@ -771,9 +813,9 @@ module.exports = {
       }
   },
 
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   /**
-   * --------------------------------------------------------------------------------------------------------------------------------------------------------------
    * @name distortText(msg);
    * @param {String} msg 
    * @description : Distorts texts by changing letters' case by random. 
