@@ -7,14 +7,11 @@ const assist_func = require('./assist_functions');
  * commands
  * 
  * The list of functions:
- * - populateChannelJSON
- * - userTimeOut
  * 
  * - logResponse 
  * - outputResponse
- * - trackStats
+ * - deleteStubs
  * - showStats
- * - distortText
  * 
  */
 
