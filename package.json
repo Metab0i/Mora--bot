@@ -11,6 +11,8 @@
   "dependencies": {
     "discord.js": "^11.4.2",
     "forever": "^0.15.3",
+    "google-auth-library": "^5.1.1",
+    "googleapis": "^42.0.0",
     "jimp": "^0.6.0",
     "pg": "^7.8.0",
     "request": "^2.88.0",
