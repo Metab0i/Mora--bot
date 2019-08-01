@@ -821,57 +821,72 @@ module.exports = {
    * @description : Distorts texts by changing letters' case by random. 
    *                Plans : Implement a feature that allows a user to distort a last message of the particular chat member.
    */
-  distortText: function(client, msg){
-    if((msg.content == "!mockme" || msg.content == "!mockme shutit") && msg.author.bot != true){
-      msg.channel.startTyping();
+  distortText: function(prefix, msg){
+    if(msg.author.bot == true) return;
+
+    var disText_check = new RegExp("^" + prefix + "distext <@.?[0-9]+>$", "g");
+    var disText_any = new RegExp("^" + prefix + "distext .*?");
+
+    if(disText_check.test(msg.content.toLowerCase())){
+      var usr_id = msg.content.slice(msg.content.indexOf("<"), msg.content.length);
       
-      if(speakTimer(msg, 5000) == true){
-        msg.channel.send("`Sorry, you cant be using me for the next " + getTimeLeft().toString() + "s !`");
-        return;
-      }
+      //User timer
+      if(userTimeOut(msg) == true) return;  
+      msg.channel.startTyping();
 
-      var messageOrigin;
+      var response = ""; 
+      var check = false;
 
-      msg.channel.fetchMessages({"limit" : 2})
+      msg.channel.fetchMessages({"limit" : 100})
         .then(messages => {
-          messages.array().forEach( message => {
-            messageOrigin = message.content;
 
-            if(message.author.bot == true) return; 
+          messages.array().forEach(message => {
+            if(usr_id.includes(message.author.id) && (message.content != msg.content) && !check){
+              check = true;
 
-            var response = ""; 
-            
-            if(message.content === (".mockme") || message.content === (".mockme shutit")) return; 
-
-            for(i = 0; i < messageOrigin.length; i++){
-              var chance = Math.floor(Math.random() * (2 - 1) + 1);
-              
-              if((Math.floor(Math.random() * 3) + 1) == 1){
-                response += messageOrigin.charAt(i).toUpperCase();
-
-                if((Math.floor(Math.random() * 20) + 1) == 4 && (messages.array()[0].content.includes("shutit"))){
-                  message.reply(response + "-      shut up.");
-                  return;
+              for(i = 0; i < message.content.length; i++){                
+                if((Math.floor(Math.random() * 3) + 1) == 1){                  
+                  response += message.content.charAt(i).toUpperCase();
+                }else{
+                  response += message.content.charAt(i).toLowerCase();
                 }
-
-              }else{
-                response += messageOrigin.charAt(i).toLowerCase();
               }
-
-            }
-
-            if(!msg.member.hasPermission("MANAGE_MESSAGES")){
-              return message.reply(response);
-            } 
-
-            //message.delete(500);
-            message.reply(response);
-              
+            }   
           });
+
+          msg.channel.stopTyping();
+          msg.channel.send(response);
+
         });
     }
 
-    msg.channel.stopTyping();
+    else if(disText_any.test(msg.content.toLowerCase())){
+      var disMessage = msg.content.slice(msg.content.indexOf(" "), msg.content.length);
+      var msg_send = "";
 
+      //User timer
+      if(userTimeOut(msg) == true) return;  
+      msg.channel.startTyping();
+
+      for(i = 0; i < disMessage.length; i++){                
+        if((Math.floor(Math.random() * 3) + 1) == 1){                  
+          msg_send += disMessage.charAt(i).toUpperCase();
+        }else{
+          msg_send += disMessage.charAt(i).toLowerCase();
+        }
+      }
+
+      msg.channel.stopTyping();
+      msg.channel.send(msg_send);
+
+    }
   }   
 }
+
+// for(i = 0; i < message.content.length; i++){                //var chance = Math.floor(Math.random() * (2 - 1) + 1);
+//   if((Math.floor(Math.random() * 3) + 1) == 1){                  
+//     response += message.content.charAt(i).toUpperCase();
+//   }else{
+//     response += message.content.charAt(i).toLowerCase();
+//   }
+// }

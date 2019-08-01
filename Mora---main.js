@@ -63,7 +63,7 @@ client.on('message', msg => {
     db_functions.gatherData(msg.guild, pool);
   }
 
-  messages.distortText(client, msg);
+  messages.distortText(prefix, msg);
 
   messages.logResponse(prefix,msg,pool);
   messages.deleteStubs(prefix,msg,pool);
