@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const path = require('path');
-const usedCommand = new Set();
+const assist_func = require('./assist_functions');
 
 /**
  * Module Exports, contains main functionality of simple text based
@@ -17,78 +17,6 @@ const usedCommand = new Set();
  * - distortText
  * 
  */
-
-// ========================================================== Assistance functions ==========================================================
-
-/**
-* @name populateChannelJSON(...)
-*
-* @param {JSON} json_channels 
-* @param {Guild} guild 
-* @param {POOL} pool 
-*
-* @description : Assistant function, maintains consistency of server channels amount with DB.
-*/
-function populateChannelJSON(json_channels, guild, pool){
-  var object = new Object();
-  var check = false;
-  var count_channels = 0;
-  var channels_str = "|";
-
-  for(var i = 1; i < guild.channels.size; i++){
-    if(guild.channels.array()[i].type == "text"){
-      channels_str += guild.channels.array()[i].id + "|";
-      count_channels++;
-    }
-  }
-
-  if(Object.keys(json_channels).length >= count_channels){
-    for(var key in json_channels){
-      if(!channels_str.includes(key)) delete json_channels[key]
-    }
-
-    check = true;
-  }
-
-  for(var i = 0; i < guild.channels.size; i++){
-    if(!JSON.stringify(json_channels).includes(guild.channels.array()[i].id) && guild.channels.array()[i].type == "text"){
-      object["no_message"] = 0;
-      json_channels[guild.channels.array()[i].id] = object;
-      
-      check = true;
-    }
-  }
-
-  if(check == true){
-    pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_channels), guild.id])
-      .catch((err)=>{
-        console.log("it was a failure");
-      });
-  }
-
-}
-
-/**
- * @name userTimeOut(...)
- * 
- * @param {Message} msg 
- * 
- * @description : Timer to avoid spamming.
- */
-function userTimeOut(msg){
-  if(usedCommand.has(msg.author.id)){
-    msg.channel.send("`Wait for 3 seconds before using commands again.`");
-    return true;
-  }
-  else{
-    usedCommand.add(msg.author.id);
-    setTimeout(() => {
-      usedCommand.delete(msg.author.id);
-    }, 6000);
-  }
-}
-
-// ========================================================== Module exports ==========================================================
 
 module.exports = {
   /**
@@ -121,7 +49,7 @@ module.exports = {
       }
 
       //Timer initiation.
-      if(userTimeOut(msg) == true) return;
+      if(assist_func.userTimeOut(msg) == true) return;
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -135,7 +63,7 @@ module.exports = {
           json_userLimit = result.rows[0].words_peruser;
 
           //maintain consistency of db with server
-          populateChannelJSON(json_count, msg.guild, pool);
+          assist_func.populateChannelJSON(json_count, msg.guild, pool);
 
           //if it's the first record, remove no_message template
           if(JSON.stringify(json_content).includes("no_message")) delete json_content.no_message;
@@ -274,7 +202,7 @@ module.exports = {
       var json_userLimit;
 
       //User timer
-      if(userTimeOut(msg) == true) return;      
+      if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -358,7 +286,7 @@ module.exports = {
       var json_userLimit;
 
       //User timer
-      if(userTimeOut(msg) == true) return;      
+      if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -412,7 +340,7 @@ module.exports = {
       var json_userLimit;
       
       //User timer
-      if(userTimeOut(msg) == true) return;      
+      if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -464,7 +392,7 @@ module.exports = {
       var json_userLimit;
       
       //User timer
-      if(userTimeOut(msg) == true) return;      
+      if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -545,7 +473,7 @@ module.exports = {
       var json_content;
 
       //User time out
-      if(userTimeOut(msg) == true) return;      
+      if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       var msgStub = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
@@ -631,14 +559,14 @@ module.exports = {
         msg.content.toLowerCase() === (prefix + "stubstats this")){
 
       //User time out
-      if(userTimeOut(msg) == true) return;      
+      if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
       pool.query('SELECT count_stats FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
         .then((result)=>{
           json_count = result.rows[0].count_stats;
 
-          populateChannelJSON(json_count, msg.guild, pool);
+          assist_func.populateChannelJSON(json_count, msg.guild, pool);
 
           //create 2 filters, one for forwards the other one for backwards
           const backwardsFilter = (reaction, usr) => reaction.emoji.name === '⏪' && usr.id === msg.author.id;
@@ -728,8 +656,9 @@ module.exports = {
 
               })
             })
-
-          }else if(msg.content.toLowerCase() === (prefix + "stubstats this")){
+          }
+          
+          else if(msg.content.toLowerCase() === (prefix + "stubstats this")){
             var index = 1;
             str = "";
             count = 0;
@@ -811,82 +740,6 @@ module.exports = {
         msg.channel.stopTyping();
 
       }
-  },
+  }
 
-// --------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * @name distortText(msg);
-   * @param {String} msg 
-   * @description : Distorts texts by changing letters' case by random. 
-   *                Plans : Implement a feature that allows a user to distort a last message of the particular chat member.
-   */
-  distortText: function(prefix, msg){
-    if(msg.author.bot == true) return;
-
-    var disText_check = new RegExp("^" + prefix + "distext <@.?[0-9]+>$", "g");
-    var disText_any = new RegExp("^" + prefix + "distext .*?");
-
-    if(disText_check.test(msg.content.toLowerCase())){
-      var usr_id = msg.content.slice(msg.content.indexOf("<"), msg.content.length);
-      
-      //User timer
-      if(userTimeOut(msg) == true) return;  
-      msg.channel.startTyping();
-
-      var response = ""; 
-      var check = false;
-
-      msg.channel.fetchMessages({"limit" : 100})
-        .then(messages => {
-
-          messages.array().forEach(message => {
-            if(usr_id.includes(message.author.id) && (message.content != msg.content) && !check){
-              check = true;
-
-              for(i = 0; i < message.content.length; i++){                
-                if((Math.floor(Math.random() * 3) + 1) == 1){                  
-                  response += message.content.charAt(i).toUpperCase();
-                }else{
-                  response += message.content.charAt(i).toLowerCase();
-                }
-              }
-            }   
-          });
-
-          msg.channel.stopTyping();
-          msg.channel.send(response);
-
-        });
-    }
-
-    else if(disText_any.test(msg.content.toLowerCase())){
-      var disMessage = msg.content.slice(msg.content.indexOf(" "), msg.content.length);
-      var msg_send = "";
-
-      //User timer
-      if(userTimeOut(msg) == true) return;  
-      msg.channel.startTyping();
-
-      for(i = 0; i < disMessage.length; i++){                
-        if((Math.floor(Math.random() * 3) + 1) == 1){                  
-          msg_send += disMessage.charAt(i).toUpperCase();
-        }else{
-          msg_send += disMessage.charAt(i).toLowerCase();
-        }
-      }
-
-      msg.channel.stopTyping();
-      msg.channel.send(msg_send);
-
-    }
-  }   
 }
-
-// for(i = 0; i < message.content.length; i++){                //var chance = Math.floor(Math.random() * (2 - 1) + 1);
-//   if((Math.floor(Math.random() * 3) + 1) == 1){                  
-//     response += message.content.charAt(i).toUpperCase();
-//   }else{
-//     response += message.content.charAt(i).toLowerCase();
-//   }
-// }

@@ -2,7 +2,8 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 //File imports
-const messages = require('./commands/messages');
+const stubs = require('./commands/stubs');
+const distort_text = require('./commands/distort_text');
 const db_functions = require('./commands/database');
 const settings = require('./json files/settings.json');
 
@@ -63,12 +64,12 @@ client.on('message', msg => {
     db_functions.gatherData(msg.guild, pool);
   }
 
-  messages.distortText(prefix, msg);
+  stubs.logResponse(prefix,msg,pool);
+  stubs.deleteStubs(prefix,msg,pool);
+  stubs.outputStubs(prefix,msg,pool);
+  stubs.showStats(prefix, msg, pool);
 
-  messages.logResponse(prefix,msg,pool);
-  messages.deleteStubs(prefix,msg,pool);
-  messages.outputStubs(prefix,msg,pool);
-  messages.showStats(prefix, msg, pool);
+  distort_text.distortText(prefix, msg);
 });
 
 client.login(settings.token);
