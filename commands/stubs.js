@@ -3,9 +3,6 @@ const path = require('path');
 const assist_func = require('./assist_functions');
 
 /**
- * Module Exports, contains main functionality of simple text based
- * commands
- * 
  * The list of functions:
  * 
  * - logResponse 
@@ -20,12 +17,10 @@ module.exports = {
    * @name logResponse(msg,pool); 
    * 
    * @param {String} msg 
-   * @param {Object} pool 
+   * @param {PSQL_Pool} pool 
    * 
    * @description : Logs stubs and assigns messages/media called "stubbies (or stubby in singular form). Allows to store practically anything. And later, display them by calling
    *                a specific stub.
-   * @note : Limit stubby amount. 92 of text and 92 of various media. 184 spaces per stub total. 
-   * @TODO : Get rid of stubbies, the whole thing is inconvinient and no one is gonna use it anyway. 
    */
   logResponse: function(prefix,msg,pool){
     if(msg.author.bot == true) return;

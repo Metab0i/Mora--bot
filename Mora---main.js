@@ -5,6 +5,7 @@ const client = new Discord.Client();
 const stubs = require('./commands/stubs');
 const distort_text = require('./commands/distort_text');
 const db_functions = require('./commands/database');
+const yt = require('./commands/youtube');
 const settings = require('./json files/settings.json');
 
 //prefix
@@ -70,6 +71,8 @@ client.on('message', msg => {
   stubs.showStats(prefix, msg, pool);
 
   distort_text.distortText(prefix, msg);
+
+  yt.init_ysearch(prefix, msg);
 });
 
 client.login(settings.token);

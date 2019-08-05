@@ -7,6 +7,7 @@ module.exports = {
    * @param {String} msg 
    * @description : Distorts texts by changing letters' case by random. 
    *                Plans : Implement a feature that allows a user to distort a last message of the particular chat member.
+   * @Note : embed message check 
    */
   distortText: function(prefix, msg){
     if(msg.author.bot == true) return;
