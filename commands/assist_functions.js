@@ -67,6 +67,63 @@ module.exports = {
         usedCommand.delete(msg.author.id);
       }, 6000);
     }
+  },
+
+  /**
+   * @name createIntList(...)
+   * 
+   * @param {MESSAGE} msg 
+   * @param {Array} pages 
+   * 
+   * @description : stands for Create Interactive List. Creates event listeners and events themselves. Allows 
+   *                creation of interactive lists through which a user can iterate using emojis 
+   */
+  createIntList: function(msg, pages){
+    //external scope var
+    let page = 1;
+
+    msg.channel.stopTyping();
+    msg.channel.send(pages[0]).then(msg_pages =>{
+      msg_pages.react('⏪').then( r => {
+        msg_pages.react('⏩');
+
+        //create 2 filters
+        const backwardsFilter = (reaction, usr) => reaction.emoji.name === '⏪' && usr.id === msg.author.id;
+        const forwardsFilter = (reaction, usr) => reaction.emoji.name === '⏩' && usr.id === msg.author.id;
+
+        //create 2 collectors of reactions, set filters ^
+        const backwards = msg_pages.createReactionCollector(backwardsFilter, { time: 120000 });
+        const forwards = msg_pages.createReactionCollector(forwardsFilter, { time: 120000 }); 
+
+        //on action, change the values:
+        backwards.on('collect', r => { 
+          msg_pages.reactions.forEach(function(value){
+            value.remove(msg.author.id);
+          })
+
+          if (page === 1) return; 
+
+          page--; 
+
+          msg_pages.edit(pages[page-1]); 
+        })
+        
+        //on action change the values:
+        forwards.on('collect', r => { 
+          msg_pages.reactions.forEach(function(value){
+            value.remove(msg.author.id);
+          })
+          
+          if (page === pages.length && pages.length != 1) return;
+
+          if (pages.length != 1){
+            page++;
+          } 
+
+          msg_pages.edit(pages[page-1]); 
+        });
+      });
+    });
   }
 
 }

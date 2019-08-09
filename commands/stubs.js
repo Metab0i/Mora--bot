@@ -577,7 +577,6 @@ module.exports = {
 
               for(var trackable in json_count[channel]){
                 total_stubCount += json_count[channel][trackable];
-                //str += " ⑃ *" + trackable + "*: " + json_count[channel][trackable] + " ⑃ ";
                 totalWords += json_count[channel][trackable];
               }
 

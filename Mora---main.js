@@ -1,12 +1,13 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const settings = require('./json files/settings.json');
 
 //File imports
 const stubs = require('./commands/stubs');
 const distort_text = require('./commands/distort_text');
 const db_functions = require('./commands/database');
 const yt = require('./commands/youtube');
-const settings = require('./json files/settings.json');
+const wiki = require('./commands/wiki');
 
 //prefix
 const prefix = "%";
@@ -71,8 +72,8 @@ client.on('message', msg => {
   stubs.showStats(prefix, msg, pool);
 
   distort_text.distortText(prefix, msg);
-
   yt.init_ysearch(prefix, msg);
+  wiki.wiki_search(prefix, msg);
 });
 
 client.login(settings.token);
