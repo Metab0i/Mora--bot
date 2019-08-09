@@ -3,6 +3,14 @@ const rp = require('request-promise');
 const assist_func = require('../commands/assist_functions');
 
 module.exports ={
+  /**
+   * @name wiki_search(...)
+   * 
+   * @param {String} prefix 
+   * @param {Message} msg 
+   * 
+   * @description : Searches a wiki article based on a query
+   */
   wiki_search: async function(prefix, msg){
     var wiki = new RegExp("^" + prefix + "wiki .*?");
 
