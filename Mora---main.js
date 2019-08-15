@@ -8,6 +8,7 @@ const distort_text = require('./commands/distort_text');
 const db_functions = require('./commands/database');
 const yt = require('./commands/youtube');
 const wiki = require('./commands/wiki');
+const reddit = require('./commands/reddit');
 
 //prefix
 const prefix = "%";
@@ -74,6 +75,7 @@ client.on('message', msg => {
   distort_text.distortText(prefix, msg);
   yt.init_ysearch(prefix, msg);
   wiki.wiki_search(prefix, msg);
+  reddit.serve_pasta(prefix, msg);
 });
 
 client.login(settings.token);
