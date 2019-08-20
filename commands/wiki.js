@@ -30,16 +30,21 @@ module.exports ={
         uri: request,
         json: true // Automatically parses the JSON string 
       };
-
-      var result = await rp(options);
+      
+      try{
+        var result = await rp(options);
+      }catch(err){
+        return console.error('Error executing query', err.stack);
+      }
 
       //checking if search was successful
       if(result[3].length == 0) return msg.channel.send("`Invalid search, try again.`"); 
       
       for(var wiki_iter in result[3]){
-        pages.push("`Command user: " + msg.author.username + "`\n"+ ". . ".repeat(27) +"\n" + result[3][wiki_iter] + "\n`page: " + (parseInt(wiki_iter)+1) + " of 25`");
+        pages.push("`Command user: " + msg.author.username + "`\n"+ ". . ".repeat(23) +"\n" + result[3][wiki_iter] + "\n`page: " + (parseInt(wiki_iter)+1) + " of " + result[3].length + "`");
       }
 
+      msg.channel.stopTyping();
       assist_func.createIntList(msg,pages);
     }
 

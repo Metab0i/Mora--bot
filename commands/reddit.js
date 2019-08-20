@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
-const API_token = "";
 const rp = require('request-promise');
 const assist_func = require('../commands/assist_functions');
+const reddit_auth = require('../json files/reddit_auth.json');
 
 module.exports = {
 
@@ -46,7 +46,8 @@ module.exports = {
           request = reddit + "/r/copypasta/rising/.json?limit=80";
           break;
         default:
-          msg.channel.send("`Wrong category, try again.`");
+          msg.channel.stopTyping();
+          return msg.channel.send("`Wrong category, try again.`");
       }
 
       var options = {
@@ -54,7 +55,12 @@ module.exports = {
         json: true // Automatically parses the JSON string 
       };
 
-      var result = await rp(options);
+      try{
+        var result = await rp(options);
+      }catch(err){
+        return console.error('Error executing query', err.stack);
+      }
+
       result = result.data['children'][Math.floor((Math.random() * 80) + 0)];
 
       embed.setTitle(result.data['title'])
@@ -64,6 +70,56 @@ module.exports = {
       
       msg.channel.stopTyping();
       msg.channel.send(embed);
+    }
+  },
+
+  update_ad: async function(prefix, msg){
+    var up_ad = new RegExp("^" + prefix + "srvbump");
+
+    if(up_ad.test(msg.content.toLowerCase())){
+      var reddit = "https://www.reddit.com/api/v1/access_token";
+      
+      var options = {
+        method: 'POST',
+        uri: reddit + "?" + reddit_auth.token_request_url,
+        headers: {
+          'Authorization': "Basic " + reddit_auth.token_auth
+        },
+
+        body: {
+            data: reddit_auth.token_request_data
+        },
+
+        json: true // Automatically stringifies the body to JSON
+      };
+
+      try{
+        var result = await rp(options);
+      }catch(err){
+        return console.error('Error executing query', err.stack);
+      }
+
+      console.log(JSON.stringify(result) + "\n\n");
+
+      var options_submit = {
+        url: 'https://oauth.reddit.com/api/submit' + '?kind=self&sr=reddit_api_deinsect&title=more%20test&text=hello%20world', //make sure to encode it and change Kind param. api docs
+        method: 'POST',
+        headers: {
+            'Authorization': 'bearer '+ result.access_token,
+            'user-agent': reddit_auth.user_agent
+        }
+       
+      }
+
+      try{
+        var result_submit = await rp(options_submit);
+      }catch(err){
+        return console.error('Error executing query', err.stack);
+      }
+
+      msg.channel.send('```' + JSON.stringify(result_submit) + '```');
+      console.log(result_submit);
+
     }
   }
 

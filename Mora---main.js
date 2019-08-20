@@ -75,7 +75,9 @@ client.on('message', msg => {
   distort_text.distortText(prefix, msg);
   yt.init_ysearch(prefix, msg);
   wiki.wiki_search(prefix, msg);
+
   reddit.serve_pasta(prefix, msg);
+  reddit.update_ad(prefix, msg);
 });
 
 client.login(settings.token);

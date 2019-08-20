@@ -36,16 +36,21 @@ module.exports = {
         json: true // Automatically parses the JSON string 
       };
 
-      var result = await rp(options);
+      try{
+        var result = await rp(options);
+      }catch(err){
+        return console.error('Error executing query', err.stack);
+      }
 
       if(result.items.length == 0) return msg.channel.send("`Invalid search, try again.`");
       
       var link = "https://www.youtube.com/watch?v=";
 
       for(var vod_id in result.items){
-        pages.push("`Command user: " + msg.author.username + "`\n"+ ". . ".repeat(27) +"\n" + link + result.items[vod_id].id.videoId + "\n`page: " + (parseInt(vod_id)+1) + " of 25`");
+        pages.push("`Command user: " + msg.author.username + "`\n"+ ". . ".repeat(24) +"\n" + link + result.items[vod_id].id.videoId + "\n`page: " + (parseInt(vod_id)+1) + " of " + result.items.length + "`");
       }
 
+      msg.channel.stopTyping();
       assist_func.createIntList(msg, pages);
     }
   }

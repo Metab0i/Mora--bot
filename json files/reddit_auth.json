@@ -1,0 +1,10 @@
+{
+  "token_request_url" : "grant_type=password&username=<Username>&password=<password>",
+  "token_request_data" : {
+    "grant_type": "password",
+    "username": "<Username>",
+    "password": "<password>"
+  },
+  "token_auth": "<encoded base64 of secret and app id like so: APPID:APPSECRET>",
+  "user_agent": "<platform>:<app identification>:<version> (by u/<reddit_username>)"
+}
