@@ -1,0 +1,10 @@
+{
+  "token" : "YOUR TOKEN",
+  "youtube_token" : "YOUR API TOKEN",
+  "db_details" : {
+    "host": "DB_Address",
+    "user": "user_name",
+    "password": "p@ssword",
+    "database": "db_name"
+  }
+}

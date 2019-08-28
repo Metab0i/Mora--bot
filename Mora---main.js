@@ -14,16 +14,10 @@ const reddit = require('./commands/reddit');
 const prefix = "%";
 
 //DB essentials (psql)
+const configs = require('./json files/settings.json');
 const Pool = require('pg').Pool;
 
-var config = {
-  host: 'DB_Address',
-  user: 'user_name',
-  password: 'p@ssword',
-  database: 'db_name'  
-};
-
-const pool = new Pool(config);
+const pool = new Pool(configs.db_details);
 
 /**
  * Event: On activation
@@ -62,7 +56,7 @@ client.on("channelCreate", function(channel){
  * Functionality: Proceeds to produce an output every time an appropriate command was executed in a text chat. 
  */
 client.on('message', msg => {
-  if(msg.author == '<@360790875560869889>' && msg.content.includes('!getInfo')) {
+  if(msg.author == '<@360790875560869889>' && msg.content.includes('%getInfo')) {
     msg.channel.send("`Refreshing data.`");
     db_functions.gatherData(msg.guild, pool);
   }
@@ -77,7 +71,7 @@ client.on('message', msg => {
   wiki.wiki_search(prefix, msg);
 
   reddit.serve_pasta(prefix, msg);
-  reddit.update_ad(prefix, msg);
+  if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg);
 });
 
 client.login(settings.token);

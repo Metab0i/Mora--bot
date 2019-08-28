@@ -8,6 +8,8 @@ module.exports = {
    * @description : Distorts texts by changing letters' case by random. 
    *                Plans : Implement a feature that allows a user to distort a last message of the particular chat member.
    * @Note : embed message check 
+   *         check if message contains text
+   *         check if message is even in range
    */
   distortText: function(prefix, msg){
     if(msg.author.bot == true) return;
@@ -29,7 +31,7 @@ module.exports = {
         .then(messages => {
 
           messages.array().forEach(message => {
-            if(usr_id.includes(message.author.id) && (message.content != msg.content) && !check){
+            if(usr_id.includes(message.author.id) && (message.content != msg.content) && !check && message.content != ""){
               check = true;
 
               for(i = 0; i < message.content.length; i++){                

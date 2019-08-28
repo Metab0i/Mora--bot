@@ -1,2 +1,3 @@
 node_modules
-/json files/client_secret.json
+/json files/reddit_auth.json
+/json files/settings.json
