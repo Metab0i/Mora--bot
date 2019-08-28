@@ -27,7 +27,7 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
   client.channels.get();
   client.user.setStatus("online");
-  client.user.setActivity(client.guilds.size + ' SVRs|@ me.', { type: 'WATCHING' });
+  client.user.setActivity(client.guilds.size + ' SVRs|%help.', { type: 'WATCHING' });
 });
 
 /**
@@ -60,6 +60,8 @@ client.on('message', msg => {
     msg.channel.send("`Refreshing data.`");
     db_functions.gatherData(msg.guild, pool);
   }
+
+  if(msg.content == prefix + "help") msg.reply("https://github.com/Metab0i/Mora--bot/blob/master/README.md");
 
   stubs.logResponse(prefix,msg,pool);
   stubs.deleteStubs(prefix,msg,pool);

@@ -47,7 +47,7 @@ module.exports = {
       var link = "https://www.youtube.com/watch?v=";
 
       for(var vod_id in result.items){
-        pages.push("`Command user: " + msg.author.username + "`\n"+ ". . ".repeat(24) +"\n" + link + result.items[vod_id].id.videoId + "\n`page: " + (parseInt(vod_id)+1) + " of " + result.items.length + "`");
+        pages.push("• `Command user: " + msg.author.username + "`\n" + link + result.items[vod_id].id.videoId + "\n〈 `page: " + (parseInt(vod_id)+1) + " of " + result.items.length + "` 〉");
       }
 
       msg.channel.stopTyping();

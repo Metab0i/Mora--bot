@@ -41,7 +41,7 @@ module.exports ={
       if(result[3].length == 0) return msg.channel.send("`Invalid search, try again.`"); 
       
       for(var wiki_iter in result[3]){
-        pages.push("`Command user: " + msg.author.username + "`\n"+ ". . ".repeat(23) +"\n" + result[3][wiki_iter] + "\n`page: " + (parseInt(wiki_iter)+1) + " of " + result[3].length + "`");
+        pages.push("• `Command user: " + msg.author.username + "`\n" + result[3][wiki_iter] + "\n〈 `page: " + (parseInt(wiki_iter)+1) + " of " + result[3].length + "` 〉");
       }
 
       msg.channel.stopTyping();
