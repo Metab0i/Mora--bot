@@ -33,7 +33,7 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 
 `vod <query>` : Search for a video that matches a <query> post it back to the user  
 
-`r <subredd> <top/new/hot/controversial/rising/rising>` : View posts from specified subreddit based on a given ranking  
+`r <subredd> <top/new/hot/controversial/rising>` : View posts from specified subreddit based on a given ranking  
 
 `wiki <query>` : Search for a wiki article based on a <query> and post it back to the user   
 
