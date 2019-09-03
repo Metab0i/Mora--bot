@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const path = require('path');
 const rp = require('request-promise');
 const assist_func = require('../commands/assist_functions');
 const reddit_auth = require('../json files/reddit_auth.json');
@@ -13,8 +14,8 @@ module.exports = {
    * 
    * @description : posts a random copypasta from r/copypasta sub-reddit.
    */
-  serve_pasta: async function(prefix, msg){
-    var pasta = new RegExp("^" + prefix + "pasta .*?");
+  serve_reddit: async function(prefix, msg){
+    var pasta = new RegExp("^" + prefix + "r .*? ");
 
     if(pasta.test(msg.content.toLowerCase())){
       //User timer
@@ -25,25 +26,27 @@ module.exports = {
         .setColor('#f4ef88');
 
       var reddit = "https://www.reddit.com";
-      var query = msg.content.slice(msg.content.indexOf(" "), msg.content.length).replace(/\s/g, "");
+      var subr = msg.content.slice(msg.content.indexOf(" ")+1);
+      subr = subr.slice(0, subr.indexOf(" "));
+      var category = msg.content.slice(msg.content.indexOf(subr) + subr.length+1, msg.content.length).replace(/\s/g, "");
 
       var request = "";
 
-      switch(query.toLowerCase()) {
+      switch(category.toLowerCase()) {
         case "top":
-          request = reddit + "/r/copypasta/top/.json?limit=80";
+          request = reddit + `/r/${subr}/top/.json?limit=24`;
           break;
         case "new":
-          request = reddit + "/r/copypasta/new/.json?limit=80";
+          request = reddit + `/r/${subr}/new/.json?limit=24`;
           break;
         case "hot":
-          request = reddit + "/r/copypasta/hot/.json?limit=80";
+          request = reddit + `/r/${subr}/hot/.json?limit=24`;
           break;
         case "controversial":
-          request = reddit + "/r/copypasta/controversial/.json?limit=80";
+          request = reddit + `/r/${subr}/controversial/.json?limit=24`;
           break;
         case "rising":
-          request = reddit + "/r/copypasta/rising/.json?limit=80";
+          request = reddit + `/r/${subr}/rising/.json?limit=24`;
           break;
         default:
           msg.channel.stopTyping();
@@ -60,16 +63,30 @@ module.exports = {
       }catch(err){
         return console.error('Error executing query', err.stack);
       }
-
-      result = result.data['children'][Math.floor((Math.random() * 80) + 0)];
-
-      embed.setTitle(result.data['title'])
-           .setURL(reddit + result.data['permalink'])
-           .setAuthor("r/copypasta")
-           .setDescription(result.data['selftext'].length <= 2047 ? (result.data['selftext'] == "" ? result.data['title'] : result.data['selftext']) : result.data['selftext'].slice(0, 2044) + "...");
       
+      var reddit_dataset = result.data['children'][Math.floor((Math.random() * 24) + 0)];
+
       msg.channel.stopTyping();
-      msg.channel.send(embed);
+      if(reddit_dataset == null) return msg.channel.send("`Bad request, try again.`");
+
+      if(assist_func.content_type(reddit_dataset.data['url']) == "link"){
+        embed.setTitle(reddit_dataset.data['title'].length <= 256 ? reddit_dataset.data['title'] : reddit_dataset.data['title'].slice(0, 252) + "...")
+            .setURL(reddit + reddit_dataset.data['permalink'])
+            .setAuthor("r/" + subr)
+            .setDescription(reddit_dataset.data['selftext'].length <= 2047 ? (reddit_dataset.data['selftext'] == "" ? reddit_dataset.data['title'] : reddit_dataset.data['selftext']) : reddit_dataset.data['selftext'].slice(0, 2044) + "...");
+        
+        msg.channel.send(embed);
+        if(reddit_dataset.data['url'].includes("youtube") || reddit_dataset.data['url'].includes("youtu.be"))msg.channel.send(reddit_dataset.data['url']);
+      }
+      else{
+        embed.setTitle(reddit_dataset.data['title'].length <= 256 ? reddit_dataset.data['title'] : reddit_dataset.data['title'].slice(0, 252) + "...")
+             .setURL(reddit + reddit_dataset.data['permalink'])
+             .setAuthor("r/" + subr)
+             .setImage(reddit_dataset.data['url'])
+        
+        msg.channel.send(embed);
+
+      }
     }
   },
 

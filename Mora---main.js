@@ -72,7 +72,7 @@ client.on('message', msg => {
   yt.init_ysearch(prefix, msg);
   wiki.wiki_search(prefix, msg);
 
-  reddit.serve_pasta(prefix, msg);
+  reddit.serve_reddit(prefix, msg);
   if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg);
 });
 

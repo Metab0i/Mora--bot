@@ -1,3 +1,5 @@
+const path = require('path');
+
 const usedCommand = new Set();
 
 module.exports = {
@@ -124,6 +126,33 @@ module.exports = {
         });
       });
     });
+  },
+
+  /**
+   * @name content_type(...)
+   * 
+   * @param {String} str 
+   * 
+   * @description : checks if any media is present in supplied link
+   */
+  content_type: function(url){
+    result = path.extname(url);
+
+    if(result.toLowerCase().includes("png")){
+      return "media";
+    }
+    else if(result.toLowerCase().includes("jpg") || result.toLowerCase().includes("jpeg")){
+      return "media";
+    }
+    else if(result.toLowerCase().includes("image")){
+      return "media";      
+    }
+    else if(result.toLowerCase().includes("gif")){
+      return "media";
+    }
+    else{
+      return "link";      
+    }
   }
 
 }

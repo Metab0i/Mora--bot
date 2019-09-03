@@ -483,24 +483,11 @@ module.exports = {
           embed.addField("`text`:","```" + json_content[msgStub]['res_messages'] + "```");
 
           for(var k = 0; k < json_content[msgStub]['attachments'].length; k++){
-            var checkIf_image = path.extname(json_content[msgStub]['attachments'][k]);
+            var checkIf_image = assist_func.content_type(json_content[msgStub]['attachments'][k]);
 
-            if(checkIf_image.toLowerCase().includes("png")){
-              embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
-                    //.setImage(json_content[msgStub]['attachments'][k]);
-              media_ar.push(json_content[msgStub]['attachments'][k]);
-            }
-            else if(checkIf_image.toLowerCase().includes("jpg") || checkIf_image.toLowerCase().includes("jpeg")){
-              embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
-              media_ar.push(json_content[msgStub]['attachments'][k]);              
-            }
-            else if(checkIf_image.toLowerCase().includes("image")){
+            if(checkIf_image == "media"){
               embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
               media_ar.push(json_content[msgStub]['attachments'][k]);
-            }
-            else if(checkIf_image.toLowerCase().includes("gif")){
-              embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
-              media_ar.push(json_content[msgStub]['attachments'][k]);              
             }
             else{
               embed.addField("`" + (k+1) + ") link: `", json_content[msgStub]['attachments'][k])
