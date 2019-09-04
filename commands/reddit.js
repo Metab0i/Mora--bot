@@ -22,8 +22,7 @@ module.exports = {
       if(assist_func.userTimeOut(msg) == true) return;  
       msg.channel.startTyping();
 
-      var embed = new Discord.RichEmbed()
-        .setColor('#f4ef88');
+      var embed = new Discord.RichEmbed();
 
       var reddit = "https://www.reddit.com";
       var subr = msg.content.slice(msg.content.indexOf(" ")+1);
@@ -69,14 +68,19 @@ module.exports = {
       msg.channel.stopTyping();
       if(reddit_dataset == null) return msg.channel.send("`Bad request, try again.`");
 
+      embed.setFooter(reddit_dataset.data['ups'] + " votes and " + reddit_dataset.data['num_comments'] + " comments");
+
       if(assist_func.content_type(reddit_dataset.data['url']) == "link"){
         embed.setTitle(reddit_dataset.data['title'].length <= 256 ? reddit_dataset.data['title'] : reddit_dataset.data['title'].slice(0, 252) + "...")
             .setURL(reddit + reddit_dataset.data['permalink'])
             .setAuthor("r/" + subr)
-            .setDescription(reddit_dataset.data['selftext'].length <= 2047 ? (reddit_dataset.data['selftext'] == "" ? reddit_dataset.data['title'] : reddit_dataset.data['selftext']) : reddit_dataset.data['selftext'].slice(0, 2044) + "...");
+            .setDescription(reddit_dataset.data['selftext'].length <= 2047 ? (reddit_dataset.data['selftext'] == "" ? "" : reddit_dataset.data['selftext']) : reddit_dataset.data['selftext'].slice(0, 2044) + "...");
         
+        if(reddit_dataset.data['selftext'] == "") {
+          msg.channel.send(reddit_dataset.data['url']); 
+        }
+
         msg.channel.send(embed);
-        if(reddit_dataset.data['url'].includes("youtube") || reddit_dataset.data['url'].includes("youtu.be"))msg.channel.send(reddit_dataset.data['url']);
       }
       else{
         embed.setTitle(reddit_dataset.data['title'].length <= 256 ? reddit_dataset.data['title'] : reddit_dataset.data['title'].slice(0, 252) + "...")
