@@ -73,7 +73,7 @@ client.on('message', msg => {
   wiki.wiki_search(prefix, msg);
 
   reddit.serve_reddit(prefix, msg);
-  if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg);
+  if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
 });
 
 client.login(settings.token);

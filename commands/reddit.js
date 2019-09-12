@@ -94,7 +94,7 @@ module.exports = {
     }
   },
 
-  update_ad: async function(prefix, msg){
+  update_ad: async function(prefix, msg, user){
     var up_ad = new RegExp("^" + prefix + "gdbump <#.?[0-9]+> .*?$");
 
     if(up_ad.test(msg.content.toLowerCase())){
@@ -121,7 +121,7 @@ module.exports = {
         var invites = await msg.guild.fetchInvites();
 
         for(var i = 0; i < invites.array().length; i++){
-          invites.array()[i].delete();
+          if(invites.array()[i].inviter.id == user) invites.array()[i].delete();
         }
 
         var result = await rp(options);
