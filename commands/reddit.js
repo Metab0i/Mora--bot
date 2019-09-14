@@ -60,6 +60,8 @@ module.exports = {
       try{
         var result = await rp(options);
       }catch(err){
+        msg.channel.stopTyping();
+        msg.channel.send("`" + err.message + "`");
         return console.error('Error executing query', err.stack);
       }
       
