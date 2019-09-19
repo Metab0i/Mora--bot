@@ -16,8 +16,18 @@ const prefix = "%";
 //DB essentials (psql)
 const configs = require('./json files/settings.json');
 const Pool = require('pg').Pool;
-
 const pool = new Pool(configs.db_details);
+
+//console.error overload
+const fs = require('fs');
+const util = require('util');
+const log_file = fs.createWriteStream(__dirname + '/error.log', {flags : 'w'});
+const log_stdout = process.stdout;
+
+console.error = function(start_err, err_body) { //
+  log_file.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");
+  log_stdout.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");
+};
 
 /**
  * Event: On activation
@@ -62,6 +72,7 @@ client.on('message', msg => {
   }
 
   if(msg.content == prefix + "help") msg.reply("https://github.com/Metab0i/Mora--bot/blob/master/README.md");
+  //console.log(msg.embeds);
 
   stubs.logResponse(prefix,msg,pool);
   stubs.deleteStubs(prefix,msg,pool);

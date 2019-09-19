@@ -62,7 +62,7 @@ module.exports = {
       }catch(err){
         msg.channel.stopTyping();
         msg.channel.send("`" + err.message + "`");
-        return console.error('Error executing query', err.stack);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);        
       }
       
       var reddit_dataset = result.data['children'][Math.floor((Math.random() * 24) + 0)];
@@ -132,7 +132,7 @@ module.exports = {
           maxUses: 0
         });
       }catch(err){
-        return console.error('Error executing query', err.stack);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       }
 
       var options_submit = {
@@ -147,7 +147,7 @@ module.exports = {
       try{
         var result_submit = await rp(options_submit);
       }catch(err){
-        return console.error('Error executing query', err.stack);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }
 
       var good_req = JSON.stringify(JSON.parse(result_submit).success) + '`\n' + JSON.parse(result_submit).jquery[16][3][0];

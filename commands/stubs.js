@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const path = require('path');
 const assist_func = require('./assist_functions');
 
+
 /**
  * The list of functions:
  * 
@@ -154,14 +155,13 @@ module.exports = {
               msg.delete(60000);
             })
             .catch((err)=>{
-              console.error('Error executing query', err.stack);
-              return;
+              return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
             });
 
         }).catch((err) => {
           //msg.channel.send(`\`${err.message}\``);
           msg.channel.stopTyping();
-          return console.error('Error executing query', err.stack)
+          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
         });
     }    
   },
@@ -260,15 +260,15 @@ module.exports = {
               msg.delete(60000);
             })
             .catch((err)=>{
-              console.error('Error executing query', err.stack);
-              return;
+              return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
+              
             });
 
         })
         .catch((err)=>{
           //msg.channel.send(`\`${err.message}\``);
           msg.channel.stopTyping();
-          return console.error('Error executing query', err.stack);
+          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
         })
     }
 
@@ -314,15 +314,14 @@ module.exports = {
               msg.delete(60000);
             })
             .catch((err)=>{
-              console.error('Error executing query', err.stack);
-              return;
+              return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);  
             });
 
         })
         .catch((err)=>{
           //msg.channel.send(`\`${err.message}\``);
           msg.channel.stopTyping();
-          return console.error('Error executing query', err.stack);
+          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
         })
     }
 
@@ -366,15 +365,14 @@ module.exports = {
               msg.channel.stopTyping();
             })
             .catch((err)=>{
-              console.error('Error executing query', err.stack);
-              return;
+              return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
             });
 
       })
       .catch((err)=>{
         //msg.channel.send(`\`${err.message}\``);
         msg.channel.stopTyping();
-        return console.error('Error executing query', err.stack);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       });
     }
 
@@ -427,15 +425,14 @@ module.exports = {
               msg.delete(60000);
             })
             .catch((err)=>{
-              console.error('Error executing query', err.stack);
-              return;
+              return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
             });
 
       })
       .catch((err)=>{
         //msg.channel.send(`\`${err.message}\``);
         msg.channel.stopTyping();
-        return console.error('Error executing query', err.stack);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       });
     }
   },
@@ -508,7 +505,7 @@ module.exports = {
           //msg.channel.send(`\`${err.message}\``);
           msg.channel.send('\`Something went wrong. Reminder: I am case-sensitive.\`');
           msg.channel.stopTyping();
-          return console.error('Error executing query', err.stack);
+          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
         });
 
         msg.channel.stopTyping();
@@ -712,7 +709,7 @@ module.exports = {
         })
         .catch((err)=>{
           msg.channel.send(`\`${err.message}\``);
-          return console.error('Error executing query', err.stack);
+          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
         });
 
         msg.channel.stopTyping();

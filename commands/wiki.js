@@ -34,7 +34,7 @@ module.exports ={
       try{
         var result = await rp(options);
       }catch(err){
-        return console.error('Error executing query', err.stack);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       }
 
       //checking if search was successful

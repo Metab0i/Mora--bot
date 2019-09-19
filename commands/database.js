@@ -34,7 +34,7 @@ module.exports = {
           // *Populates the table words using previously created objects json_messages and json_channels
           pool.query('INSERT INTO words VALUES($1, (SELECT uugid FROM guilds WHERE (gid = $2)), $3, $4);', [uuidv4(), guild_1.id, JSON.stringify(json_messages), JSON.stringify(json_channels)])
             .catch((err) => {
-              return console.error('Error executing query', err.stack);
+              return console.error('on GatherData function;', err.stack);
             });
         })
 
@@ -44,11 +44,8 @@ module.exports = {
               console.log("It was a success.");
             })
             .catch((err)=>{
-              console.error('Error executing query', err.stack);
+              return console.error('on GatherData db function;', err.stack);
             })
-          
-          //console.error('Error executing query', err.stack);
-          return;
         });
       }
   },
@@ -76,12 +73,12 @@ module.exports = {
 
       pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_countStats), channel.guild.id])
         .catch((err)=>{
-          console.error('Error executing query', err.stack);
+          console.error('on AddChannel db function;', err.stack);
           return;
         }); 
     })
     .catch((err)=>{
-      console.error('Error executing query', err.stack);
+      console.error('on AddChannel db function;', err.stack);
       return;
     });
   },
@@ -100,13 +97,11 @@ module.exports = {
 
         pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_countStats), channel.guild.id])
           .catch((err)=>{
-            console.error('Error executing query', err.stack);
-            return;
+            return console.error('on DeleteChannel db function;', err.stack);
           });
       })
       .catch((err)=>{
-        console.error('Error executing query', err.stack);
-        return;
+        return console.error('on DeleteChannel db function;', err.stack);
       });
   }
 }

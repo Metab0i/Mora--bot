@@ -45,7 +45,7 @@ module.exports = {
     if(check == true){
       pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_channels), guild.id])
         .catch((err)=>{
-          console.log("it was a failure");
+          return console.error('on DB query populateChannelJSON;', err.stack); 
         });
     }
 
