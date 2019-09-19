@@ -135,7 +135,7 @@ module.exports = {
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       }
 
-      var options_submit = {
+      var options_submit_ds = {
         url: 'https://oauth.reddit.com/api/submit' + '?kind=link&url=' + invite_link + '&sr=discordservers&title=' + encodeURIComponent(title),
         method: 'POST',
         headers: {
@@ -144,17 +144,31 @@ module.exports = {
         }
       }
 
+      var options_submit_da = {
+        url: 'https://oauth.reddit.com/api/submit' + '?kind=link&url=' + invite_link + '&sr=DiscordAdvertising&title=' + encodeURIComponent(title),
+        method: 'POST',
+        headers: {
+            'Authorization': 'bearer '+ result.access_token,
+            'user-agent': reddit_auth.user_agent
+        }
+      }
+
       try{
-        var result_submit = await rp(options_submit);
+        var result_submit_ds = await rp(options_submit_ds);
+        var result_submit_da = await rp(options_submit_da);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }
 
-      var good_req = JSON.stringify(JSON.parse(result_submit).success) + '`\n' + JSON.parse(result_submit).jquery[16][3][0];
-      var bad_req = JSON.stringify(JSON.parse(result_submit).success) + '`\n`Reason: ' + JSON.parse(result_submit).jquery[22][3][0] + '`';
+      var good_req_ds = JSON.stringify(JSON.parse(result_submit_ds).success) + '`\n' + JSON.parse(result_submit_ds).jquery[16][3][0];
+      var bad_req_ds = JSON.stringify(JSON.parse(result_submit_ds).success) + '`\n`Reason: ' + JSON.parse(result_submit_ds).jquery[22][3][0] + '`';
+      var good_req_da = JSON.stringify(JSON.parse(result_submit_da).success) + '`\n' + JSON.parse(result_submit_da).jquery[16][3][0];
+      var bad_req_da = JSON.stringify(JSON.parse(result_submit_da).success) + '`\n`Reason: ' + JSON.parse(result_submit_da).jquery[22][3][0] + '`';
 
       msg.channel.stopTyping();
-      msg.channel.send(JSON.stringify(JSON.parse(result_submit).success) == "true" ? '`Result of a request - Success: ' + good_req : '`Result of a request - Success: ' + bad_req);
+      
+      msg.channel.send(JSON.stringify(JSON.parse(result_submit_ds).success) == "true" ? '`Result of a request - Success: ' + good_req_ds : '`Result of a request - Success: ' + bad_req_ds);
+      msg.channel.send(JSON.stringify(JSON.parse(result_submit_da).success) == "true" ? '`Result of a request - Success: ' + good_req_da : '`Result of a request - Success: ' + bad_req_da);
 
     }
   }
