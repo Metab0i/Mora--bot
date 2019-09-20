@@ -9,6 +9,7 @@ const db_functions = require('./commands/database');
 const yt = require('./commands/youtube');
 const wiki = require('./commands/wiki');
 const reddit = require('./commands/reddit');
+const little_features = require('./commands/little_features');
 
 //prefix
 const prefix = "%";
@@ -80,6 +81,7 @@ client.on('message', msg => {
   stubs.showStats(prefix, msg, pool);
 
   distort_text.distortText(prefix, msg);
+  little_features.give(prefix, client, msg);
   yt.init_ysearch(prefix, msg);
   wiki.wiki_search(prefix, msg);
 

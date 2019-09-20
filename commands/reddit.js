@@ -19,7 +19,7 @@ module.exports = {
 
     if(pasta.test(msg.content.toLowerCase())){
       //User timer
-      //if(assist_func.userTimeOut(msg) == true) return;    
+      if(assist_func.userTimeOut(msg) == true) return;    
       msg.channel.startTyping();
 
       var embed = new Discord.RichEmbed()
