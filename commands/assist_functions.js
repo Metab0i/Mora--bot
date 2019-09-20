@@ -60,14 +60,15 @@ module.exports = {
    */
   userTimeOut: function(msg){
     if(usedCommand.has(msg.author.id)){
-      msg.channel.send("`Wait for 3 seconds before using commands again.`");
+      //msg.channel.send("`Wait for 2 seconds before using commands again.`");
+      msg.react('⏳');
       return true;
     }
     else{
       usedCommand.add(msg.author.id);
       setTimeout(() => {
         usedCommand.delete(msg.author.id);
-      }, 6000);
+      }, 3000);
       return false;
     }
   },
