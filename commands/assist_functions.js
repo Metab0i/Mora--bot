@@ -68,6 +68,7 @@ module.exports = {
       setTimeout(() => {
         usedCommand.delete(msg.author.id);
       }, 6000);
+      return false;
     }
   },
 
@@ -153,6 +154,17 @@ module.exports = {
     else{
       return "link";      
     }
+  },
+
+  /**
+   * @name random_hex_colour()
+   * 
+   * @param {void}
+   * 
+   * @description : generate random hex colour
+   */
+  random_hex_colour: function(){
+    return '#'+Math.floor(Math.random()*16777215).toString(16);
   }
 
 }

@@ -19,10 +19,11 @@ module.exports = {
 
     if(pasta.test(msg.content.toLowerCase())){
       //User timer
-      if(assist_func.userTimeOut(msg) == true) return;  
+      //if(assist_func.userTimeOut(msg) == true) return;    
       msg.channel.startTyping();
 
-      var embed = new Discord.RichEmbed();
+      var embed = new Discord.RichEmbed()
+        .setColor(assist_func.random_hex_colour());
 
       var reddit = "https://www.reddit.com";
       var subr = msg.content.slice(msg.content.indexOf(" ")+1);
@@ -58,14 +59,14 @@ module.exports = {
       };
 
       try{
-        var result = await rp(options);
+        var result = await rp(options);        
       }catch(err){
         msg.channel.stopTyping();
         msg.channel.send("`" + err.message + "`");
-        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);        
+        return console.error('on [' + msg.content + ']\nBy <@' + msg. author.id + ">", err.stack);        
       }
-      
-      var reddit_dataset = result.data['children'][Math.floor((Math.random() * 24) + 0)];
+
+      var reddit_dataset = result.data['children'][Math.floor((Math.random() * result.data['children'].length) + 0)];
 
       msg.channel.stopTyping();
       if(reddit_dataset == null) return msg.channel.send("`Bad request, try again.`");
