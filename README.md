@@ -38,6 +38,8 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 `wiki <query>` : Search for a wiki article based on a <query> and post it back to the user   
 
 `distext <user refrence/text>` : distorts text of a specified user or supplied text 
+    
+`give <user> <thing to give>` : give a random thing to anyone on the server to make them feel a certain way 
 
 
 
