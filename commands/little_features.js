@@ -10,7 +10,7 @@ module.exports = {
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
       msg.channel.startTyping();
-      
+
       var user_id = msg.content.slice(msg.content.indexOf("@")+1, msg.content.indexOf(">")).replace(/\D/g,'');
       var item = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length);
 
@@ -30,8 +30,10 @@ module.exports = {
 
       msg.channel.stopTyping();
       msg.channel.send(embed);
-
-        
     }
-  } 
+  },
+
+  how: async function(prefix, client, msg){
+    
+  }
 } 

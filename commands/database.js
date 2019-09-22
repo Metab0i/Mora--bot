@@ -51,6 +51,26 @@ module.exports = {
   },
 
   /**
+   * @name removeGuild(...)
+   * @param {guild} guild_1 
+   * @param {PSQL} pool 
+   * @description : removes the guild from the db
+   */
+  removeGuild: function(guild_1, pool){
+    pool.query('DELETE FROM words WHERE(words.uugid = (SELECT uugid FROM guilds WHERE(guilds.gid = $1))) ',[guild_1.id])
+      .then((result)=>{
+
+        pool.query('DELETE FROM guilds WHERE(guilds.gid = $1)',[guild_1.id])
+          .catch((err)=>{
+            return console.error('on removeGuild db function;', err.stack);
+          });
+      })
+      .catch((err)=>{
+        return console.error('on removeGuild db function;', err.stack);
+      });
+  },
+
+  /**
    * @name addChannel(...)
    * @param {Bot} client 
    * @param {PSQL} pool 

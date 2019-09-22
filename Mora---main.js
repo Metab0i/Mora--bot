@@ -49,6 +49,10 @@ client.on("guildCreate", function(guild){
   db_functions.gatherData(guild, pool);
 });
 
+client.on("guildDelete", function(guild){
+  db_functions.removeGuild(guild, pool);
+})
+
 /**
  * Events: channel create, delete
  * Functionality: every time a channel gets created or deleted, it emits a call to a function
