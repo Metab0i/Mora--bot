@@ -90,6 +90,7 @@ client.on('message', msg => {
 
   little_features.give(prefix, client, msg);
   little_features.how(prefix, client, msg);
+  little_features.eight_ball(prefix, msg);
 
   reddit.serve_reddit(prefix, msg);
   if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);

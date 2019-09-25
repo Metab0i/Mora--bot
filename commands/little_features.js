@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const assist_func = require('./assist_functions');
-const feelings = require("../json files/feelings.json")
+const feelings = require("../json files/feelings.json");
+const eight_ball = require("../json files/8ball_answers.json");
 
 module.exports = {
   /**
@@ -18,7 +19,6 @@ module.exports = {
     if(give_regex.test(msg.content.toLowerCase())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
-      msg.channel.startTyping();
 
       var user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
       var item = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
@@ -28,21 +28,28 @@ module.exports = {
         .setTitle(msg.author.username + " gave -" + item + "- to " + user + ".")
         .setDescription("That makes them feel " + feelings.emotions[Math.floor((Math.random() * feelings.emotions.length) + 0)]);
 
-      msg.channel.stopTyping();
       msg.channel.send(embed);
     }
   },
 
+  /**
+   * @name how(...)
+   * 
+   * @description : Let's find out how much % something or someone is
+   * 
+   * @param {String} prefix 
+   * @param {CLIENT} client 
+   * @param {MESSAGE} msg 
+   */
   how: async function(prefix, client, msg){
     //e.g. "how <user> <cool/weird/happy/sad>" -> returns a percentage or something of that manner
     var how_regex = new RegExp("^" + prefix + "how <@.?[0-9]+> .*?$");
     var how_me = new RegExp("^" + prefix + "how .*?$");
-    var how_something = new RegExp("^" + prefix + "how_ .*? (iz) .*?", "g");
+    var how_something = new RegExp("^" + prefix + "how .*? (iz) .*?", "g");
 
     if(how_regex.test(msg.content.toLowerCase())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
-      msg.channel.startTyping();
 
       var user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
       var how_query = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
@@ -52,29 +59,11 @@ module.exports = {
         .setTitle(msg.author.username + " wonders how -" + how_query + "- is " + user + ".")
         .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
 
-      msg.channel.stopTyping();
-      msg.channel.send(embed);
-
-    }else if(how_me.test(msg.content.toLowerCase())){
-      //User timer
-      if(assist_func.userTimeOut(msg) == true) return;    
-      msg.channel.startTyping();
-
-      var how_query = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim();
-      how_query = await assist_func.id_to_name(how_query, client, msg);
-
-      var embed = new Discord.RichEmbed()
-        .setColor(assist_func.random_hex_colour())
-        .setTitle(msg.author.username + " ponders to themselves, how -" + how_query + "- they are?")
-        .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
-
-      msg.channel.stopTyping();
       msg.channel.send(embed);
 
     }else if(how_something.test(msg.content.toLowerCase())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
-      msg.channel.startTyping();
 
       var how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("iz")).trim();
       var something = msg.content.slice(msg.content.indexOf("iz") + 2, msg.content.length).trim(); 
@@ -87,7 +76,20 @@ module.exports = {
         .setTitle(msg.author.username + " wonders.. How -" + how + "- iz -" + something + "- ?")
         .setDescription(something + " iz " + Math.floor((Math.random() * 100) + 0) + "% " + how + ".");
 
-      msg.channel.stopTyping();
+      msg.channel.send(embed);
+
+    }else if(how_me.test(msg.content.toLowerCase())){
+      //User timer
+      if(assist_func.userTimeOut(msg) == true) return;
+
+      var how_query = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim();
+      how_query = await assist_func.id_to_name(how_query, client, msg);
+
+      var embed = new Discord.RichEmbed()
+        .setColor(assist_func.random_hex_colour())
+        .setTitle(msg.author.username + " ponders to themselves, how -" + how_query + "- they are?")
+        .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
+
       msg.channel.send(embed);
 
     }
@@ -95,6 +97,21 @@ module.exports = {
 
   eight_ball: function(prefix, msg){
     //ask a question and it shall answer my guy
+    var ask_8 = new RegExp("^" + prefix + "ask8 .*?$");
+
+    if(ask_8.test(msg.content.toLowerCase())){
+      if(assist_func.userTimeOut(msg) == true) return;  
+
+      msg.react('🎱');
+
+      var embed = new Discord.RichEmbed()
+        .setColor(assist_func.random_hex_colour())
+        .setAuthor(msg.author.username + " asked a question...", msg.author.avatarURL)
+        .setDescription(eight_ball.magic_answers[Math.floor((Math.random() * eight_ball.magic_answers.length) + 0)])
+        .setFooter("Only yes or no questions please. I am not that smart.");
+
+      msg.channel.send(embed);
+    }
   },
 
   hello_goodbye: function(prefix, msg){

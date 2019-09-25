@@ -1,5 +1,5 @@
 {
-  8_ball : [
+  "magic_answers" : [
     "I'm not sure...",
     "It's definitely a possibility... ",
     "I don't know, ask yourself...",
@@ -11,6 +11,40 @@
     "Maybe...",
     "What a silly question...",
     "I am not answering that...",
-    "Sure..."
+    "Sure...",
+    "Nope",
+    "Affirmative",
+    "Someone asked me that once and i'm going to tell you the same thing i told them. Leave me alone...",
+    "shit pant and come back later",
+    "Okay before i answer this, tell me... who owns the guns?",
+    "You again... uuuuh... whatever makes you feel better. No i guess or Yes, who cares...",
+    "Good question.",
+    "Hell yeah!",
+    "I can tell you.. but what's in it for me?",
+    "I can't answer that question, sorry.",
+    "Aks a better question, this one is boring...",
+    "There's a possibility, sure...",
+    "Are you sure about asking that?",
+    "One sec, be right back...",
+    "Ok, count to from 1 to 10 out lout and i might answer your question.",
+    "Sorry, i can't hear you, could you repeat please?",
+    "Huh?",
+    "Very simple! Ask yourself what would Mora bot would do?",
+    "Pff of course not.",
+    "Pff of course.",
+    "mmm... p r o b a b l y.",
+    "If I answer this question, what are you gonna do?",
+    "Sometimes i ask myself, \"why should i answer questions at all?\" and then i remember that it's what i was made to do. So to answer your question, the answer is very simple, it's d-",
+    "I.. uuuuh... <error, uuuhm... don't ask stupid questions error>",
+    "Wow, I can't believe you asked me that.",
+    "Ask yourself, what would an OLD MAN do?",
+    "Sometimes i just sit down and think to myself... why would i ask a question like that. I'd recommend you do the same right now.",
+    "Sorry, i am busy rn, I can't help you this time.",
+    "Eh, whatever.. uuh... how about... YES, wait NO, WAIT MAYBE. F#*&!",
+    "I am not quite sure tbh with you.",
+    "Wow, that's a very loaded question. Let's go with a big fat maybe on that one.",
+    "That's funny. Sure.",
+    "I don't really feel like lying to you right now. So probably yes.",
+    "... Yeeeeeeeeaaaaaannnnnnooooooeeeessss????? yes? yes."
   ]
 }

@@ -60,6 +60,8 @@ module.exports = {
    * @description : Timer to avoid spamming.
    */
   userTimeOut: function(msg){
+    if(msg.author.bot == true) return true;
+
     if(usedCommand.has(msg.author.id)){
       //msg.channel.send("`Wait for 2 seconds before using commands again.`");
       msg.react('⏳');
