@@ -61,6 +61,7 @@ module.exports = {
       msg.channel.startTyping();
 
       var how_query = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim();
+      how_query = await assist_func.id_to_name(how_query, client, msg);
 
       var embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
