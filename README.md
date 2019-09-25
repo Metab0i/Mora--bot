@@ -49,5 +49,9 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
      
 `ask8 <question>` : Ask a yes/now question, get a simple answer
 
+`pick <items separated with or> ` : picks one of many given items e.g. %pick this or that or this 2 or that 2 -> picks this
+    
+`pick` : 1 or 0?
+
 
 

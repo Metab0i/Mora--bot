@@ -118,15 +118,42 @@ module.exports = {
     //react with an emoji on specific message, E.g. goodnight -> moon emoji. Make a json file full of various messages and emoji responses 
   },
 
-  user_stats: function(prefix, msg, client){
-    //give some info about a user , if no user specified, give info about command caller
-  },
+  /**
+   * @name this_or(...)
+   * 
+   * @description : can't pick? This command will help you do just that.
+   * 
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   * @param {CLIENT} client 
+   */
+  this_or: async function(prefix, msg, client){
+    var whichone = new RegExp("^" + prefix + "pick .*? (or) .*?", "g");
 
-  guild_stats: function(prefix, msg){
-    //give some info about the server where the command was called
-  },
+    if(whichone.test(msg.content.toLowerCase())){
+      var pick_array = msg.content.split('or');
 
-  pfp: function(prefix, msg, client){
-    //show a profile picture of the user 
+      if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
+
+      var final_pick = await assist_func.id_to_name(pick_array[Math.floor((Math.random() * pick_array.length) + 0)], client, msg);
+      final_pick = final_pick.replace("%pick", "").trim();
+
+      var embed = new Discord.RichEmbed()
+        .setColor(assist_func.random_hex_colour())
+        .setAuthor(msg.author.username + " asks me to pick...", msg.author.avatarURL)
+        .setDescription("I pick `" + final_pick + "`")
+        .setFooter("-1 || 0 = " + Math.floor((Math.random() * 2) + 0) + "-");
+
+      msg.channel.send(embed);
+    }else if(msg.content.toLowerCase() == prefix + "pick"){
+      if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
+
+      var embed = new Discord.RichEmbed()
+        .setColor(assist_func.random_hex_colour())
+        .setAuthor(msg.author.username + " wonders, 0 or 1?", msg.author.avatarURL)
+        .setDescription("I flip numbers and it's `*" + Math.floor((Math.random() * 2) + 0) + "*`");
+
+      msg.channel.send(embed);
+    }
   }
 } 
