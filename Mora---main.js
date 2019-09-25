@@ -85,9 +85,11 @@ client.on('message', msg => {
   stubs.showStats(prefix, msg, pool);
 
   distort_text.distortText(prefix, msg);
-  little_features.give(prefix, client, msg);
   yt.init_ysearch(prefix, msg);
   wiki.wiki_search(prefix, msg);
+
+  little_features.give(prefix, client, msg);
+  little_features.how(prefix, client, msg);
 
   reddit.serve_reddit(prefix, msg);
   if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
