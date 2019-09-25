@@ -20,16 +20,8 @@ module.exports = {
       if(assist_func.userTimeOut(msg) == true) return;    
       msg.channel.startTyping();
 
-      var user_id = msg.content.slice(msg.content.indexOf("@")+1, msg.content.indexOf(">")).replace(/\D/g,'');
+      var user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
       var item = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
-
-      try{
-        var user = await client.fetchUser(user_id);
-      }catch(err){
-        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
-      }
-
-      user = user.username;
 
       var embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
@@ -45,22 +37,15 @@ module.exports = {
     //e.g. "how <user> <cool/weird/happy/sad>" -> returns a percentage or something of that manner
     var how_regex = new RegExp("^" + prefix + "how <@.?[0-9]+> .*?$");
     var how_me = new RegExp("^" + prefix + "how .*?$");
+    var how_something = new RegExp("^" + prefix + "how_ .*? (iz) .*?", "g");
 
     if(how_regex.test(msg.content.toLowerCase())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
       msg.channel.startTyping();
 
-      var user_id = msg.content.slice(msg.content.indexOf("@")+1, msg.content.indexOf(">")).replace(/\D/g,'');
+      var user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
       var how_query = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
-
-      try{
-        var user = await client.fetchUser(user_id);
-      }catch(err){
-        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
-      }
-
-      user = user.username;
 
       var embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
@@ -81,6 +66,25 @@ module.exports = {
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " ponders to themselves, how -" + how_query + "- they are?")
         .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
+
+      msg.channel.stopTyping();
+      msg.channel.send(embed);
+
+    }else if(how_something.test(msg.content.toLowerCase())){
+      //User timer
+      if(assist_func.userTimeOut(msg) == true) return;    
+      msg.channel.startTyping();
+
+      var how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("iz")).trim();
+      var something = msg.content.slice(msg.content.indexOf("iz") + 2, msg.content.length).trim(); 
+
+      how = await assist_func.id_to_name(how, client, msg);
+      something = await assist_func.id_to_name(something, client, msg);
+
+      var embed = new Discord.RichEmbed()
+        .setColor(assist_func.random_hex_colour())
+        .setTitle(msg.author.username + " wonders.. How -" + how + "- iz -" + something + "- ?")
+        .setDescription(something + " iz " + Math.floor((Math.random() * 100) + 0) + "% " + how + ".");
 
       msg.channel.stopTyping();
       msg.channel.send(embed);

@@ -1,3 +1,4 @@
 node_modules
 /json files/reddit_auth.json
 /json files/settings.json
+error.log

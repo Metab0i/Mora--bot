@@ -1,4 +1,5 @@
 const path = require('path');
+const Discord = require('discord.js');
 
 const usedCommand = new Set();
 
@@ -166,6 +167,33 @@ module.exports = {
    */
   random_hex_colour: function(){
     return '#'+Math.floor(Math.random()*16777215).toString(16);
+  },
+
+  /**
+   * @name id_to_name(...)
+   * 
+   * @description : replaces ids with user names in string
+   * 
+   * @param {String} str 
+   * @param {CLIENT} client 
+   * @param {MESSAGE} msg 
+   */
+  id_to_name: async function(str, client, msg){
+    if(/<@.?[0-9]+>/.test(str)){
+      var user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
+
+        try{
+          var user = await client.fetchUser(user_id);
+        }catch(err){
+          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
+        }
+  
+        user = user.username;
+
+        return str.replace(/<@.?[0-9]+>/, user);
+    }else{
+      return str;
+    }
   }
 
 }
