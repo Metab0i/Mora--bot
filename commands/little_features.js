@@ -100,7 +100,7 @@ module.exports = {
     var ask_8 = new RegExp("^" + prefix + "ask8 .*?$");
 
     if(ask_8.test(msg.content.toLowerCase())){
-      if(assist_func.userTimeOut(msg) == true) return;  
+      if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
 
       msg.react('🎱');
 

@@ -40,6 +40,14 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 `distext <user refrence/text>` : distorts text of a specified user or supplied text 
     
 `give <user> <thing to give>` : give a random thing to anyone on the server to make them feel a certain way 
+     
+`how <user> <cool/not cool/silly etc>` : how "something" is someone? 
+    
+`how <something>` : how "something" is user?
+     
+`how <something> iz <something>` : how "adjective" is "something"
+     
+`ask8 <question>` : Ask a yes/now question, get a simple answer
 
 
 
