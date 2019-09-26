@@ -78,7 +78,6 @@ client.on('message', msg => {
     db_functions.gatherData(msg.guild, pool);
   }
 
-  if(msg.content == prefix + "help") msg.reply("https://github.com/Metab0i/Mora--bot/blob/master/README.md");
   //console.log(msg.embeds);
 
   stubs.logResponse(prefix,msg,pool);
@@ -94,6 +93,7 @@ client.on('message', msg => {
   little_features.how(prefix, client, msg);
   little_features.eight_ball(prefix, msg);
   little_features.this_or(prefix, msg, client);
+  little_features.help_mora(prefix, msg, client);
 
   images.hug(prefix, msg, client);
 

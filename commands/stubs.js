@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const path = require('path');
 const assist_func = require('./assist_functions');
 
 
@@ -171,7 +170,7 @@ module.exports = {
   /**
    * @name deleteStubs(...)
    * 
-   * @param {Discord} client 
+   * @param {String} prefix 
    * @param {Message} msg 
    * @param {PSQL} pool 
    * 
@@ -442,7 +441,7 @@ module.exports = {
   /**
    * @name outputStubs(...)
    * 
-   * @param {DISCORDJS} client 
+   * @param {String} prefix 
    * @param {message} msg 
    * @param {PSQL} pool 
    * 

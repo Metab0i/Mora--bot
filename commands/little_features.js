@@ -155,5 +155,23 @@ module.exports = {
 
       msg.channel.send(embed);
     }
+  },
+
+  /**
+   * 
+   * Help.
+   * 
+   */
+  help_mora: function(prefix, msg, client){
+    if(msg.content == prefix + "help") {
+      var embed = new Discord.RichEmbed()
+        .setColor("#d65aa6")
+        .setThumbnail(client.user.avatarURL)
+        .setTitle("click me.")
+        .setDescription("A list of commands for Mora.\nEnjoy.")
+        .setURL("https://github.com/Metab0i/Mora--bot/blob/master/README.md")
+        .setFooter("🐍")
+      msg.channel.send(embed);
+    }
   }
 } 
