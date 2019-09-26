@@ -196,6 +196,21 @@ module.exports = {
     }else{
       return str;
     }
+  },
+
+  id_to_user: async function(str, client, msg){
+    if(/<@.?[0-9]+>/.test(str)){
+      var user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
+
+      try{
+        var user = await client.fetchUser(user_id);
+      }catch(err){
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
+      }
+
+      return user;
+    }
+    
   }
 
 }

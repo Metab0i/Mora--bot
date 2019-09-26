@@ -4,20 +4,19 @@ const assist_func = require('./assist_functions');
 module.exports = {
    /**
    * @name distortText(msg);
+   * 
    * @param {String} msg 
-   * @description : Distorts texts by changing letters' case by random. 
-   *                Plans : Implement a feature that allows a user to distort a last message of the particular chat member.
-   * @Note : embed message check 
-   *         check if message contains text
-   *         check if message is even in range
+   * @param {String} prefix
+   * 
+   * @description : dIsTorT anY tExT
    */
   distortText: function(prefix, msg){
     if(msg.author.bot == true) return;
 
-    var disText_check = new RegExp("^" + prefix + "distext <@.?[0-9]+>$", "g");
+    var disText_user = new RegExp("^" + prefix + "distext <@.?[0-9]+>$", "g");
     var disText_any = new RegExp("^" + prefix + "distext .*?");
 
-    if(disText_check.test(msg.content.toLowerCase())){
+    if(disText_user.test(msg.content.toLowerCase())){
       var usr_id = msg.content.slice(msg.content.indexOf("<"), msg.content.length);
       
       //User timer

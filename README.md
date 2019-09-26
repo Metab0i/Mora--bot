@@ -39,6 +39,8 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 
 `distext <user refrence/text>` : distorts text of a specified user or supplied text 
     
+`uwu <user refrence/text>` : uwu-fies text of a specified user or supplied text
+    
 `give <user> <thing to give>` : give a random thing to anyone on the server to make them feel a certain way 
      
 `how <user> <cool/not cool/silly etc>` : how "something" is someone? 

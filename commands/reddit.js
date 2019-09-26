@@ -34,31 +34,31 @@ module.exports = {
 
       switch(category.toLowerCase()) {
         case "top":
-          request = reddit + `/r/${subr}/top/.json?limit=24&t=day`;
+          request = reddit + `/r/${subr}/top/.json?limit=85&t=day`;
           break;
         case "tophour":
-          request = reddit + `/r/${subr}/top/.json?limit=24&t=hour`;
+          request = reddit + `/r/${subr}/top/.json?limit=85&t=hour`;
           break;
         case "topweek":
-          request = reddit + `/r/${subr}/top/.json?limit=24&t=week`;
+          request = reddit + `/r/${subr}/top/.json?limit=85&t=week`;
           break;
         case "topmonth":
-          request = reddit + `/r/${subr}/top/.json?limit=24&t=month`;
+          request = reddit + `/r/${subr}/top/.json?limit=85&t=month`;
           break;
         case "topall":
-          request = reddit + `/r/${subr}/top/.json?limit=24&t=year`;
+          request = reddit + `/r/${subr}/top/.json?limit=85&t=year`;
           break;
         case "new":
-          request = reddit + `/r/${subr}/new/.json?limit=24`;
+          request = reddit + `/r/${subr}/new/.json?limit=85`;
           break;
         case "hot":
-          request = reddit + `/r/${subr}/hot/.json?limit=24`;
+          request = reddit + `/r/${subr}/hot/.json?limit=85`;
           break;
         case "controversial":
-          request = reddit + `/r/${subr}/controversial/.json?limit=24`;
+          request = reddit + `/r/${subr}/controversial/.json?limit=85`;
           break;
         case "rising":
-          request = reddit + `/r/${subr}/rising/.json?limit=24`;
+          request = reddit + `/r/${subr}/rising/.json?limit=85`;
           break;
         default:
           msg.channel.stopTyping();

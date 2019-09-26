@@ -10,6 +10,8 @@ const yt = require('./commands/youtube');
 const wiki = require('./commands/wiki');
 const reddit = require('./commands/reddit');
 const little_features = require('./commands/little_features');
+const images = require('./commands/images');
+const uwu_fier = require('./commands/uwu_fier');
 
 //prefix
 const prefix = "%";
@@ -82,7 +84,7 @@ client.on('message', msg => {
   stubs.logResponse(prefix,msg,pool);
   stubs.deleteStubs(prefix,msg,pool);
   stubs.outputStubs(prefix,msg,pool);
-  stubs.showStats(prefix, msg, pool);
+  stubs.showStats(prefix,msg,pool);
 
   distort_text.distortText(prefix, msg);
   yt.init_ysearch(prefix, msg);
@@ -92,6 +94,10 @@ client.on('message', msg => {
   little_features.how(prefix, client, msg);
   little_features.eight_ball(prefix, msg);
   little_features.this_or(prefix, msg, client);
+
+  images.hug(prefix, msg, client);
+
+  uwu_fier.uwu_fier(prefix, msg);
 
   reddit.serve_reddit(prefix, msg);
   if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
