@@ -87,7 +87,7 @@ module.exports = {
 
       var embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
-        .setTitle(msg.author.username + " ponders to themselves, how -" + how_query + "- they are?")
+        .setTitle(msg.author.username + " ponders to themselves, how -" + how_query + "- are they?")
         .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
 
       msg.channel.send(embed);

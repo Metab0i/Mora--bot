@@ -34,7 +34,19 @@ module.exports = {
 
       switch(category.toLowerCase()) {
         case "top":
-          request = reddit + `/r/${subr}/top/.json?limit=24`;
+          request = reddit + `/r/${subr}/top/.json?limit=24&t=day`;
+          break;
+        case "tophour":
+          request = reddit + `/r/${subr}/top/.json?limit=24&t=hour`;
+          break;
+        case "topweek":
+          request = reddit + `/r/${subr}/top/.json?limit=24&t=week`;
+          break;
+        case "topmonth":
+          request = reddit + `/r/${subr}/top/.json?limit=24&t=month`;
+          break;
+        case "topall":
+          request = reddit + `/r/${subr}/top/.json?limit=24&t=year`;
           break;
         case "new":
           request = reddit + `/r/${subr}/new/.json?limit=24`;
