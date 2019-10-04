@@ -17,36 +17,37 @@ module.exports = {
   init_ysearch: async function(prefix, msg){
 
      //RegEx definition
-    var vod = new RegExp("^" + prefix + "vod .*?");
+    let vod = new RegExp("^" + prefix + "vod .*?");
 
     if(vod.test(msg.content.toLowerCase())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;  
       msg.channel.startTyping();
 
-      //list-through pages var pre-set
+      //list-through pages let pre-set
       let pages = [];
 
       //grab a request for a video to find and URI
-      var query = encodeURIComponent(msg.content.slice(msg.content.indexOf(" "), msg.content.length));
+      let query = encodeURIComponent(msg.content.slice(msg.content.indexOf(" "), msg.content.length));
+      let result;
 
-      var request = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&order=relevance&q=" + query + "&safeSearch=none&type=video&key=" + API_token.youtube_token;
-      var options = {
+      let request = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&order=relevance&q=" + query + "&safeSearch=none&type=video&key=" + API_token.youtube_token;
+      let options = {
         uri: request,
         json: true // Automatically parses the JSON string 
       };
 
       try{
-        var result = await rp(options);
+        result = await rp(options);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       }
 
       if(result.items.length == 0) return msg.channel.send("`Invalid search, try again.`");
       
-      var link = "https://www.youtube.com/watch?v=";
+      let link = "https://www.youtube.com/watch?v=";
 
-      for(var vod_id in result.items){
+      for(let vod_id in result.items){
         pages.push("• `Command user: " + msg.author.username + "`\n" + link + result.items[vod_id].id.videoId + "\n〈 `page: " + (parseInt(vod_id)+1) + " of " + result.items.length + "` 〉");
       }
 

@@ -14,12 +14,12 @@ module.exports = {
   * @description : Assistant function, maintains consistency of server channels amount with DB.
   */
   populateChannelJSON: function(json_channels, guild, pool){
-    var object = new Object();
-    var check = false;
-    var count_channels = 0;
-    var channels_str = "|";
+    let object = new Object();
+    let check = false;
+    let count_channels = 0;
+    let channels_str = "|";
 
-    for(var i = 1; i < guild.channels.size; i++){
+    for(let i = 1; i < guild.channels.size; i++){
       if(guild.channels.array()[i].type == "text"){
         channels_str += guild.channels.array()[i].id + "|";
         count_channels++;
@@ -27,14 +27,14 @@ module.exports = {
     }
 
     if(Object.keys(json_channels).length >= count_channels){
-      for(var key in json_channels){
+      for(let key in json_channels){
         if(!channels_str.includes(key)) delete json_channels[key]
       }
 
       check = true;
     }
 
-    for(var i = 0; i < guild.channels.size; i++){
+    for(let i = 0; i < guild.channels.size; i++){
       if(!JSON.stringify(json_channels).includes(guild.channels.array()[i].id) && guild.channels.array()[i].type == "text"){
         object["no_message"] = 0;
         json_channels[guild.channels.array()[i].id] = object;
@@ -86,7 +86,7 @@ module.exports = {
    *                creation of interactive lists through which a user can iterate using emojis 
    */
   createIntList: function(msg, pages){
-    //external scope var
+    //external scope let
     let page = 1;
 
     msg.channel.stopTyping();
@@ -141,7 +141,7 @@ module.exports = {
    * @description : checks if any media is present in supplied link
    */
   content_type: function(url){
-    result = path.extname(url);
+    let result = path.extname(url);
 
     if(result.toLowerCase().includes("png")){
       return "media";
@@ -182,17 +182,18 @@ module.exports = {
    */
   id_to_name: async function(str, client, msg){
     if(/<@.?[0-9]+>/.test(str)){
-      var user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
+      let user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
+      let user;
 
-        try{
-          var user = await client.fetchUser(user_id);
-        }catch(err){
-          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
-        }
-  
-        user = user.username;
+      try{
+        user = await client.fetchUser(user_id);
+      }catch(err){
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
+      }
 
-        return str.replace(/<@.?[0-9]+>/, user);
+      user = user.username;
+
+      return str.replace(/<@.?[0-9]+>/, user);
     }else{
       return str;
     }
@@ -200,10 +201,11 @@ module.exports = {
 
   id_to_user: async function(str, client, msg){
     if(/<@.?[0-9]+>/.test(str)){
-      var user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
+      let user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
+      let user;
 
       try{
-        var user = await client.fetchUser(user_id);
+        user = await client.fetchUser(user_id);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }

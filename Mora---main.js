@@ -17,13 +17,11 @@ const uwu_fier = require('./commands/uwu_fier');
 const prefix = "%";
 
 //DB essentials (psql)
-const configs = require('./json files/settings.json');
 const Pool = require('pg').Pool;
-const pool = new Pool(configs.db_details);
+const pool = new Pool(settings.db_details);
 
 //console.error overload
 const fs = require('fs');
-const util = require('util');
 const log_file = fs.createWriteStream(__dirname + '/error.log', {flags : 'w'});
 const log_stdout = process.stdout;
 
@@ -33,7 +31,8 @@ console.error = function(start_err, err_body) { //
 };
 
 /**
- * Event: On activation
+ * Event: On acti
+ * images.super_hot(prefix, msg, client);tion
  * Functionality: runs essentials on activation (such as validating data against database to make sure everything is up to date)
  */
 client.on('ready', () => {
@@ -96,6 +95,7 @@ client.on('message', msg => {
   little_features.help_mora(prefix, msg, client);
 
   images.hug(prefix, msg, client);
+  images.super_hot(prefix, msg, client);
 
   uwu_fier.uwu_fier(prefix, msg);
 

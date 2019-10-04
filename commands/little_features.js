@@ -14,16 +14,16 @@ module.exports = {
    * @param {MESSAGE} msg 
    */
   give: async function(prefix, client, msg){
-    var give_regex = new RegExp("^" + prefix + "give <@.?[0-9]+> .*?$");
+    let give_regex = new RegExp("^" + prefix + "give <@.?[0-9]+> .*?$");
 
     if(give_regex.test(msg.content.toLowerCase())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
 
-      var user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
-      var item = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
+      let user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
+      let item = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
 
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " gave -" + item + "- to " + user + ".")
         .setDescription("That makes them feel " + feelings.emotions[Math.floor((Math.random() * feelings.emotions.length) + 0)]);
@@ -43,18 +43,18 @@ module.exports = {
    */
   how: async function(prefix, client, msg){
     //e.g. "how <user> <cool/weird/happy/sad>" -> returns a percentage or something of that manner
-    var how_regex = new RegExp("^" + prefix + "how <@.?[0-9]+> .*?$");
-    var how_me = new RegExp("^" + prefix + "how .*?$");
-    var how_something = new RegExp("^" + prefix + "how .*? (iz) .*?", "g");
+    let how_regex = new RegExp("^" + prefix + "how <@.?[0-9]+> .*?$");
+    let how_me = new RegExp("^" + prefix + "how .*?$");
+    let how_something = new RegExp("^" + prefix + "how .*? (iz) .*?", "g");
 
     if(how_regex.test(msg.content.toLowerCase())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
 
-      var user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
-      var how_query = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
+      let user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
+      let how_query = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
 
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " wonders how -" + how_query + "- is " + user + ".")
         .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
@@ -65,13 +65,13 @@ module.exports = {
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
 
-      var how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("iz")).trim();
-      var something = msg.content.slice(msg.content.indexOf("iz") + 2, msg.content.length).trim(); 
+      let how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("iz")).trim();
+      let something = msg.content.slice(msg.content.indexOf("iz") + 2, msg.content.length).trim(); 
 
       how = await assist_func.id_to_name(how, client, msg);
       something = await assist_func.id_to_name(something, client, msg);
 
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " wonders.. How -" + how + "- iz -" + something + "- ?")
         .setDescription(something + " iz " + Math.floor((Math.random() * 100) + 0) + "% " + how + ".");
@@ -82,10 +82,10 @@ module.exports = {
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;
 
-      var how_query = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim();
+      let how_query = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim();
       how_query = await assist_func.id_to_name(how_query, client, msg);
 
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " ponders to themselves, how -" + how_query + "- are they?")
         .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
@@ -97,14 +97,14 @@ module.exports = {
 
   eight_ball: function(prefix, msg){
     //ask a question and it shall answer my guy
-    var ask_8 = new RegExp("^" + prefix + "ask8 .*?$");
+    let ask_8 = new RegExp("^" + prefix + "ask8 .*?$");
 
     if(ask_8.test(msg.content.toLowerCase())){
       if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
 
       msg.react('🎱');
 
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setAuthor(msg.author.username + " asked a question...", msg.author.avatarURL)
         .setDescription(eight_ball.magic_answers[Math.floor((Math.random() * eight_ball.magic_answers.length) + 0)])
@@ -128,17 +128,17 @@ module.exports = {
    * @param {CLIENT} client 
    */
   this_or: async function(prefix, msg, client){
-    var whichone = new RegExp("^" + prefix + "pick .*? (or) .*?", "g");
+    let whichone = new RegExp("^" + prefix + "pick .*? (or) .*?", "g");
 
     if(whichone.test(msg.content.toLowerCase())){
-      var pick_array = msg.content.split('or');
+      let pick_array = msg.content.split('or');
 
       if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
 
-      var final_pick = await assist_func.id_to_name(pick_array[Math.floor((Math.random() * pick_array.length) + 0)], client, msg);
+      let final_pick = await assist_func.id_to_name(pick_array[Math.floor((Math.random() * pick_array.length) + 0)], client, msg);
       final_pick = final_pick.replace("%pick", "").trim();
 
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setAuthor(msg.author.username + " asks me to pick...", msg.author.avatarURL)
         .setDescription("I pick `" + final_pick + "`")
@@ -148,7 +148,7 @@ module.exports = {
     }else if(msg.content.toLowerCase() == prefix + "pick"){
       if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
 
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setAuthor(msg.author.username + " wonders, 0 or 1?", msg.author.avatarURL)
         .setDescription("I flip numbers and it's `*" + Math.floor((Math.random() * 2) + 0) + "*`");
@@ -164,7 +164,7 @@ module.exports = {
    */
   help_mora: function(prefix, msg, client){
     if(msg.content == prefix + "help") {
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor("#d65aa6")
         .setThumbnail(client.user.avatarURL)
         .setTitle("click me.")

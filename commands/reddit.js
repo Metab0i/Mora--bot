@@ -15,22 +15,23 @@ module.exports = {
    * @description : posts a random copypasta from r/copypasta sub-reddit.
    */
   serve_reddit: async function(prefix, msg){
-    var pasta = new RegExp("^" + prefix + "r .*? ");
+    let pasta = new RegExp("^" + prefix + "r .*? ");
 
     if(pasta.test(msg.content.toLowerCase())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
       msg.channel.startTyping();
 
-      var embed = new Discord.RichEmbed()
+      let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour());
 
-      var reddit = "https://www.reddit.com";
-      var subr = msg.content.slice(msg.content.indexOf(" ")+1);
+      let reddit = "https://www.reddit.com";
+      let subr = msg.content.slice(msg.content.indexOf(" ")+1);
       subr = subr.slice(0, subr.indexOf(" "));
-      var category = msg.content.slice(msg.content.indexOf(subr) + subr.length+1, msg.content.length).replace(/\s/g, "");
+      let category = msg.content.slice(msg.content.indexOf(subr) + subr.length+1, msg.content.length).replace(/\s/g, "");
 
-      var request = "";
+      let request = "";
+      let result;
 
       switch(category.toLowerCase()) {
         case "top":
@@ -65,20 +66,20 @@ module.exports = {
           return msg.channel.send("`Wrong category, try again.`");
       }
 
-      var options = {
+      let options = {
         uri: request,
         json: true // Automatically parses the JSON string 
       };
 
       try{
-        var result = await rp(options);        
+        result = await rp(options);        
       }catch(err){
         msg.channel.stopTyping();
         msg.channel.send("`" + err.message + "`");
         return console.error('on [' + msg.content + ']\nBy <@' + msg. author.id + ">", err.stack);        
       }
 
-      var reddit_dataset = result.data['children'][Math.floor((Math.random() * result.data['children'].length) + 0)];
+      let reddit_dataset = result.data['children'][Math.floor((Math.random() * result.data['children'].length) + 0)];
 
       msg.channel.stopTyping();
       if(reddit_dataset == null) return msg.channel.send("`Bad request, try again.`");
@@ -110,17 +111,22 @@ module.exports = {
   },
 
   update_ad: async function(prefix, msg, user){
-    var up_ad = new RegExp("^" + prefix + "gdbump <#.?[0-9]+> .*?$");
+    let up_ad = new RegExp("^" + prefix + "gdbump <#.?[0-9]+> .*?$");
 
     if(up_ad.test(msg.content.toLowerCase())){
       msg.channel.startTyping();
+      let result;
+      let invite_link;
+      let invites;
+      let result_submit_ds;
+      let result_submit_da;
 
-      var reddit = "https://www.reddit.com/api/v1/access_token";
+      let reddit = "https://www.reddit.com/api/v1/access_token";
 
-      var channel_id = msg.content.slice(msg.content.indexOf("#")+1, msg.content.indexOf(">"));
-      var title = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length);
+      let channel_id = msg.content.slice(msg.content.indexOf("#")+1, msg.content.indexOf(">"));
+      let title = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length);
       
-      var options = {
+      let options = {
         method: 'POST',
         uri: reddit + "?" + reddit_auth.token_request_url,
         headers: {
@@ -132,15 +138,16 @@ module.exports = {
         json: true // Automatically stringifies the body to JSON
       };
 
+      //Primary reason for using try catch is predominantly due to me trying to document errors in a log file
       try{
-        var invites = await msg.guild.fetchInvites();
+        invites = await msg.guild.fetchInvites();
 
-        for(var i = 0; i < invites.array().length; i++){
+        for(let i = 0; i < invites.array().length; i++){
           if(invites.array()[i].inviter.id == user) invites.array()[i].delete();
         }
 
-        var result = await rp(options);
-        var invite_link = await msg.guild.channels.get(channel_id).createInvite({
+        result = await rp(options);
+        invite_link = await msg.guild.channels.get(channel_id).createInvite({
           maxAge: 0,
           maxUses: 0
         });
@@ -148,7 +155,7 @@ module.exports = {
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       }
 
-      var options_submit_ds = {
+      let options_submit_ds = {
         url: 'https://oauth.reddit.com/api/submit' + '?kind=link&url=' + invite_link + '&sr=discordservers&title=' + encodeURIComponent(title),
         method: 'POST',
         headers: {
@@ -157,7 +164,7 @@ module.exports = {
         }
       }
 
-      var options_submit_da = {
+      let options_submit_da = {
         url: 'https://oauth.reddit.com/api/submit' + '?kind=link&url=' + invite_link + '&sr=DiscordAdvertising&title=' + encodeURIComponent(title),
         method: 'POST',
         headers: {
@@ -167,16 +174,16 @@ module.exports = {
       }
 
       try{
-        var result_submit_ds = await rp(options_submit_ds);
-        var result_submit_da = await rp(options_submit_da);
+        result_submit_ds = await rp(options_submit_ds);
+        result_submit_da = await rp(options_submit_da);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }
 
-      var good_req_ds = JSON.stringify(JSON.parse(result_submit_ds).success) + '`\n' + JSON.parse(result_submit_ds).jquery[16][3][0];
-      var bad_req_ds = JSON.stringify(JSON.parse(result_submit_ds).success) + '`\n`Reason: ' + JSON.parse(result_submit_ds).jquery[22][3][0] + '`';
-      var good_req_da = JSON.stringify(JSON.parse(result_submit_da).success) + '`\n' + JSON.parse(result_submit_da).jquery[16][3][0];
-      var bad_req_da = JSON.stringify(JSON.parse(result_submit_da).success) + '`\n`Reason: ' + JSON.parse(result_submit_da).jquery[22][3][0] + '`';
+      let good_req_ds = JSON.stringify(JSON.parse(result_submit_ds).success) + '`\n' + JSON.parse(result_submit_ds).jquery[16][3][0];
+      let bad_req_ds = JSON.stringify(JSON.parse(result_submit_ds).success) + '`\n`Reason: ' + JSON.parse(result_submit_ds).jquery[22][3][0] + '`';
+      let good_req_da = JSON.stringify(JSON.parse(result_submit_da).success) + '`\n' + JSON.parse(result_submit_da).jquery[16][3][0];
+      let bad_req_da = JSON.stringify(JSON.parse(result_submit_da).success) + '`\n`Reason: ' + JSON.parse(result_submit_da).jquery[22][3][0] + '`';
 
       msg.channel.stopTyping();
       

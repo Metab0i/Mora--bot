@@ -13,18 +13,18 @@ module.exports = {
   distortText: function(prefix, msg){
     if(msg.author.bot == true) return;
 
-    var disText_user = new RegExp("^" + prefix + "distext <@.?[0-9]+>$", "g");
-    var disText_any = new RegExp("^" + prefix + "distext .*?");
+    let disText_user = new RegExp("^" + prefix + "distext <@.?[0-9]+>$", "g");
+    let disText_any = new RegExp("^" + prefix + "distext .*?");
 
     if(disText_user.test(msg.content.toLowerCase())){
-      var usr_id = msg.content.slice(msg.content.indexOf("<"), msg.content.length);
+      let usr_id = msg.content.slice(msg.content.indexOf("<"), msg.content.length);
       
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;  
       msg.channel.startTyping();
 
-      var response = ""; 
-      var check = false;
+      let response = ""; 
+      let check = false;
 
       msg.channel.fetchMessages({"limit" : 100})
         .then(messages => {
@@ -50,8 +50,8 @@ module.exports = {
     }
 
     else if(disText_any.test(msg.content.toLowerCase())){
-      var disMessage = msg.content.slice(msg.content.indexOf(" "), msg.content.length);
-      var msg_send = "";
+      let disMessage = msg.content.slice(msg.content.indexOf(" "), msg.content.length);
+      let msg_send = "";
 
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;  

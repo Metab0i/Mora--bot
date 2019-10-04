@@ -26,16 +26,16 @@ module.exports = {
     if(msg.author.bot == true) return;
 
     //RegEx definition
-    var stubs = new RegExp("^" + prefix + "stubs \"(.*?)\"", "g");
+    let stubs = new RegExp("^" + prefix + "stubs \"(.*?)\"", "g");
 
     if(stubs.test(msg.content.toLowerCase())){
-      var stubMax = 92;
-      var stubbyMax = 5;
+      let stubMax = 92;
+      let stubbyMax = 5;
 
-      var json_count;
-      var json_content;
-      var json_userLimit;
-      var resp_template = {
+      let json_count;
+      let json_content;
+      let json_userLimit;
+      let resp_template = {
         "res_messages" : [],
         "attachments" : []
       }
@@ -44,8 +44,8 @@ module.exports = {
       if(assist_func.userTimeOut(msg) == true) return;
       msg.channel.startTyping();
 
-      var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
-      var msgResponse = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[3];    
+      let msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
+      let msgResponse = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[3];    
 
       pool.query('SELECT content_response, count_stats, words_peruser FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
         .then((result) => {
@@ -91,7 +91,7 @@ module.exports = {
           }
 
           //boolean to monitor the URL duplicates
-          var media_present = false;
+          let media_present = false;
 
           if(msg.attachments.size > 0){
             msg.attachments.forEach(function(value,key){
@@ -114,15 +114,15 @@ module.exports = {
           }
 
           //boolean to monitor the amount of stubs used up by an individual user.
-          var user_check = false;
+          let user_check = false;
 
           //if user isn't a part of the json_userLimit, proceed to add them. Otherwise check if they exceed the number of stubs, if they do notify them.
           if(!JSON.stringify(json_userLimit).includes(msg.author.id)){
-            var obj = [msgRecord];
+            let obj = [msgRecord];
             json_userLimit == null || json_userLimit == "" ? json_userLimit = {} : null;
             json_userLimit[msg.author.id] = obj; 
           }else{
-            var obj = json_userLimit[msg.author.id];
+            let obj = json_userLimit[msg.author.id];
             obj.length >= stubMax ? user_check = true : null;
 
             json_content[msgRecord]['attachments'].length > stubbyMax ? user_check = true : null;
@@ -136,9 +136,9 @@ module.exports = {
             return;
           }
 
-          for(var key in json_count){
+          for(let key in json_count){
             Object.keys(json_content).forEach(function(key2){
-              var obj = json_count[key];
+              let obj = json_count[key];
 
               if(JSON.stringify(obj).includes("no_message")) obj = {};
 
@@ -179,25 +179,25 @@ module.exports = {
   deleteStubs: function(prefix, msg, pool){
     if(msg.author.bot == true) return;
     
-    var stubMax = 92;
+    let stubMax = 92;
 
     //RegEx definition 
-    var rmstub = new RegExp("^" + prefix + "rmstub \"(.*?)\"", "g");
-    var rmstubby = new RegExp("^" + prefix + "rmstubby \"(.*?)\" \"(.*?)\"", "g");
-    var rmmedia = new RegExp("^" + prefix + "rmmedia \"(.*?)\"", "g");
+    let rmstub = new RegExp("^" + prefix + "rmstub \"(.*?)\"", "g");
+    let rmstubby = new RegExp("^" + prefix + "rmstubby \"(.*?)\" \"(.*?)\"", "g");
+    let rmmedia = new RegExp("^" + prefix + "rmmedia \"(.*?)\"", "g");
     
 
     if(rmstub.test(msg.content.toLowerCase())){
-      var json_count;
-      var json_content;
-      var json_userLimit;
+      let json_count;
+      let json_content;
+      let json_userLimit;
 
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
-      var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
-      var msgResponse = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[3];
+      let msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
+      let msgResponse = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[3];
 
       pool.query('SELECT content_response, count_stats, words_peruser FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
         .then((result)=>{
@@ -231,9 +231,9 @@ module.exports = {
             return;
           }
 
-          var obj = json_userLimit[msg.author.id];
+          let obj = json_userLimit[msg.author.id];
 
-          for(var i = 0; i < obj.length; i++){
+          for(let i = 0; i < obj.length; i++){
             if(obj[i] === msgRecord){
               obj.splice(i,1);
               i--;
@@ -241,7 +241,7 @@ module.exports = {
           }
 
           //deletes from count
-          for(var key in json_count){
+          for(let key in json_count){
             Object.keys(json_content).forEach(function(key2){
               if(key2 == msgRecord){
                 delete json_count[key][key2];
@@ -272,15 +272,15 @@ module.exports = {
     }
 
     else if(prefix + "rmallstubs" == msg.content.toLowerCase()){
-      var json_count;
-      var json_content;
-      var json_userLimit;
+      let json_count;
+      let json_content;
+      let json_userLimit;
 
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
-      var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
+      let msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
 
       pool.query('SELECT content_response, count_stats, words_peruser FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
         .then((result)=>{
@@ -291,7 +291,7 @@ module.exports = {
 
           json_userLimit[msg.author.id].forEach(function(item){
             //deletes from count
-            for(var key in json_count){
+            for(let key in json_count){
               Object.keys(json_content).forEach(function(key2){
                 if(key2 == item){
                   delete json_count[key][key2];
@@ -325,15 +325,15 @@ module.exports = {
     }
 
     else if(rmmedia.test(msg.content.toLowerCase())){
-      var json_count;
-      var json_content;
-      var json_userLimit;
+      let json_count;
+      let json_content;
+      let json_userLimit;
       
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
-      var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
+      let msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
 
       pool.query('SELECT content_response, count_stats, words_peruser FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
       .then((result)=>{
@@ -376,16 +376,16 @@ module.exports = {
     }
 
     else if(rmstubby.test(msg.content.toLowerCase())){
-      var json_count;
-      var json_content;
-      var json_userLimit;
+      let json_count;
+      let json_content;
+      let json_userLimit;
       
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
-      var msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
-      var msgResponse = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[3];  
+      let msgRecord = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
+      let msgResponse = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[3];  
 
       pool.query('SELECT content_response, count_stats, words_peruser FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
       .then((result)=>{
@@ -408,9 +408,9 @@ module.exports = {
           return;
         }
 
-        var obj = json_content[msgRecord]['res_messages'];
+        let obj = json_content[msgRecord]['res_messages'];
         
-        for(var i = 0; i < obj.length; i++){
+        for(let i = 0; i < obj.length; i++){
           if(obj[i] === msgResponse){
             obj.splice(i,1);
             i--;
@@ -453,33 +453,33 @@ module.exports = {
     if(msg.author.bot == true) return;
     
     //regEx definition
-    var msg_check = new RegExp("^" + prefix + "sst \"(.*?)\"", "g");
+    let msg_check = new RegExp("^" + prefix + "sst \"(.*?)\"", "g");
 
     //logical XOR
     if(msg_check.test(msg.content.toLowerCase())){
-      var json_count;
-      var json_content;
+      let json_count;
+      let json_content;
 
       //User time out
       if(assist_func.userTimeOut(msg) == true) return;      
       msg.channel.startTyping();
 
-      var msgStub = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
+      let msgStub = msg.content.replace(msg.content.split(" ", 1)[0], "").split(/"(.*?)"/)[1];
 
       pool.query('SELECT content_response, count_stats FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))', [msg.guild.id])
         .then((result)=>{
           json_content = result.rows[0].content_response;
           json_count = result.rows[0].count_stats;
-          var media_ar = [];
+          let media_ar = [];
 
-          var embed = new Discord.RichEmbed()
+          let embed = new Discord.RichEmbed()
             .setColor('#ef2d56')
             .setTitle("Stub: *" + msgStub + "*");
 
           embed.addField("`text`:","```" + json_content[msgStub]['res_messages'] + "```");
 
-          for(var k = 0; k < json_content[msgStub]['attachments'].length; k++){
-            var checkIf_image = assist_func.content_type(json_content[msgStub]['attachments'][k]);
+          for(let k = 0; k < json_content[msgStub]['attachments'].length; k++){
+            let checkIf_image = assist_func.content_type(json_content[msgStub]['attachments'][k]);
 
             if(checkIf_image == "media"){
               embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
@@ -526,7 +526,7 @@ module.exports = {
     let pages = [];
     let page = 1; //index of a current page
     let totalWords = 0;
-    var json_count;
+    let json_count;
 
     //logcial XOR
     if(msg.content.toLowerCase() === (prefix + "stubstats") ? 
@@ -548,17 +548,15 @@ module.exports = {
           const forwardsFilter = (reaction, usr) => reaction.emoji.name === '⏩' && usr.id === msg.author.id;
           
           if(msg.content.toLowerCase() === (prefix + "stubstats")){
-            var str = "";
-            var count = 0;
+            let str = "";
+            let count = 0;
             
-            for(var channel in json_count){
-              //console.log(msg.guild.channels.get(channel).name.toString());
-
+            for(let channel in json_count){
               str += "```**" + msg.guild.channels.get(channel).name + ":** ```";
 
-              var total_stubCount = 0;
+              let total_stubCount = 0;
 
-              for(var trackable in json_count[channel]){
+              for(let trackable in json_count[channel]){
                 total_stubCount += json_count[channel][trackable];
                 totalWords += json_count[channel][trackable];
               }
@@ -633,9 +631,9 @@ module.exports = {
           }
           
           else if(msg.content.toLowerCase() === (prefix + "stubstats this")){
-            var index = 1;
-            str = "";
-            count = 0;
+            let index = 1;
+            let str = "";
+            let count = 0;
             totalWords = 0;
 
             for(value in json_count[msg.channel.id]){

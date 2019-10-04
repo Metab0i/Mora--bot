@@ -9,8 +9,8 @@ module.exports = {
    */
   gatherData: function(guild_1, pool){
     if(guild_1 !== undefined){ 
-      //define all the necessary vars for the db
-      var json_channels = JSON.parse("{}"), object = new Object();
+      //define all the necessary lets for the db
+      let json_channels = JSON.parse("{}"), object = new Object();
 
       guild_1.channels.forEach(channel => {
         if(channel.type != "text") return;
@@ -20,7 +20,7 @@ module.exports = {
       });
       
       // *Creates an object with a necessary structure for JSON column "content_response"
-      var json_messages = {
+      let json_messages = {
         "no_message" : {
           "res_messages" : [],
           "attachments" : []
@@ -82,11 +82,11 @@ module.exports = {
 
     pool.query('SELECT count_stats, content_response FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))',[channel.guild.id])
     .then((result)=>{
-      var json_countStats = result.rows[0].count_stats;
-      var json_contentResponse = result.rows[0].content_response;
+      let json_countStats = result.rows[0].count_stats;
+      let json_contentResponse = result.rows[0].content_response;
       
-      for(var key in json_contentResponse){
-        var content_channel = {};
+      for(let key in json_contentResponse){
+        let content_channel = {};
         content_channel[key] = 0;
         json_countStats[channel.id] = content_channel;
       }
@@ -112,7 +112,7 @@ module.exports = {
   deleteChannel: function(pool, channel){
     pool.query('SELECT count_stats, content_response FROM words JOIN guilds ON((words.uugid = guilds.uugid) AND (guilds.gid = $1))',[channel.guild.id])
       .then((result)=>{
-        var json_countStats = result.rows[0].count_stats;
+        let json_countStats = result.rows[0].count_stats;
         delete json_countStats[channel.id];
 
         pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_countStats), channel.guild.id])
