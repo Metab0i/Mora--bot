@@ -6,6 +6,7 @@ module.exports = {
    * @name uwu_fier(...);
    * 
    * @param {String} msg 
+   * @param {String} prefix
    * 
    * @description : uwu-fy any message
    * 

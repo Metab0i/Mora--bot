@@ -5,6 +5,15 @@ const fs = require('fs');
 
 
 module.exports = {
+  /**
+   * @name hug(...)
+   * 
+   * @param {String} msg 
+   * @param {String} prefix
+   * 
+   * @description : hugs a mentioned user's profile picture
+   * 
+   */
   hug: async function(prefix, msg, client){
     let hug_regex = new RegExp("^" + prefix + "hug <@.?[0-9]+>");
 
@@ -15,24 +24,29 @@ module.exports = {
 
       let hug_image;
       let user_pfp;
+      let canvas;
 
       try{
         let user = await assist_func.id_to_user(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
-        hug_image = await Jimp.read('../Mora bot/misc/hug.jpg');
+        hug_image = await Jimp.read('../Mora bot/misc/anime-hug2.png');
+        canvas = await Jimp.read('../Mora bot/misc/canvas.png');
         user_pfp = await Jimp.read(user.avatarURL);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }
       
 
-      user_pfp.resize(240, 240);
-      user_pfp.rotate(-10, false);
+      user_pfp.resize(230, 230);
+      user_pfp.rotate(-20, false);
 
-      hug_image.composite(user_pfp, 575, 150);
-      hug_image.write('fin.png');
+      hug_image.resize(500, 500);
+
+      canvas.composite(user_pfp, 240, 250);
+      canvas.composite(hug_image, 0, 0);
+      canvas.write('fin.png');
 
       msg.channel.stopTyping();  
-      msg.channel.send("This is a test: ", {files: ["fin.png"]})
+      msg.channel.send({files: ["fin.png"]})
         .then((res) =>{
           fs.unlinkSync('fin.png')
         })
@@ -42,6 +56,15 @@ module.exports = {
     }
   },
 
+  /**
+   * @name super_hot(...)
+   * 
+   * @param {*} prefix 
+   * @param {*} msg 
+   * @param {*} client 
+   * 
+   * @description : puts a text of a message into a last frame. (text going out of text box was done for comedic purposes)
+   */
   super_hot: async function(prefix, msg, client){
     let supahot_user = new RegExp("^" + prefix + "hot <@.?[0-9]+>$", "g");
     let supahot_sentence = new RegExp("^" + prefix + "hot .*?");
@@ -49,7 +72,6 @@ module.exports = {
     if(supahot_user.test(msg.content.toLowerCase())){
       let usr_id = msg.content.slice(msg.content.indexOf(" "), msg.content.length).trim();
       let supaHot;
-      let user_pfp;
       let font;
       let messages;
 

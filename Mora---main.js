@@ -12,6 +12,7 @@ const reddit = require('./commands/reddit');
 const little_features = require('./commands/little_features');
 const images = require('./commands/images');
 const uwu_fier = require('./commands/uwu_fier');
+const stomp_user = require('./commands/stomp');
 
 //prefix
 const prefix = "%";
@@ -96,6 +97,8 @@ client.on('message', msg => {
 
   images.hug(prefix, msg, client);
   images.super_hot(prefix, msg, client);
+
+  stomp_user.stomp(prefix, msg, client);
 
   uwu_fier.uwu_fier(prefix, msg);
 

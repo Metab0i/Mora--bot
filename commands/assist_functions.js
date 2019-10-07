@@ -71,7 +71,7 @@ module.exports = {
       usedCommand.add(msg.author.id);
       setTimeout(() => {
         usedCommand.delete(msg.author.id);
-      }, 3000);
+      }, 6000);
       return false;
     }
   },
