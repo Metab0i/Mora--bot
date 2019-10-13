@@ -58,6 +58,10 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 `hug <user> [2]` : hug a user
     
 `stomp <user>` : stomp a user
+    
+`muda <user>` : muda muda muda muda muda muda muda!
+    
+`ora <user>` : ora ora ora ora ora ora ora ora!
 
 
 
