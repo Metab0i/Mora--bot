@@ -55,7 +55,7 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
     
 `pick` : 1 or 0?
     
-`hug <user>` : hug a user
+`hug <user> [2]` : hug a user
     
 `stomp <user>` : stomp a user
 

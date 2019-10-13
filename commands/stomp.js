@@ -46,22 +46,22 @@ module.exports = {
 
           switch(count){
             case 0:
-              frame_edit.composite(user_pfp, 0, 550);
+              frame_edit.composite(user_pfp, -20, 570);
               break;
             case 1:
-              frame_edit.composite(user_pfp, 0, 490);
+              frame_edit.composite(user_pfp, -15, 490);
               break;
             case 2:
-              frame_edit.composite(user_pfp, 0, 480);
+              frame_edit.composite(user_pfp, -10, 480);
               break;
             case 3:
-              frame_edit.composite(user_pfp, 0, 450);
+              frame_edit.composite(user_pfp, -5, 450);
               break;
             case 4:
-              frame_edit.composite(user_pfp, 0, 550);
+              frame_edit.composite(user_pfp, -20, 570);
               break;
             case 5:
-              frame_edit.composite(user_pfp, 0, 555);
+              frame_edit.composite(user_pfp, -20, 575);
               break;
             default:
               break;

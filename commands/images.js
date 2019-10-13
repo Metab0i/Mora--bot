@@ -15,7 +15,7 @@ module.exports = {
    * 
    */
   hug: async function(prefix, msg, client){
-    let hug_regex = new RegExp("^" + prefix + "hug <@.?[0-9]+>");
+    let hug_regex = new RegExp("^" + prefix + "hug <@.?[0-9]+> ?2?$");
 
     if(hug_regex.test(msg.content.toLowerCase())){
       //user timer
@@ -28,21 +28,32 @@ module.exports = {
 
       try{
         let user = await assist_func.id_to_user(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
-        hug_image = await Jimp.read('../Mora bot/misc/anime-hug2.png');
+
+        hug_image = msg.content.slice(msg.content.indexOf(">") + 1).includes("2") ? await Jimp.read('../Mora bot/misc/anime-hug.png') : await Jimp.read('../Mora bot/misc/anime-hug2.png');
         canvas = await Jimp.read('../Mora bot/misc/canvas.png');
         user_pfp = await Jimp.read(user.avatarURL);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }
       
+      if(msg.content.slice(msg.content.indexOf(">") + 1).includes("2")){
+        user_pfp.resize(300, 300);
 
-      user_pfp.resize(230, 230);
-      user_pfp.rotate(-20, false);
+        hug_image.resize(500, 500);
 
-      hug_image.resize(500, 500);
+        canvas.composite(user_pfp, 100, 170);
+        canvas.composite(hug_image, 0, 0);
+      }
+      else{
+        user_pfp.resize(230, 230);
+        user_pfp.rotate(-20, false);
 
-      canvas.composite(user_pfp, 240, 250);
-      canvas.composite(hug_image, 0, 0);
+        hug_image.resize(500, 500);
+
+        canvas.composite(user_pfp, 240, 250);
+        canvas.composite(hug_image, 0, 0);
+      }
+      
       canvas.write('fin.png');
 
       msg.channel.stopTyping();  
