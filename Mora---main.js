@@ -13,6 +13,8 @@ const little_features = require('./commands/little_features');
 const images = require('./commands/images');
 const uwu_fier = require('./commands/uwu_fier');
 const stomp_user = require('./commands/stomp');
+const muda_user = require('./commands/muda');
+const ora_user = require('./commands/ora');
 
 //prefix
 const prefix = "%";
@@ -95,10 +97,14 @@ client.on('message', msg => {
   little_features.this_or(prefix, msg, client);
   little_features.help_mora(prefix, msg, client);
 
+  //images
   images.hug(prefix, msg, client);
   images.super_hot(prefix, msg, client);
 
+  //gifs
   stomp_user.stomp(prefix, msg, client);
+  muda_user.muda(prefix, msg, client);
+  ora_user.ora(prefix, msg, client);
 
   uwu_fier.uwu_fier(prefix, msg);
 

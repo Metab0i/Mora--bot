@@ -73,11 +73,11 @@ module.exports = {
           GifUtil.quantizeSorokin(frame, 256);
         });
       
-        GifUtil.write("modified.gif", inputGif.frames, inputGif).then(outputGif => {
+        GifUtil.write("stomp_fin.gif", inputGif.frames, inputGif).then(outputGif => {
           msg.channel.stopTyping();  
-          msg.channel.send({files: ["modified.gif"]})
+          msg.channel.send({files: ["stomp_fin.gif"]})
             .then((res) =>{
-              fs.unlinkSync('modified.gif')
+              fs.unlinkSync('stomp_fin.gif')
             })
             .catch((err) =>{
               return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
