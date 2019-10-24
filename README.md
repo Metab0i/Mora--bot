@@ -17,15 +17,15 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 
 `help` : Reference a user to a github readme file (this one)    
 
-`stubs <text/stub> <response text/stubby> [links]` : Assign any message to <text/stub> and store it.   
+`stubs "<text/stub>" "<response text/stubby>" [links]` : Assign any message to <text/stub> and store it.   
 
-`rmstub <text/stub>` : Remove a stub   
+`rmstub "<text/stub>"` : Remove a stub   
 
-`rmstubby <text/stub> <response text/stubby>` : Remove a stubby that belongs to a specific stub   
+`rmstubby "<text/stub>" "<response text/stubby>"` : Remove a stubby that belongs to a specific stub   
 
-`rmmedia <text/stub>` : Remove all media of referenced stub   
+`rmmedia "<text/stub>"` : Remove all media of referenced stub   
    
-`sst <text/stub>` : Displays referenced stub's text and/or media   
+`sst "<text/stub>" [text]` : Displays referenced stub's text and/or media, if addition "text" was written, then it will display only text
 
 `stubstats` : Display the amount of times stubs were called in every channel of the server
 
