@@ -59,23 +59,23 @@ module.exports = {
                   canvas_mod.composite(user_pfp, 280, 30);
                   break;
                 case 1:
-                  for(k = 0; k < 6; k++ ) user_pfp.fade(0.8);
+                  user_pfp.fade(0.8);
                   canvas_mod.composite(user_pfp, 280, 30);
                   break;
                 case 2:
-                  for(k = 0; k < 6; k++ ) user_pfp.fade(0.4);
+                  user_pfp.fade(0.3);
                   canvas_mod.composite(user_pfp, 280, 30);
                   break;
                 case 39:
-                  user_pfp.fade(0.9);
+                  user_pfp.fade(0.7);
                   canvas_mod.composite(user_pfp, 280, 30);
                   break;
                 case 40:
-                  for(k = 0; k < 7; k++ ) user_pfp.fade(0.8);
+                  user_pfp.fade(0.8);
                   canvas_mod.composite(user_pfp, 280, 30);
                   break;
                 case 41:
-                  for(k = 0; k < 10; k++ ) user_pfp.fade(0.9);
+                  user_pfp.fade(0.9);
                   canvas_mod.composite(user_pfp, 280, 30);
                   break;
                 case 42:

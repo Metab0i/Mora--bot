@@ -454,6 +454,7 @@ module.exports = {
     
     //regEx definition
     let msg_check = new RegExp("^" + prefix + "sst \"(.*?)\"", "g");
+    let text_check = new RegExp("^" + prefix + "sst \"(.*?)\" text$", "g");
 
     //logical XOR
     if(msg_check.test(msg.content.toLowerCase())){
@@ -470,35 +471,40 @@ module.exports = {
         .then((result)=>{
           json_content = result.rows[0].content_response;
           json_count = result.rows[0].count_stats;
-          let media_ar = [];
 
-          let embed = new Discord.RichEmbed()
-            .setColor('#ef2d56')
-            .setTitle("Stub: *" + msgStub + "*");
+          if(text_check.test(msg.content.toLowerCase())){
+            msg.channel.send("`"+ json_content[msgStub]['res_messages'] +"`");
+          }else{
+            let media_ar = [];
 
-          embed.addField("`text`:","```" + json_content[msgStub]['res_messages'] + "```");
-
-          for(let k = 0; k < json_content[msgStub]['attachments'].length; k++){
-            let checkIf_image = assist_func.content_type(json_content[msgStub]['attachments'][k]);
-
-            if(checkIf_image == "media"){
-              embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
-              media_ar.push(json_content[msgStub]['attachments'][k]);
+            let embed = new Discord.RichEmbed()
+              .setColor('#ef2d56')
+              .setTitle("Stub: *" + msgStub + "*");
+  
+            embed.addField("`text`:","```" + json_content[msgStub]['res_messages'] + "```");
+  
+            for(let k = 0; k < json_content[msgStub]['attachments'].length; k++){
+              let checkIf_image = assist_func.content_type(json_content[msgStub]['attachments'][k]);
+  
+              if(checkIf_image == "media"){
+                embed.addField("`" + (k+1) + ") media: `", json_content[msgStub]['attachments'][k])
+                media_ar.push(json_content[msgStub]['attachments'][k]);
+              }
+              else{
+                embed.addField("`" + (k+1) + ") link: `", json_content[msgStub]['attachments'][k])
+              }
             }
-            else{
-              embed.addField("`" + (k+1) + ") link: `", json_content[msgStub]['attachments'][k])
-            }
+            
+            //pick a random image to display
+            embed.setImage(media_ar[Math.floor((Math.random() * media_ar.length) + 0)]);
+            msg.channel.send(embed);
           }
-          
-          //pick a random image to display
-          embed.setImage(media_ar[Math.floor((Math.random() * media_ar.length) + 0)]);
-          msg.channel.send(embed);
           
           //add +1 to the count json_count
           json_count[msg.channel.id][msgStub] += 1;
 
           pool.query('UPDATE words SET count_stats = $1, content_response = $2 FROM guilds WHERE(guilds.gid = $3 AND guilds.uugid = words.uugid)',[JSON.stringify(json_count), JSON.stringify(json_content), msg.channel.guild.id])
-
+          
         })
         .catch((err)=>{
           //msg.channel.send(`\`${err.message}\``);

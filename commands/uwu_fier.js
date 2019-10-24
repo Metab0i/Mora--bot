@@ -20,7 +20,6 @@ module.exports = {
       
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;  
-      msg.channel.startTyping();
 
       let response = ""; 
       let check = false;
@@ -60,7 +59,6 @@ module.exports = {
         msg_send = msg_send.toLowerCase().replace("r", "w").replace("l","w").replace("s", "th").replace("oh", "oww").replace("oo", "owo");
       }     
 
-      msg.channel.stopTyping();
       msg.channel.send(msg_send);
 
     }
