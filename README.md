@@ -10,7 +10,7 @@ _____ ______   ________  ________  ________                               ______
 
 Beep bop, i'm a bot.
    
-Mora encapsulates a whole lot of different features that are primarily purely for entertainment purposes.
+Mora encapsulates a whole lot of different features that are primarily for entertainment purposes.
 
 ## Command list
 
