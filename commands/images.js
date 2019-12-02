@@ -108,8 +108,7 @@ module.exports = {
           response = message.content;
         }   
       });
-      //every 43rd char insert \n
-      //TODO: figure out the sizing and the scalin of the text
+
       let msgArray = response.match(/.{1,41}/g);
       let msgFinal = "";
 
