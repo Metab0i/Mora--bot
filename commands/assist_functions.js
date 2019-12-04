@@ -59,7 +59,7 @@ module.exports = {
    * 
    * @description : Timer to avoid spamming.
    */
-  userTimeOut: function(msg){
+  userTimeOut: function(msg, timer = 6000){
     if(msg.author.bot == true) return true;
 
     if(usedCommand.has(msg.author.id)){
@@ -71,7 +71,31 @@ module.exports = {
       usedCommand.add(msg.author.id);
       setTimeout(() => {
         usedCommand.delete(msg.author.id);
-      }, 6000);
+      }, timer);
+      return false;
+    }
+  },
+
+    /**
+   * @name serverTimeOut(...)
+   * 
+   * @param {Message} msg 
+   * 
+   * @description : Timer to avoid spamming.
+   */
+  serverTimeOut: function(msg, timer = 40000){
+    if(msg.author.bot == true) return true;
+
+    if(usedCommand.has(msg.guild.id)){
+      //msg.channel.send("`Wait for 2 seconds before using commands again.`");
+      msg.react('⏱');
+      return true;
+    }
+    else{
+      usedCommand.add(msg.guild.id);
+      setTimeout(() => {
+        usedCommand.delete(msg.guild.id);
+      }, timer);
       return false;
     }
   },

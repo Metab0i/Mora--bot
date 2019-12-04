@@ -22,7 +22,7 @@ module.exports = {
 
     if(muda_regex.test(msg.content.toLowerCase())){
       //user timer
-      if(assist_func.userTimeOut(msg) == true) return;
+      if(assist_func.serverTimeOut(msg, 40000) == true) return;
       msg.channel.send("`it's gonna take a few seconds |`")
         .then(async message => {
           msg.channel.startTyping();
@@ -33,6 +33,8 @@ module.exports = {
           try{
             user = await assist_func.id_to_user(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
           }catch(err){
+            msg.channel.stopTyping();
+            message.edit("`something went wrong...`")
             return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
           }
 
