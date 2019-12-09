@@ -11,6 +11,8 @@ _____ ______   ________  ________  ________                               ______
 **Beep bop, i'm a bot.**
    
 Mora encapsulates a whole lot of different features that are primarily for entertainment purposes.
+   
+*Be sure to read through Mora--bot wiki page in case you are interested in details of how to host this bot yourself*
 
 ## Command list
 
