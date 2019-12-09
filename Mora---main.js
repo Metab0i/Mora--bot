@@ -15,6 +15,7 @@ const uwu_fier = require('./commands/uwu_fier');
 const stomp_user = require('./commands/stomp');
 const muda_user = require('./commands/muda');
 const ora_user = require('./commands/ora');
+const bruh_sounds = require('./commands/bruh');
 
 //prefix
 const prefix = "%";
@@ -109,6 +110,9 @@ client.on('message', msg => {
   uwu_fier.uwu_fier(prefix, msg);
 
   reddit.serve_reddit(prefix, msg);
+
+  bruh_sounds.bruh_pitched(prefix, msg);
+
   if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
 });
 

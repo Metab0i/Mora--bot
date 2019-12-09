@@ -223,6 +223,10 @@ module.exports = {
     }
   },
 
+  random_number: function(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  },
+
   id_to_user: async function(str, client, msg){
     if(/<@.?[0-9]+>/.test(str)){
       let user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
