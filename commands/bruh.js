@@ -27,8 +27,6 @@ module.exports = {
             await msg.react('🇭');
 
             break;
-          default:
-            break;
         }
 
         dispatcher.on("end", end => {
