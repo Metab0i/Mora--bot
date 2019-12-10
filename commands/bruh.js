@@ -8,31 +8,16 @@ module.exports = {
     let bruh_check = new RegExp("^" + prefix + "bruh$"); 
 
     if(bruh_check.test(msg.content.toLowerCase())){
+
       if(assist_func.userTimeOut(msg) == true) return;
 
       const voiceChannel = msg.member.voiceChannel; 
+      const file_names = ["original_bruh", "autobruh", "bruh hhHhHhhh", "BRUH", "hurB", "2bruh", "breh", "bruhbrubru", "bruhwhat", "bruuuuuuuuuuuuuuuuh", "demon_bruh", "glitch_bruh", "hurbhurbhurb", "kinda_long_bruh", "long_bruh", "nightmare_bruh", "really_long_bruh"];
 
       if(voiceChannel != null){
         const connection = await voiceChannel.join()
-        let dispatcher = null
 
-        switch (assist_func.random_number(0, 4)) {
-          case 0:
-            dispatcher = connection.playFile("../Mora bot/misc/original_bruh.mp3")
-            break;
-          case 1:
-            dispatcher = connection.playFile("../Mora bot/misc/autobruh.mp3")
-            break;
-          case 2:
-            dispatcher = connection.playFile("../Mora bot/misc/bruh hhHhHhhh.mp3")
-            break;
-          case 3:
-            dispatcher = connection.playFile("../Mora bot/misc/BRUH.mp3")
-            break;
-          case 4:
-            dispatcher = connection.playFile("../Mora bot/misc/hurB.mp3")
-            break;
-        }
+        let dispatcher = connection.playFile("../Mora bot/misc/bruh_sounds/" + file_names[assist_func.random_number(0, file_names.length)] + ".mp3");
         
         dispatcher.on("end", end => {
           setTimeout(function(){
@@ -40,33 +25,16 @@ module.exports = {
           }, 1000);
           
         })
-
-        
       }
+
       else{
-        switch (assist_func.random_number(0, 4)) {
-          case 0:
-            msg.channel.send({files: ["../Mora bot/misc/original_bruh.mp3"]})
-            
-            break;
-          case 1:
-            msg.channel.send({files: ["../Mora bot/misc/autobruh.mp3"]})
-            
-            break;
-          case 2:
-            msg.channel.send({files: ["../Mora bot/misc/bruh hhHhHhhh.mp3"]})
+        msg.channel.startTyping();
 
-            break;
-          case 3:
-            msg.channel.send({files: ["../Mora bot/misc/BRUH.mp3"]})
-
-            break;
-          case 4:
-            msg.channel.send({files: ["../Mora bot/misc/hurB.mp3"]})
-
-            break;
-        }
+        msg.channel.send({files: ["../Mora bot/misc/bruh_sounds/" + file_names[assist_func.random_number(0, file_names.length)] + ".mp3"]});
       }
+
+      msg.channel.stopTyping();
+
     }
   }
 }
