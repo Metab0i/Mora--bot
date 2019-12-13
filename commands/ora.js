@@ -55,40 +55,7 @@ module.exports = {
               user_pfp.resize(100, 100);
               user_pfp.rotate(5, true);
 
-              switch(i){
-                case 0:
-                  user_pfp.fade(1);
-                  canvas_mod.composite(user_pfp, 280, 30);
-                  break;
-                case 1:
-                  user_pfp.fade(0.8);
-                  canvas_mod.composite(user_pfp, 280, 30);
-                  break;
-                case 2:
-                  user_pfp.fade(0.3);
-                  canvas_mod.composite(user_pfp, 280, 30);
-                  break;
-                case 39:
-                  user_pfp.fade(0.7);
-                  canvas_mod.composite(user_pfp, 280, 30);
-                  break;
-                case 40:
-                  user_pfp.fade(0.8);
-                  canvas_mod.composite(user_pfp, 280, 30);
-                  break;
-                case 41:
-                  user_pfp.fade(0.9);
-                  canvas_mod.composite(user_pfp, 280, 30);
-                  break;
-                case 42:
-                  user_pfp.fade(1);
-                  canvas_mod.composite(user_pfp, 280, 30);
-                  break;
-                default:
-                  user_pfp.fade(0);
-                  canvas_mod.composite(user_pfp, (Math.random() * (280 - 270) + 270), (Math.random() * (30 - 25) + 25));
-                  break;
-              }
+              canvas_mod.composite(user_pfp, (Math.random() * (280 - 270) + 270), (Math.random() * (30 - 25) + 25));              
 
               frame_edit.resize(400, 200);
               canvas_mod.composite(frame_edit, 0, 0);

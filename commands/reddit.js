@@ -182,6 +182,7 @@ module.exports = {
 
       let good_req_ds = JSON.stringify(JSON.parse(result_submit_ds).success) + '`\n' + JSON.parse(result_submit_ds).jquery[16][3][0];
       let bad_req_ds = JSON.stringify(JSON.parse(result_submit_ds).success) + '`\n`Reason: ' + JSON.parse(result_submit_ds).jquery[22][3][0] + '`';
+      
       let good_req_da = JSON.stringify(JSON.parse(result_submit_da).success) + '`\n' + JSON.parse(result_submit_da).jquery[16][3][0];
       let bad_req_da = JSON.stringify(JSON.parse(result_submit_da).success) + '`\n`Reason: ' + JSON.parse(result_submit_da).jquery[22][3][0] + '`';
 
