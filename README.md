@@ -20,7 +20,9 @@ Mora encapsulates a whole lot of different features that are primarily for enter
 Any essential arguments are surrounded by **<>** and optional arguments by **[]**
 
 `help` : Reference a user to a github readme file (this one)    
-
+    
+`srvstats` : Show statistics of the server where the command was called
+    
 `stubs "<text/stub>" "<response text/stubby>" [links]` : Assign any message to <text/stub> and store it.   
 
 `rmstub "<text/stub>"` : Remove a stub   

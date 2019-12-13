@@ -110,6 +110,15 @@ module.exports = {
     }
   },
 
+  /**
+   * @name update_ad(...)
+   * 
+   * @description : Posts an ad on reddit.
+   * 
+   * @param {String} prefix 
+   * @param {String} msg 
+   * @param {USER} user 
+   */
   update_ad: async function(prefix, msg, user){
     let up_ad = new RegExp("^" + prefix + "gdbump <#.?[0-9]+> .*?$");
 

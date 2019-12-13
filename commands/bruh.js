@@ -18,9 +18,6 @@ module.exports = {
         let dispatcher = connection.playFile("../Mora bot/misc/bruh_sounds/" + file_names[assist_func.random_number(0, file_names.length-1)] + ".mp3");
 
         dispatcher.on("end", end => {
-          // setTimeout(function(){
-          //   voiceChannel.leave();
-          // }, 1000);
           voiceChannel.leave();
         })
       }

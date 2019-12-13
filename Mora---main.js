@@ -16,6 +16,7 @@ const stomp_user = require('./commands/stomp');
 const muda_user = require('./commands/muda');
 const ora_user = require('./commands/ora');
 const bruh_sounds = require('./commands/bruh');
+const stats = require('./commands/stats_commands');
 
 //prefix
 const prefix = "%";
@@ -112,6 +113,8 @@ client.on('message', msg => {
   reddit.serve_reddit(prefix, msg);
 
   bruh_sounds.bruh_pitched(prefix, msg);
+
+  stats.server_stats(prefix, msg);
 
   if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
 });
