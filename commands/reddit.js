@@ -143,7 +143,12 @@ module.exports = {
         invites = await msg.guild.fetchInvites();
 
         for(let i = 0; i < invites.array().length; i++){
-          if(invites.array()[i].inviter.id == user) invites.array()[i].delete();
+          try{
+            if(invites.array()[i].inviter.id == user) invites.array()[i].delete();
+          }catch(err){
+            invites.array()[i].delete();
+          }
+          
         }
 
         result = await rp(options);
