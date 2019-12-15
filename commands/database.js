@@ -1,5 +1,10 @@
 const uuidv4 = require('uuid/v4');
 
+/**
+ * NOTES:
+ * As long as db contains the right column names and proper data type, there need not be any default values.
+ */
+
 module.exports = {
   /**
    * @name gatherData(...)
@@ -62,11 +67,11 @@ module.exports = {
 
         pool.query('DELETE FROM guilds WHERE(guilds.gid = $1)',[guild_1.id])
           .catch((err)=>{
-            return console.error('on removeGuild db function;', err.stack);
+            return //console.error('on removeGuild db function;', err.stack);
           });
       })
       .catch((err)=>{
-        return console.error('on removeGuild db function;', err.stack);
+        return //console.error('on removeGuild db function;', err.stack);
       });
   },
 

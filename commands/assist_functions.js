@@ -1,7 +1,9 @@
 const path = require('path');
 const Discord = require('discord.js');
+const commands = require('../Mora---main');
 
 const usedCommand = new Set();
+let total_commands = 0;
 
 module.exports = {
   /**
@@ -53,6 +55,15 @@ module.exports = {
   },
 
   /**
+   * @name get_commands(...)
+   * 
+   * @description : returns a total number of times commands were called during active period of the bot.
+   */
+  get_commands: function(){
+    return total_commands;
+  },
+
+  /**
    * @name userTimeOut(...)
    * 
    * @param {Message} msg 
@@ -61,6 +72,8 @@ module.exports = {
    */
   userTimeOut: function(msg, timer = 6000){
     if(msg.author.bot == true) return true;
+
+    total_commands += 1;
 
     if(usedCommand.has(msg.author.id)){
       //msg.channel.send("`Wait for 2 seconds before using commands again.`");

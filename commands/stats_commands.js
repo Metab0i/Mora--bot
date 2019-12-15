@@ -16,15 +16,28 @@ module.exports = {
 
       if(assist_func.userTimeOut(msg) == true) return;
 
+      //record emojis
       let emoji_list = "";
 
       msg.guild.emojis.array().forEach(emoji =>{
-        if(emoji_list.length > 1900){
-          //msg.channel.send(emoji_list)
-          emoji_list = emoji_list
-        }
-        else{
+        if(emoji_list.length < 2000){
           emoji_list += `${emoji} `;
+        }
+      })
+
+      //count total online members
+      let total_online = 0;
+
+      msg.guild.presences.array().forEach(presnece =>{
+        switch(presnece.status){
+          case "online":
+            total_online += 1;
+            break;
+          case "dnd":
+            total_online += 1;
+            break;
+          default:
+            break;
         }
       })
 
@@ -33,13 +46,67 @@ module.exports = {
         .setTitle(msg.guild.name)
         .setThumbnail(msg.guild.iconURL)
         .setDescription(emoji_list)
-        .addField("Initial given role:", msg.guild.defaultRole)
-        .addField("Region:" , msg.guild.region)
-        .addField("Owner of the guild", msg.guild.owner)
-        .addField("Number of roles:", msg.guild.roles.size)
-        .addField("Total members:" , msg.guild.memberCount)
-        .addField("Number of Channels:", msg.guild.channels.size)
+        .addField("Initial given role:", msg.guild.defaultRole, true)
+        .addField("Region:" , msg.guild.region, true)
+        .addField("Owner of the guild", msg.guild.owner, true)
+        .addField("Number of roles:", msg.guild.roles.size, true)
+        .addField("Total members:" , msg.guild.memberCount, true)
+        .addField("Members Online ATM:", total_online, true)
+        .addField("Number of Channels:", msg.guild.channels.size, true)
         .setFooter("Server created at: " + msg.guild.createdAt)
+
+      msg.channel.send(embed);
+    }
+  },
+
+  /**
+   * @name bot_stats(...)
+   * 
+   * @description : sends an embed of overall general statistics of the application
+   * 
+   * @param {String} prefix 
+   * @param {String} msg 
+   * @param {CLIENT} client 
+   * @param {Int} errors 
+   */
+  bot_stats: function(prefix, msg, client, errors){
+    if(prefix + "botstats" == msg.content.toLowerCase()){
+
+      if(assist_func.userTimeOut(msg) == true) return;
+
+      let total_members = 0;
+
+      client.guilds.array().forEach(guild =>{
+        total_members += guild.memberCount
+      })
+
+      //define necessities for uptime trackage:
+      String.prototype.toHHMMSS = function () {
+        var sec_num = parseInt(this, 10); // don't forget the second param
+        var hours   = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+    
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        var time    = hours+'h : '+minutes+'m : '+seconds + "s";
+        return time;
+      }
+
+      const time = process.uptime();
+      const uptime = (time + "").toHHMMSS();
+
+      const embed = new Discord.RichEmbed()
+        .setColor('#d65aa6')
+        .setTitle(client.user.username)
+        .setThumbnail(client.user.avatarURL)
+        .addField("Total Server Count:", client.guilds.size, true)
+        .addField("Total members across servers:", total_members, true)
+        .addField("Total Uptime:" , uptime)
+        .addField("Errors during Runtime:", errors)
+        .addField("Total commands called during runtime:", assist_func.get_commands())
+        .setFooter("🐍")
 
       msg.channel.send(embed);
     }

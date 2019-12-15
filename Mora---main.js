@@ -25,26 +25,29 @@ const prefix = "%";
 const Pool = require('pg').Pool;
 const pool = new Pool(settings.db_details);
 
-//console.error overload
+//console.error overload and essentials
+let total_errors = 0;
+
 const fs = require('fs');
 const log_file = fs.createWriteStream(__dirname + '/error.log', {flags : 'w'});
 const log_stdout = process.stdout;
 
 console.error = function(start_err, err_body) { //
+  total_errors += 1;
   log_file.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");
   log_stdout.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");
 };
 
 /**
- * Event: On acti
- * images.super_hot(prefix, msg, client);tion
+ * Event: On action
+ * images.super_hot(prefix, msg, client);
  * Functionality: runs essentials on activation (such as validating data against database to make sure everything is up to date)
  */
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
   client.channels.get();
   client.user.setStatus("online");
-  client.user.setActivity(client.guilds.size + ' SVRs|%help.', { type: 'WATCHING' });
+  client.user.setActivity('for your commands.', { type: 'WATCHING' });
 });
 
 /**
@@ -53,6 +56,13 @@ client.on('ready', () => {
  */
 client.on("guildCreate", function(guild){
   db_functions.gatherData(guild, pool);
+  let state = false;
+  guild.channels.array().forEach(channel => {
+    if(channel.type == "text" && state == false){
+      channel.send("Hi, I am Mora. Type `%help` to get started.");
+      state = true;
+    }
+  })
 });
 
 client.on("guildDelete", function(guild){
@@ -115,19 +125,9 @@ client.on('message', msg => {
   bruh_sounds.bruh_pitched(prefix, msg);
 
   stats.server_stats(prefix, msg);
+  stats.bot_stats(prefix, msg, client, total_errors);
 
   if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
 });
 
 client.login(settings.token);
-
-
-
-/**
- * NOTES:
- * 
- * request is for future programmatic website interaction. Keep it. 
- * if it's useless then just remove it using: npm uninstall request -g --save and then npm uninstall request --save-dev
- * 
- * 
- */

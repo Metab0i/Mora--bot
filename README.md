@@ -23,6 +23,8 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
     
 `srvstats` : Show statistics of the server where the command was called
     
+`botstats` : Show statistics related to the bot
+     
 `stubs "<text/stub>" "<response text/stubby>" [links]` : Assign any message to <text/stub> and store it.   
 
 `rmstub "<text/stub>"` : Remove a stub   
