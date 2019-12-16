@@ -36,7 +36,8 @@ module.exports = {
           case "dnd":
             total_online += 1;
             break;
-          default:
+          case "idle":
+            total_online += 1;
             break;
         }
       })
@@ -75,9 +76,29 @@ module.exports = {
       if(assist_func.userTimeOut(msg) == true) return;
 
       let total_members = 0;
+      let mobile = 0;
+      let desktop = 0;
+      let web = 0;
 
       client.guilds.array().forEach(guild =>{
         total_members += guild.memberCount
+
+        guild.members.forEach(member => {
+          //console.log(member.presence.clientStatus);
+          for(var device in member.presence.clientStatus){
+            switch(device.toString()){
+              case "mobile":
+                mobile += 1;
+                break;
+              case "desktop":
+                desktop += 1;
+                break;
+              case "web":
+                web += 1;
+                break;
+            }
+          }
+        })
       })
 
       //define necessities for uptime trackage:
@@ -103,9 +124,12 @@ module.exports = {
         .setThumbnail(client.user.avatarURL)
         .addField("Total Server Count:", client.guilds.size, true)
         .addField("Total members across servers:", total_members, true)
-        .addField("Total Uptime:" , uptime)
-        .addField("Errors during Runtime:", errors)
-        .addField("Total commands called during runtime:", assist_func.get_commands())
+        .addField("Online mobile users:", mobile, true)
+        .addField("Online desktop users:", desktop, true)
+        .addField("Online web users:", web, true)
+        .addField("Total Uptime:" , uptime, true)
+        .addField("Errors during Runtime:", errors, true)
+        .addField("Total commands called during runtime:", assist_func.get_commands(), true)
         .setFooter("🐍")
 
       msg.channel.send(embed);
