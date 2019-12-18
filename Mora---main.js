@@ -17,6 +17,7 @@ const muda_user = require('./commands/muda');
 const ora_user = require('./commands/ora');
 const bruh_sounds = require('./commands/bruh');
 const stats = require('./commands/stats_commands');
+const poll = require('./commands/poll');
 const assist_func = require('./commands/assist_functions')
 
 //prefix
@@ -96,10 +97,13 @@ client.on('message', msg => {
 
   //send an error to app owner
   if(msg.author == '<@360790875560869889>' && msg.content.includes("%errlog")){
+    msg.react("👨‍💻")
     assist_func.notify_of_error("360790875560869889", client, "../Mora Bot/error.log");
+    msg.delete(6500);
   }
 
-  //console.log(msg.embeds);
+  //reddit ad update
+  if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
 
   stubs.logResponse(prefix,msg,pool);
   stubs.deleteStubs(prefix,msg,pool);
@@ -134,7 +138,7 @@ client.on('message', msg => {
   stats.server_stats(prefix, msg);
   stats.bot_stats(prefix, msg, client, total_errors);
 
-  if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
+  poll.poll(prefix, msg, client);
 });
 
 client.login(settings.token);
