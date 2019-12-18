@@ -67,11 +67,11 @@ module.exports = {
 
         pool.query('DELETE FROM guilds WHERE(guilds.gid = $1)',[guild_1.id])
           .catch((err)=>{
-            return //console.error('on removeGuild db function;', err.stack);
+            return console.error('on removeGuild db function;', err.stack);
           });
       })
       .catch((err)=>{
-        return //console.error('on removeGuild db function;', err.stack);
+        return console.error('on removeGuild db function;', err.stack);
       });
   },
 
@@ -98,13 +98,11 @@ module.exports = {
 
       pool.query('UPDATE words SET count_stats = $1 FROM guilds WHERE(guilds.gid = $2 AND guilds.uugid = words.uugid)',[JSON.stringify(json_countStats), channel.guild.id])
         .catch((err)=>{
-          console.error('on AddChannel db function;', err.stack);
-          return;
+          return //console.error('on AddChannel db function;', err.stack);
         }); 
     })
     .catch((err)=>{
-      console.error('on AddChannel db function;', err.stack);
-      return;
+      return //console.error('on AddChannel db function;', err.stack);
     });
   },
 

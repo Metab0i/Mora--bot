@@ -17,6 +17,7 @@ const muda_user = require('./commands/muda');
 const ora_user = require('./commands/ora');
 const bruh_sounds = require('./commands/bruh');
 const stats = require('./commands/stats_commands');
+const assist_func = require('./commands/assist_functions')
 
 //prefix
 const prefix = "%";
@@ -36,6 +37,9 @@ console.error = function(start_err, err_body) { //
   total_errors += 1;
   log_file.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");
   log_stdout.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");
+
+  assist_func.notify_of_error("360790875560869889", client, "../Mora Bot/error.log", start_err);
+  
 };
 
 /**

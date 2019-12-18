@@ -236,10 +236,15 @@ module.exports = {
     }
   },
 
-  random_number: function(min, max){
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  },
-
+  /**
+   * @name id_to_user(...)
+   * 
+   * @description : get id of a user and return a user
+   * 
+   * @param {String} str 
+   * @param {CLIENT} client 
+   * @param {MESSAGE} msg 
+   */
   id_to_user: async function(str, client, msg){
     if(/<@.?[0-9]+>/.test(str)){
       let user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
@@ -253,7 +258,31 @@ module.exports = {
 
       return user;
     }
-    
+  }, 
+
+  /**
+   * @name send_file(...)
+   * 
+   * @description : send a file to a user in dms
+   * 
+   * @param {String} str 
+   * @param {Client} client
+   * @param {String} path 
+   */
+  notify_of_error: async function(id, client, path, start_err){
+    let user;
+
+    try{
+      user = await client.fetchUser(id);
+    }catch(err){
+      return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);  
+    }
+
+    user.send(start_err, {files: [path]})
+  },
+
+  random_number: function(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
 }

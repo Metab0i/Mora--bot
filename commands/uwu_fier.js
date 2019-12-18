@@ -39,7 +39,6 @@ module.exports = {
             }   
           });
 
-          msg.channel.stopTyping();
           msg.channel.send(response);
 
         });
@@ -51,7 +50,6 @@ module.exports = {
 
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;  
-      msg.channel.startTyping();
 
       msg_send = uwuMessage.toLowerCase().replace("r", "w").replace("l","w").replace("s", "th").replace("oh", "oww").replace("oo", "owo") + ". uwu";
 
