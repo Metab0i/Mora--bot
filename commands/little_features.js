@@ -128,10 +128,10 @@ module.exports = {
    * @param {CLIENT} client 
    */
   this_or: async function(prefix, msg, client){
-    let whichone = new RegExp("^" + prefix + "pick .*? (or) .*?", "g");
+    let whichone = new RegExp("^" + prefix + "pick .*? (.or) .*?", "g");
 
     if(whichone.test(msg.content.toLowerCase())){
-      let pick_array = msg.content.split('or');
+      let pick_array = msg.content.split('.or');
 
       if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
 

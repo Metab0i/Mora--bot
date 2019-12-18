@@ -3,13 +3,13 @@ const Discord = require('discord.js');
 
 module.exports = {
   poll: async function(prefix, msg, client){
-    let poll_check = new RegExp("^" + prefix + "poll .*? (or) .*?", "g");
+    let poll_check = new RegExp("^" + prefix + "poll .*? (.or) .*?", "g");
 
     if(poll_check.test(msg.content.toLowerCase())){
 
       if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
 
-      let poll_array = msg.content.replace("%poll", "").split('or');
+      let poll_array = msg.content.replace("%poll", "").split('.or');
 
       if(poll_array.length > 9) return msg.channel.send("`Exceeded the maximum number of poll items.`");
 

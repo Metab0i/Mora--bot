@@ -25,7 +25,7 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
     
 `botstats` : Show statistics related to the bot
     
-`poll <one thing or other thing or ... >` : set up a poll to vote on something!    
+`poll <one thing .or other thing .or ... >` : set up a poll to vote on something!    
      
 `stubs "<text/stub>" "<response text/stubby>" [links]` : Assign any message to <text/stub> and store it.   
 
@@ -61,7 +61,7 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
      
 `ask8 <question>` : Ask a yes/now question, get a simple answer
 
-`pick <items separated with or> ` : picks one of many given items e.g. %pick this or that or this 2 or that 2 -> picks this
+`pick <this .or that .or this ...> ` : picks one of many given items e.g. %pick this or that or this 2 or that 2 -> picks this
     
 `pick` : 1 or 0?
    
