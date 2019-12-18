@@ -25,6 +25,27 @@ module.exports = {
         }
       })
 
+      //verification level of the server
+      let ver_level = "";
+
+      switch(msg.guild.verificationLevel){
+        case 0:
+          ver_level = "None";
+          break;
+        case 1: 
+          ver_level = "Low";
+          break;
+        case 2: 
+          ver_level = "Medium"
+          break;
+        case 3: 
+          ver_level = "High (╯°□°）╯︵ ┻━┻"
+          break;
+        case 4:
+          ver_level = "Extreme ┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻"
+          break;
+      }
+
       //count total online members
       let total_online = 0;
 
@@ -45,8 +66,10 @@ module.exports = {
       const embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.guild.name)
-        .setThumbnail(msg.guild.iconURL)
+        .setThumbnail(msg.guild.iconURL.replace(".jpg", ".png?size=1024"))
         .setDescription(emoji_list)
+        .addField("ID: " , msg.guild.id)
+        .addField("Verification Level: ", ver_level)
         .addField("Initial given role:", msg.guild.defaultRole, true)
         .addField("Region:" , msg.guild.region, true)
         .addField("Owner of the guild", msg.guild.owner, true)
@@ -54,7 +77,7 @@ module.exports = {
         .addField("Total members:" , msg.guild.memberCount, true)
         .addField("Members Online ATM:", total_online, true)
         .addField("Number of Channels:", msg.guild.channels.size, true)
-        .setFooter("Server created at: " + msg.guild.createdAt)
+        .setFooter("Server creation date: " + msg.guild.createdAt)
 
       msg.channel.send(embed);
     }
