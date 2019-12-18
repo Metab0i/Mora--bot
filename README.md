@@ -24,6 +24,8 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 `srvstats` : Show statistics of the server where the command was called
     
 `botstats` : Show statistics related to the bot
+    
+`poll <one thing or other thing or ... >` : set up a poll to vote on something!    
      
 `stubs "<text/stub>" "<response text/stubby>" [links]` : Assign any message to <text/stub> and store it.   
 
