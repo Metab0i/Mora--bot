@@ -36,10 +36,7 @@ const log_stdout = process.stdout;
 console.error = function(start_err, err_body) { //
   total_errors += 1;
   log_file.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");
-  log_stdout.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");
-
-  assist_func.notify_of_error("360790875560869889", client, "../Mora Bot/error.log", start_err);
-  
+  log_stdout.write(start_err + ':\n' + err_body + "\n" + "-".repeat(10) + "\n");  
 };
 
 /**
@@ -91,9 +88,15 @@ client.on("channelCreate", function(channel){
  * Functionality: Proceeds to produce an output every time an appropriate command was executed in a text chat. 
  */
 client.on('message', msg => {
+  //db force gather
   if(msg.author == '<@360790875560869889>' && msg.content.includes('%getInfo')) {
     msg.channel.send("`Refreshing data.`");
     db_functions.gatherData(msg.guild, pool);
+  }
+
+  //send an error to app owner
+  if(msg.author == '<@360790875560869889>' && msg.content.includes("%errlog")){
+    assist_func.notify_of_error("360790875560869889", client, "../Mora Bot/error.log");
   }
 
   //console.log(msg.embeds);

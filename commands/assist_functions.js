@@ -269,7 +269,7 @@ module.exports = {
    * @param {Client} client
    * @param {String} path 
    */
-  notify_of_error: async function(id, client, path, start_err){
+  notify_of_error: async function(id, client, path){
     let user;
 
     try{
@@ -278,7 +278,7 @@ module.exports = {
       return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);  
     }
 
-    user.send(start_err, {files: [path]})
+    user.send({files: [path]})
   },
 
   random_number: function(min, max){
