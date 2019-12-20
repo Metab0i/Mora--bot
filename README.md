@@ -67,6 +67,8 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
    
 `bruh` : for real bruh moments
     
+`asciimg <some image either attached or a link>` : turns any image into ascii art
+    
 `hug <user> [2]` : hug a user
     
 `stomp <user>` : stomp a user
