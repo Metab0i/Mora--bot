@@ -110,13 +110,13 @@ module.exports = {
           
         }
         
-        fs.writeFile(__dirname + '/ascii_big.txt', ascii_img, function(err){
+        fs.writeFile(__dirname + '/ascii_big.html', "<code><span style=\"display:block;line-height:8px; font-size: 8px; font-weight:bold;white-space:pre;font-family: monospace;color: black; background: white;\">" + ascii_img + "</span></code>", function(err){
           if(err) return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.content);
         });
 
-        msg.channel.send("`full scale ascii`:", {files: ['../Mora bot/commands/ascii_big.txt']})
+        msg.channel.send("`full scale ascii`:", {files: ['../Mora bot/commands/ascii_big.html']})
           .then((res) =>{
-            fs.unlinkSync('../Mora bot/commands/ascii_big.txt')
+            fs.unlinkSync('../Mora bot/commands/ascii_big.html')
           })
           .catch((err) =>{
             return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
