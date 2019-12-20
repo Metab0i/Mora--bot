@@ -18,7 +18,7 @@ module.exports = {
         "0 25.3" : "▓",
         "25.4 50.6" : "▒",
         "50.7 75.9" : "░",
-        "76.0 101.2" : "%",
+        "76.0 101.2" : "#",
         "101.3 126.5" : "0",
         "126.6 151.8" : "1",
         "151.9 177.1" : "*",
@@ -122,7 +122,7 @@ module.exports = {
             return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
           })
 
-        msg.channel.send("`ascii mini:` \n```"+ascii_mini+"```");
+        msg.channel.send("`ascii mini:` \n```\n"+ascii_mini+"```");
 
       }
 
