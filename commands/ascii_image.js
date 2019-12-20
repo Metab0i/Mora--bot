@@ -122,6 +122,7 @@ module.exports = {
             return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
           })
 
+        msg.channel.send("`Phone users - landscape mode to view ascii art properly.`")
         msg.channel.send("`ascii mini:` \n```\n"+ascii_mini+"```");
 
       }
