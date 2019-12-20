@@ -19,6 +19,7 @@ const bruh_sounds = require('./commands/bruh');
 const stats = require('./commands/stats_commands');
 const poll = require('./commands/poll');
 const assist_func = require('./commands/assist_functions')
+const ascii_image = require('./commands/ascii_image');
 
 //prefix
 const prefix = "%";
@@ -139,6 +140,8 @@ client.on('message', msg => {
   stats.bot_stats(prefix, msg, client, total_errors);
 
   poll.poll(prefix, msg, client);
+
+  ascii_image.ascii_image(prefix, msg);
 });
 
 client.login(settings.token);
