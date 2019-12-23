@@ -21,6 +21,7 @@ const poll = require('./commands/poll');
 const assist_func = require('./commands/assist_functions')
 const ascii_image = require('./commands/ascii_image');
 const comments = require('./commands/dev_comments');
+const funny_ad = require('./commands/generate_ad');
 
 //prefix
 const prefix = "%";
@@ -109,6 +110,8 @@ client.on('message', msg => {
 
   comments.set_channel(prefix, msg);
   comments.leave_comment(prefix, msg);
+
+  funny_ad.gen_ad(prefix, msg);
 
   stubs.logResponse(prefix,msg,pool);
   stubs.deleteStubs(prefix,msg,pool);
