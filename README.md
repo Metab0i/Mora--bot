@@ -8,7 +8,7 @@ _____ ______   ________  ________  ________                               ______
     \|__|     \|__|\|_______|\|__|\|__|\|__|\|__|                             \|_______|\|_______|    \|__|
  ```
 
-**Beep bop, i'm a bot.**
+**Beep bop, i'm a bot.** https://discordapp.com/oauth2/authorize?client_id=533564622960328704&scope=bot&permissions=8
    
 Mora encapsulates a whole lot of different features that are primarily for entertainment purposes.
    
