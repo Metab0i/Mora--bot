@@ -5,6 +5,15 @@ const fs = require('fs');
 
 
 module.exports = {
+
+  /**
+   * @name ascii_img(...)
+   * 
+   * @description : turn any image into ascii text art
+   * 
+   * @param {String} prefix 
+   * @param {String} msg 
+   */
   ascii_image: async function(prefix, msg){
     const asciimg = new RegExp("^" + prefix + "asciimg.*?");;
 
@@ -110,13 +119,22 @@ module.exports = {
           
         }
         
+        //html version
         fs.writeFile(__dirname + '/ascii_big.html', "<code><span style=\"display:block;line-height:8px; font-size: 8px; font-weight:bold;white-space:pre;font-family: monospace;color: black; background: white;\">" + ascii_img + "</span></code>", function(err){
           if(err) return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.content);
         });
 
-        msg.channel.send("`full scale ascii`:", {files: ['../Mora bot/commands/ascii_big.html']})
+        //txt version
+        fs.writeFile(__dirname + '/ascii_big.txt', ascii_img, function(err){
+          if(err) return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.content);
+        });
+
+        await new Promise(r => setTimeout(r, 2000));
+
+        msg.channel.send("`full scale ascii`:", {files: ['../Mora bot/commands/ascii_big.html', '../Mora bot/commands/ascii_big.txt']})
           .then((res) =>{
             fs.unlinkSync('../Mora bot/commands/ascii_big.html')
+            fs.unlinkSync('../Mora bot/commands/ascii_big.txt')
           })
           .catch((err) =>{
             return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 

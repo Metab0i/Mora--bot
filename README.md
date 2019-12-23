@@ -76,6 +76,18 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 `muda <user>` : muda muda muda muda muda muda muda!
     
 `ora <user>` : ora ora ora ora ora ora ora ora!
+    
+`comment <message>` : say anything you want, the message will be visible in a specified by dev channel. (All comments are anonymous) Tooth emoji means channel hasn't been set, eye and ear emoji means your message has been sent successfully.
+    
+## Dev. Command list
+   
+`getInfo` : a force reset of the database on any server 
+    
+`errlog` : send an error log in dms of the dev.
+    
+`gdbump <channel> <message>` : creates an ad of the server and posts it on reddit. 
+    
+`set_commChannel` : sets a commenting channel where all the commands from %comment will go. 
 
 
 

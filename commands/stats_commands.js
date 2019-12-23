@@ -66,7 +66,7 @@ module.exports = {
       const embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.guild.name)
-        .setThumbnail(msg.guild.iconURL.replace(".jpg", ".png?size=1024"))
+        .setThumbnail(msg.guild.iconURL == null ? "" : msg.guild.iconURL.replace(".jpg", ".png?size=1024"))
         .setDescription(emoji_list)
         .addField("ID: " , msg.guild.id)
         .addField("Verification Level: ", ver_level)

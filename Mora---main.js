@@ -20,6 +20,7 @@ const stats = require('./commands/stats_commands');
 const poll = require('./commands/poll');
 const assist_func = require('./commands/assist_functions')
 const ascii_image = require('./commands/ascii_image');
+const comments = require('./commands/dev_comments');
 
 //prefix
 const prefix = "%";
@@ -105,6 +106,9 @@ client.on('message', msg => {
 
   //reddit ad update
   if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
+
+  comments.set_channel(prefix, msg);
+  comments.leave_comment(prefix, msg);
 
   stubs.logResponse(prefix,msg,pool);
   stubs.deleteStubs(prefix,msg,pool);
