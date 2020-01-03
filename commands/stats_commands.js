@@ -136,7 +136,7 @@ module.exports = {
         if (hours   < 10) {hours   = "0"+hours;}
         if (minutes < 10) {minutes = "0"+minutes;}
         if (seconds < 10) {seconds = "0"+seconds;}
-        var time    = days + 'd :' + hours + 'h : ' + minutes + 'm : ' + seconds + "s";
+        var time    = days + 'd : ' + hours + 'h : ' + minutes + 'm : ' + seconds + "s";
         return time;
       }
 
