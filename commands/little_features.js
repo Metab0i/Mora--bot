@@ -77,7 +77,7 @@ module.exports = {
 
       if(msg.content.includes("are")){
         how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("are")).trim();
-        something = msg.content.slice(msg.content.indexOf("are") + 2, msg.content.length).trim();
+        something = msg.content.slice(msg.content.indexOf("are") + 3, msg.content.length).trim();
         be = "are";
       }
 
