@@ -45,7 +45,7 @@ module.exports = {
     //e.g. "how <user> <cool/weird/happy/sad>" -> returns a percentage or something of that manner
     let how_regex = new RegExp("^" + prefix + "how <@.?[0-9]+> .*?$");
     let how_me = new RegExp("^" + prefix + "how .*?$");
-    let how_something = new RegExp("^" + prefix + "how2 .*? (is|are|am) .*?$", "g");
+    let how_something = new RegExp("^" + prefix + "how .*? (is|are|am) .*?$", "g");
 
     if(how_regex.test(msg.content.toLowerCase())){
       //User timer
