@@ -45,7 +45,7 @@ module.exports = {
     //e.g. "how <user> <cool/weird/happy/sad>" -> returns a percentage or something of that manner
     let how_regex = new RegExp("^" + prefix + "how <@.?[0-9]+> .*?$");
     let how_me = new RegExp("^" + prefix + "how .*?$");
-    let how_something = new RegExp("^" + prefix + "how .*? (iz) .*?", "g");
+    let how_something = new RegExp("^" + prefix + "how2 .*? (is|are|am) .*?$", "g");
 
     if(how_regex.test(msg.content.toLowerCase())){
       //User timer
@@ -65,16 +65,35 @@ module.exports = {
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;    
 
-      let how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("iz")).trim();
-      let something = msg.content.slice(msg.content.indexOf("iz") + 2, msg.content.length).trim(); 
+      let how = "";
+      let something = "";
+      let be = "";
+
+      if(msg.content.includes("is")){
+        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("is")).trim();
+        something = msg.content.slice(msg.content.indexOf("is") + 2, msg.content.length).trim();
+        be = "is";
+      }
+
+      if(msg.content.includes("are")){
+        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("are")).trim();
+        something = msg.content.slice(msg.content.indexOf("are") + 2, msg.content.length).trim();
+        be = "are";
+      }
+
+      if(msg.content.includes("am")){
+        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("am")).trim();
+        something = msg.content.slice(msg.content.indexOf("am") + 2, msg.content.length).trim();
+        be = "am";
+      }
 
       how = await assist_func.id_to_name(how, client, msg);
       something = await assist_func.id_to_name(something, client, msg);
 
       let embed = new Discord.RichEmbed()
         .setColor(assist_func.random_hex_colour())
-        .setTitle(msg.author.username + " wonders.. How -" + how + "- iz -" + something + "- ?")
-        .setDescription(something + " iz " + Math.floor((Math.random() * 100) + 0) + "% " + how + ".");
+        .setTitle(msg.author.username + " wonders.. How -" + how + "- " + be + " -" + something + "- ?")
+        .setDescription(something + " "+ be + " " + Math.floor((Math.random() * 100) + 0) + "% " + how + ".");
 
       msg.channel.send(embed);
 
