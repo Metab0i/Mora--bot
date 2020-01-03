@@ -57,7 +57,7 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
     
 `how <something>` : how "something" is user?
      
-`how <something> iz <something>` : how "adjective" is "something"
+`how <something> <is|are|am> <something>` : how "adjective" is "something"
      
 `ask8 <question>` : Ask a yes/now question, get a simple answer
 
