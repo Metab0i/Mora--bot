@@ -125,21 +125,23 @@ module.exports = {
       })
 
       //define necessities for uptime trackage:
-      String.prototype.toHHMMSS = function () {
+      String.prototype.toDDHHMMSS = function () {
         var sec_num = parseInt(this, 10); // don't forget the second param
-        var hours   = Math.floor(sec_num / 3600);
+        var hours   = Math.floor((sec_num / 3600) > 23 ? 0 : (sec_num / 3600));
         var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
         var seconds = sec_num - (hours * 3600) - (minutes * 60);
-    
+        var days    = Math.floor(hours / 24)
+        
+        if (days    < 10) {days    = "00"}
         if (hours   < 10) {hours   = "0"+hours;}
         if (minutes < 10) {minutes = "0"+minutes;}
         if (seconds < 10) {seconds = "0"+seconds;}
-        var time    = hours+'h : '+minutes+'m : '+seconds + "s";
+        var time    = days + 'd :' + hours + 'h : ' + minutes + 'm : ' + seconds + "s";
         return time;
       }
 
       const time = process.uptime();
-      const uptime = (time + "").toHHMMSS();
+      const uptime = (time + "").toDDHHMMSS();
 
       const embed = new Discord.RichEmbed()
         .setColor('#d65aa6')
