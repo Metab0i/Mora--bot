@@ -94,7 +94,7 @@ module.exports = {
    * @param {Int} errors 
    */
   bot_stats: function(prefix, msg, client, errors){
-    if(prefix + "botstatss" == msg.content.toLowerCase()){
+    if(prefix + "botstats" == msg.content.toLowerCase()){
 
       if(assist_func.userTimeOut(msg) == true) return;
 
