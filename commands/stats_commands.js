@@ -94,7 +94,7 @@ module.exports = {
    * @param {Int} errors 
    */
   bot_stats: function(prefix, msg, client, errors){
-    if(prefix + "botstats" == msg.content.toLowerCase()){
+    if(prefix + "botstatss" == msg.content.toLowerCase()){
 
       if(assist_func.userTimeOut(msg) == true) return;
 
@@ -127,10 +127,10 @@ module.exports = {
       //define necessities for uptime trackage:
       String.prototype.toDDHHMMSS = function () {
         var sec_num = parseInt(this, 10); // don't forget the second param
-        var hours   = Math.floor((sec_num / 3600) > 23 ? 0 : (sec_num / 3600));
-        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-        var seconds = sec_num - (hours * 3600) - (minutes * 60);
-        var days    = Math.floor(hours / 24)
+        var days    = Math.floor(sec_num / 86400)
+        var hours   = Math.floor((sec_num - (days * 86400)) / 3600); //Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (days * 86400) - (hours * 3600)) / 60);
+        var seconds = sec_num - (days * 86400) - (hours * 3600) - (minutes * 60);
         
         if (days    < 10) {days    = "0"+days;}
         if (hours   < 10) {hours   = "0"+hours;}
@@ -141,7 +141,7 @@ module.exports = {
       }
 
       const time = process.uptime();
-      const uptime = (time + "").toDDHHMMSS();
+      const uptime = (500000 + "").toDDHHMMSS();
 
       const embed = new Discord.RichEmbed()
         .setColor('#d65aa6')
