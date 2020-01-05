@@ -141,7 +141,7 @@ module.exports = {
       }
 
       const time = process.uptime();
-      const uptime = (500000 + "").toDDHHMMSS();
+      const uptime = (time + "").toDDHHMMSS();
 
       const embed = new Discord.RichEmbed()
         .setColor('#d65aa6')
