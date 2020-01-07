@@ -4,11 +4,11 @@ const ad_resources = require("../json files/ad_resources.json");
 
 module.exports = {
   /**
-   * @name gen_ad(...)
+   * @name fortune(...)
    * 
-   * @description : generate a random fortune
+   * @description : generate a random fortune by randomly selecting a word from json file, combine them appropriately 
    * @param {String} prefix 
-   * @param {String} msg 
+   * @param {Message} msg 
    */
   fortune: async function(prefix, msg){
     if(msg.content.toLowerCase() == prefix + "fortune"){
@@ -47,7 +47,7 @@ module.exports = {
           embed.setDescription("One day you will " + er_verbs + "yourself whilst feeling " + (assist_func.random_number(0, 1) == 0 ? adj : adverbs + adj));
           break;
         case 3:
-          embed.setDescription("Someday, your " + noun + "will " + (assist_func.random_number(0,1) == 0 ? er_verbs : ad_resources["meme_stack"].verbs[assist_func.random_number(0, ad_resources["meme_stack"].verbs.length-1)]) + "in a very " + adj + "manner.");
+          embed.setDescription("Someday, your " + noun + "will " + (assist_func.random_number(0,1) == 0 ? er_verbs : ad_resources["meme_stack"].verbs[assist_func.random_number(0, ad_resources["meme_stack"].verbs.length-1)] + " ") + "in a very " + adj + "manner.");
           break;
       }
 

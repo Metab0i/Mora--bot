@@ -114,6 +114,14 @@ module.exports = {
     }
   },
 
+  /**
+   * @name eight_ball(...)
+   * 
+   * @description : Grabs pre-written answers from json and sends it as a response to the command
+   * 
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   */
   eight_ball: function(prefix, msg){
     //ask a question and it shall answer my guy
     let ask_8 = new RegExp("^" + prefix + "ask8 .*?$");

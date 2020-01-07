@@ -6,7 +6,7 @@ module.exports = {
   /**
    * @name gen_ad(...)
    * 
-   * @description : generate short ad-ments for why someone should join something
+   * @description : generate short ad-ments for why someone should join something by grabbing words from json file and adding them together appropriately 
    * @param {String} prefix 
    * @param {String} msg 
    */

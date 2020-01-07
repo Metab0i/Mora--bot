@@ -9,7 +9,7 @@ module.exports = {
   /**
    * @name ascii_img(...)
    * 
-   * @description : turn any image into ascii text art
+   * @description : turn any image into ascii text art by grayscaling the image, iterating over every pixel and based on the pixel contrast proceed to add an ascii character to the string
    * 
    * @param {String} prefix 
    * @param {String} msg 
