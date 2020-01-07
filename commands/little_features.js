@@ -133,10 +133,6 @@ module.exports = {
     }
   },
 
-  hello_goodbye: function(prefix, msg){
-    //react with an emoji on specific message, E.g. goodnight -> moon emoji. Make a json file full of various messages and emoji responses 
-  },
-
   /**
    * @name this_or(...)
    * 

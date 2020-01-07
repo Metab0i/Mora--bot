@@ -22,6 +22,7 @@ const assist_func = require('./commands/assist_functions')
 const ascii_image = require('./commands/ascii_image');
 const comments = require('./commands/dev_comments');
 const funny_ad = require('./commands/generate_ad');
+const fortune_teller = require('./commands/fortune_teller');
 
 //prefix
 const prefix = "%";
@@ -112,6 +113,7 @@ client.on('message', msg => {
   comments.leave_comment(prefix, msg);
 
   funny_ad.gen_ad(prefix, msg);
+  fortune_teller.fortune(prefix, msg);
 
   stubs.logResponse(prefix,msg,pool);
   stubs.deleteStubs(prefix,msg,pool);

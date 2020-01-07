@@ -12,6 +12,8 @@ module.exports = {
    */
   gen_ad: function(prefix, msg){
     if(msg.content.toLowerCase() == prefix + "gen_ad"){
+      if(msg.author.bot == true) return true;
+
       const start_str = "join to ";
 
       const verb = assist_func.random_number(0, 1) == 0 ?

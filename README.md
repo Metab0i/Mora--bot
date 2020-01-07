@@ -79,7 +79,9 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
     
 `comment <message>` : say anything you want, the message will be visible in a specified by dev channel. (All comments are anonymous) Tooth emoji means channel hasn't been set, eye and ear emoji means your message has been sent successfully.
     
-`get_ad` : generate a random ad to join something
+`gen_ad` : generate a random ad to join something
+    
+`fortune` : tells you your future...   
     
 ## Dev. Command list
    
