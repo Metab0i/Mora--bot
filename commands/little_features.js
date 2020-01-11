@@ -45,7 +45,7 @@ module.exports = {
     //e.g. "how <user> <cool/weird/happy/sad>" -> returns a percentage or something of that manner
     let how_regex = new RegExp("^" + prefix + "how <@.?[0-9]+> .*?$");
     let how_me = new RegExp("^" + prefix + "how .*?$");
-    let how_something = new RegExp("^" + prefix + "how .*? (is|are|am) .*?$", "g");
+    let how_something = new RegExp("^" + prefix + "hows .*? (is|are|am) .*?$", "g");
 
     if(how_regex.test(msg.content.toLowerCase())){
       //User timer
@@ -69,19 +69,19 @@ module.exports = {
       let something = "";
       let be = "";
 
-      if(msg.content.includes("is")){
+      if(msg.content.includes(" is ")){
         how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf(" is ")).trim();
         something = msg.content.slice(msg.content.indexOf(" is ") + 3, msg.content.length).trim();
         be = "is";
       }
 
-      if(msg.content.includes("are")){
+      if(msg.content.includes(" are ")){
         how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf(" are ")).trim();
         something = msg.content.slice(msg.content.indexOf(" are ") + 4, msg.content.length).trim();
         be = "are";
       }
 
-      if(msg.content.includes("am")){
+      if(msg.content.includes(" am ")){
         how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf(" am ")).trim();
         something = msg.content.slice(msg.content.indexOf(" am ") + 3, msg.content.length).trim();
         be = "am";
