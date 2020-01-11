@@ -70,6 +70,8 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 `asciimg <some image either attached or a link>` : turns any image into ascii art
     
 `hug <user> [2]` : hug a user
+   
+`hot <user/text>` : adds a text written by mentioned user or a supplied text to an image
     
 `stomp <user>` : stomp a user
     
