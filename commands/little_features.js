@@ -70,20 +70,20 @@ module.exports = {
       let be = "";
 
       if(msg.content.includes("is")){
-        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("is")).trim();
-        something = msg.content.slice(msg.content.indexOf("is") + 2, msg.content.length).trim();
+        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf(" is ")).trim();
+        something = msg.content.slice(msg.content.indexOf(" is ") + 3, msg.content.length).trim();
         be = "is";
       }
 
       if(msg.content.includes("are")){
-        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("are")).trim();
-        something = msg.content.slice(msg.content.indexOf("are") + 3, msg.content.length).trim();
+        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf(" are ")).trim();
+        something = msg.content.slice(msg.content.indexOf(" are ") + 4, msg.content.length).trim();
         be = "are";
       }
 
       if(msg.content.includes("am")){
-        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf("am")).trim();
-        something = msg.content.slice(msg.content.indexOf("am") + 2, msg.content.length).trim();
+        how = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.indexOf(" am ")).trim();
+        something = msg.content.slice(msg.content.indexOf(" am ") + 3, msg.content.length).trim();
         be = "am";
       }
 

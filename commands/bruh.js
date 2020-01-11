@@ -2,6 +2,13 @@ const assist_func = require('./assist_functions');
 const ffmpeg = require('ffmpeg');
 
 module.exports = {
+  /**
+   * @name bruh_pitched(...)
+   * 
+   * @description : play or post a bruh sound depending on whether the command user is in a vc or not
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   */
   bruh_pitched: async function(prefix, msg){
     let bruh_check = new RegExp("^" + prefix + "bruh$"); 
 
