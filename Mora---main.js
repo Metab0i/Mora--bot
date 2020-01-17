@@ -15,7 +15,7 @@ const uwu_fier = require('./commands/uwu_fier');
 const stomp_user = require('./commands/stomp');
 const muda_user = require('./commands/muda');
 const ora_user = require('./commands/ora');
-const bruh_sounds = require('./commands/bruh');
+const sounds = require('./commands/soundboard');
 const stats = require('./commands/stats_commands');
 const poll = require('./commands/poll');
 const assist_func = require('./commands/assist_functions')
@@ -143,7 +143,7 @@ client.on('message', msg => {
 
   reddit.serve_reddit(prefix, msg);
 
-  bruh_sounds.bruh_pitched(prefix, msg);
+  sounds.soundboard(prefix, msg);
 
   stats.server_stats(prefix, msg);
   stats.bot_stats(prefix, msg, client, total_errors);
