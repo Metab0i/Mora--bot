@@ -65,7 +65,9 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
     
 `pick` : 1 or 0?
    
-`bruh` : for real bruh moments
+`bruh` : for real bruh moments   
+    
+`oof` : oof sounds   
     
 `asciimg <some image either attached or a link>` : turns any image into ascii art
     
