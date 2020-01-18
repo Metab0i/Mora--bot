@@ -89,7 +89,9 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
     
 ## Dev. Command list
    
-`getInfo` : a force reset of the database on any server 
+`reload` : a force reset of the database on any server
+    
+`reload all` : a force reset of the whole database back to default values
     
 `errlog` : send an error log in dms of the dev.
     
