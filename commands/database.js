@@ -34,8 +34,10 @@ module.exports = {
 
       const json_users = JSON.parse("{ \"users\" : [] }")
 
+      const json_ranks = JSON.parse("{ \"status\" : \"FALSE\", \"roles\" : [{\"role\" : \"0\"}, {\"role\" : \"0\"}] }");
+
       // *Populates the table guilds with data (generates uuid, grabs id and name)
-      pool.query('INSERT INTO guilds VALUES ($1, $2, $3, $4);',[uuidv4(), guild_1.id, "FALSE", JSON.stringify(json_users)]) 
+      pool.query('INSERT INTO guilds VALUES ($1, $2, $3, $4);',[uuidv4(), guild_1.id, JSON.stringify(json_users), JSON.stringify(json_ranks)])
         .then((result) =>{
           
           // *Populates the table words using previously created objects json_messages and json_channels
@@ -47,7 +49,7 @@ module.exports = {
 
         .catch((err) =>{
           //update guild table
-          pool.query('UPDATE guilds SET ranks_on = $1, users = $2 WHERE(uugid = (SELECT uugid FROM guilds WHERE (gid = $3)));', ["FALSE", JSON.stringify(json_users), guild_1.id])
+          pool.query('UPDATE guilds SET users = $1, ranks_feature = $2 WHERE(uugid = (SELECT uugid FROM guilds WHERE (gid = $3)));', [JSON.stringify(json_users), JSON.stringify(json_ranks), guild_1.id])
             .catch((err)=>{
               return console.error('on GatherData db function;', err.stack);
             })
