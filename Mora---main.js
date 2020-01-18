@@ -92,11 +92,27 @@ client.on("channelCreate", function(channel){
  * Event: On message
  * Functionality: Proceeds to produce an output every time an appropriate command was executed in a text chat. 
  */
-client.on('message', msg => {
+client.on('message', async msg => {
   //db force gather
-  if(msg.author == '<@360790875560869889>' && msg.content.includes('%getInfo')) {
-    msg.channel.send("`Refreshing data.`");
+  if(msg.author == '<@360790875560869889>' && msg.content == '%reload') {
+    msg.channel.send("`Reloading data...`");
+
     db_functions.gatherData(msg.guild, pool);
+
+    const status = await msg.channel.send("`Complete, check bot status.`");
+    status.delete(500);
+  }
+
+  //db force gather all records
+  if(msg.author == '<@360790875560869889>' && msg.content == '%reload all') {
+    msg.channel.send("`Reloading db...`");
+
+    client.guilds.forEach(async guild =>{
+      db_functions.gatherData(guild, pool)
+
+      const status = await msg.channel.send("`Complete, check bot status.`");
+      status.delete(500);
+    })
   }
 
   //send an error to app owner

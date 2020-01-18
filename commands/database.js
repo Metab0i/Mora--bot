@@ -32,8 +32,10 @@ module.exports = {
         }
       };
 
+      const json_users = JSON.parse("{ \"users\" : [] }")
+
       // *Populates the table guilds with data (generates uuid, grabs id and name)
-      pool.query('INSERT INTO guilds VALUES ($1, $2);',[uuidv4(), guild_1.id]) 
+      pool.query('INSERT INTO guilds VALUES ($1, $2, $3, $4);',[uuidv4(), guild_1.id, "FALSE", JSON.stringify(json_users)]) 
         .then((result) =>{
           
           // *Populates the table words using previously created objects json_messages and json_channels
@@ -44,9 +46,16 @@ module.exports = {
         })
 
         .catch((err) =>{
+          //update guild table
+          pool.query('UPDATE guilds SET ranks_on = $1, users = $2 WHERE(uugid = (SELECT uugid FROM guilds WHERE (gid = $3)));', ["FALSE", JSON.stringify(json_users), guild_1.id])
+            .catch((err)=>{
+              return console.error('on GatherData db function;', err.stack);
+            })
+          
+          //update words table
           pool.query('UPDATE words SET content_response = $1, count_stats = $2, words_peruser = $3 WHERE(uugid = (SELECT uugid FROM guilds WHERE (gid = $4)));', [JSON.stringify(json_messages), JSON.stringify(json_channels), JSON.stringify(''),guild_1.id])
             .then((result) =>{
-              console.log("It was a success.");
+              return console.log("Status: success");
             })
             .catch((err)=>{
               return console.error('on GatherData db function;', err.stack);
