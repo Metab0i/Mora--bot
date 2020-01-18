@@ -11,7 +11,11 @@ module.exports = {
    * @param {MESSAGE} msg 
    * @param {PSQL-POOL} pool 
    */
-  ranks_set_up: function(prefix, msg, pool){
+  ranks_set_up: function(prefix, msg, pool, client){
+    
+    client.on('message', async message => {
+
+    });
 
   },
 

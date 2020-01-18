@@ -19,8 +19,8 @@ module.exports = {
 
     if(asciimg.test(msg.content.toLowerCase())){
 
-      
-      // context.font = '10px Courier'
+      //User timer
+      if(assist_func.userTimeOut(msg) == true) return;
 
       //0.253 - brightest; 0 - darkest; every 25.3 is a symbol
       const contrast_symbol = {
