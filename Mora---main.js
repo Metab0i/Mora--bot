@@ -23,6 +23,7 @@ const ascii_image = require('./commands/ascii_image');
 const comments = require('./commands/dev_comments');
 const funny_ad = require('./commands/generate_ad');
 const fortune_teller = require('./commands/fortune_teller');
+const ranks = require('./commands/ranks');
 
 //prefix
 const prefix = "%";
@@ -145,6 +146,13 @@ client.on('message', async msg => {
   little_features.eight_ball(prefix, msg);
   little_features.this_or(prefix, msg, client);
   little_features.help_mora(prefix, msg, client);
+
+  //ranks
+  ranks.ranks_set_up(prefix, msg, pool, client);
+  ranks.ranks_exp_msg(msg, pool);
+  ranks.ranks_grant_xp(prefix, msg, pool);
+  ranks.ranks_remove_xp(prefix, msg, pool);
+  ranks.ranks_onoff_user(prefix, msg, pool);
 
   //images
   images.hug(prefix, msg, client);
