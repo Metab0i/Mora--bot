@@ -37,15 +37,13 @@ module.exports = {
 
         //define a recursive function to track inputs from a user
         const roleCollector_loop = async function() {
-          if(message.content.toLowerCase() != "cancel" && msg_collector.ended != true){
-            set_up_msg.delete(300);
-            
-            //check if role exists
-            
-            roleCollector_loop();
-          }
+          
+          //check if such role exists
+          set_up_msg.delete(300);
+          //if exists, proceed to query for how much xp is required to achieve said role and loop again to see if they want to set up another role
+          roleCollector_loop();
 
-          else if(message.content.toLowerCase() == "cancel"){
+          if(message.content.toLowerCase() == "cancel"){
             msg_collector.stop();
 
             const msg_confirmation = await msg.channel.send("`Operation cancelled`");

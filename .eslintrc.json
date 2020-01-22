@@ -1,8 +1,7 @@
 {
     "env": {
-        "commonjs": true,
-        "es6": true,
-        "node": true
+        "browser": true,
+        "es6": true
     },
     "extends": "eslint:recommended",
     "globals": {
@@ -13,5 +12,8 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "semi": ["error", "always"],
+        "quotes": ["error", "double"],
+        "no-empty": "error"
     }
 }
