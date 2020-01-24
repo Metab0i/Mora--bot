@@ -32,6 +32,7 @@ module.exports = {
         }
       };
 
+      //within users array the rough template is [... {"userid" : {"xp" : int}}, {"userid" : {"xp": int}} ...] that way it remains scalable
       const json_users = JSON.parse("{ \"users\" : [] }")
 
       const json_ranks = JSON.parse("{ \"status\" : \"FALSE\", \"roles\" : [{\"role\" : \"0\"}, {\"role\" : \"0\"}] }");
