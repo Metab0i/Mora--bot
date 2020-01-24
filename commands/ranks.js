@@ -26,51 +26,108 @@ module.exports = {
         maxMatches: 3000
       })
 
+      //Essential Variable definition
+      let role_name = "";
+      let role_xp = "";
+
       const embed = new Discord.RichEmbed()
         .setTitle("Ranks set-up page:")
-        .setDescription("Send a role name you want to track or type cancel.")
-        .setColor(assist_func.random_hex_colour());
+        .setDescription("Specify a role name you want to track or type cancel.")
+        .setColor(assist_func.random_hex_colour())
+        .setFooter("Operation will last for 2 minutes.");
 
       await msg.channel.send(embed);
-      //use collector as a way for waiting on input from the user (integrate it within the roleCollector_loop())
-      msg_collector.once('collect', message => {   
-        //define a recursive function to track inputs from a user
-        const roleCollector_loop = async function() {
-          embed.setDescription("Would you like to set another role? Type cancel if you wish to exit.");
-          
-          const new_prompt = await message.channel.send(embed);
+     
+      //loop to initiate a role collection
+      const roleCollector_loop = function(){
+        if(embed.description.toLowerCase() == "wrong input. try again"){
+          embed.setDescription("Specify a role name you want to track or type cancel.")
 
-          if(message.content.toLowerCase() == "cancel"){
+          msg.channel.send(embed);
+        }
+
+        msg_collector.once('collect', async r_message => {
+          if(r_message.content.toLowerCase() == "cancel" || r_message.content.toLowerCase().includes("%ranksetup")){
             msg_collector.stop();
-            const msg_confirmation = await msg.channel.send("`Operation cancelled`");
-            msg_confirmation.delete(1000);
-            new_prompt.delete();
+            return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
           }
 
-          let check_role = false;
+          let match_check = false;
 
           //if exists, proceed to query for how much xp is required to achieve said role and loop again to see if they want to set up another role
-          message.guild.roles.forEach(role => {
-            if(role.name.toLowerCase() == message.content.toLowerCase()){
-              new_prompt.delete(300);
-              
-              check_role = true;
-              roleCollector_loop();
+          r_message.guild.roles.forEach(role => {
+            if(role.name.toLowerCase() == r_message.content.toLowerCase()){
+              embed.setDescription("Would you like to set another role? Type cancel if you wish to exit.");
+              match_check = true;
+
+              role_name = r_message.content.toLowerCase();
+
+              expRoleCollector_loop();
             }
           });
 
-          if(check_role == false){
-            msg_collector.stop();
+          if(match_check == false){
+            const warning_msg = await msg.channel.send(embed.setDescription("Wrong Input. Try again"));
+            await warning_msg.delete(1000);
 
-            embed.setDescription("Wrong Role Entered. Try Again");
-
-            new_prompt.edit(embed);
-            new_prompt.delete(1000);
+            return roleCollector_loop();
           }
-        }
-        
-        roleCollector_loop();
-      })
+        });
+      }
+
+      //loop to record how much xp is required for a role to be obtained.
+      const expRoleCollector_loop = function(){
+        embed.setDescription("How much XP is required to obtain a mentioned role? Type cancel if you wish to exit.")
+        msg.channel.send(embed);
+
+        //define a regex to check if entered string is just numbers
+        const just_numb = new RegExp("^[0-9]+$");
+
+        msg_collector.once('collect', async xp_message => {
+          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%ranksetup")){
+            msg_collector.stop();
+            return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
+          }
+
+          if(just_numb.test(xp_message.content)){
+            role_xp = xp_message.content;
+
+            embed.setDescription("Would you like to confirm? [Y/N]")
+                 .addField("`Role Name:`", role_name, true)
+                 .addField("`Role XP`", role_xp, true);
+            
+            msg.channel.send(embed);
+
+            embed.fields.splice(0, embed.fields.length)
+
+            msg_collector.once('collect', async confirm_msg =>{
+              if(confirm_msg.content.toLowerCase() == "y"){
+                //push to db
+              }
+              else if(confirm_msg.content.toLowerCase() == "n"){
+                (await msg.channel.send(embed.setDescription("`Operation Cancelled`"))).delete(1000);
+
+                return msg_collector.stop();
+              }
+              else{
+                (await msg.channel.send(embed.setDescription("`Unknown entry. Operation Cancelled`"))).delete(1000);
+                
+                return msg_collector.stop();
+              }
+            })
+          }
+
+          else{
+            const warning_msg = await msg.channel.send(embed.setDescription("Your Message contains letters, has to be just numbers. Try Again."));
+            await warning_msg.delete(3000);
+
+            return expRoleCollector_loop();
+          }
+        })
+      }
+
+      roleCollector_loop();
+
     }
 
   },
