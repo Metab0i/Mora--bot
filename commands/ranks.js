@@ -94,7 +94,7 @@ module.exports = {
 
             embed.setDescription("Would you like to confirm? [Y/N]")
                  .addField("`Role Name:`", role_name, true)
-                 .addField("`Role XP`", role_xp, true);
+                 .addField("`Required XP`", role_xp, true);
             
             msg.channel.send(embed);
 
