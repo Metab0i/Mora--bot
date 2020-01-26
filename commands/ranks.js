@@ -19,6 +19,8 @@ module.exports = {
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;
 
+      //pull latest db data to be written to
+
       //set up a message collector to track responses from user
       const msg_collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {
         time: 60000,
@@ -145,6 +147,15 @@ module.exports = {
   },
 
   ranks_onoff_user: function(prefix, msg, pool){
+    //pull db data
+    //check if it contains a template or holds actual data
+    //if former, then proceed to prompt for rank-set-up function from a user with message collector
+    //only admins can have access to this command.
+  },
 
+  ranks_board: function(prefix, msg, pool){
+    //shows a board of all roles and requires xp to obtain them
+    //shows a board of people from highest xp to lowest
+    //shows people for whom feature is disabled (still shows their xp);
   }
 }
