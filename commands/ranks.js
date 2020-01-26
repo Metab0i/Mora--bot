@@ -5,7 +5,8 @@ module.exports = {
   /**
    * @name ranks_set_up(...)
    * 
-   * @description : set up ranks feature. How much XP is needed for a role
+   * @description : set up ranks feature. How much XP is needed for a role. Utilizes the MessageCollector, Nodejs Event and node-psql to function.
+   *                MessageCollector - to keep track of user's messages, Events - integration as a part of MessageCollector, node-psql - for db interaction. 
    * 
    * @param {String} prefix 
    * @param {MESSAGE} msg 
@@ -54,7 +55,7 @@ module.exports = {
 
             await first_msg.delete();
             await r_message.delete();
-            
+
             return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
           }
 
