@@ -3,6 +3,39 @@ const assist_func = require('./assist_functions');
 
 module.exports = {
   /**
+   * @name ranks_setUp_assist(...)
+   * 
+   * @description : processes a json arg, and updates db appropriately
+   * @param {json} ranks_json 
+   */
+  ranks_setUp_assist: async function(msg, role_data, ranks_json, pool){
+    if(JSON.stringify(ranks_json.roles).includes("\"role\":\"0\"")){
+      const role_name = role_data.split(";")[0];
+      const role_xp = role_data.split(";")[1];
+
+      //template verified, proceed to remove it and substitute it with real data
+      delete ranks_json.roles.role
+      ranks_json.roles[role_name] = role_xp
+
+      const fin_json = ranks_json;
+
+      //update the DB
+      try{
+        await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [fin_json, msg.guild.id]);
+      }catch(err){
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(2000);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
+      }
+      
+      (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(2000);
+    }
+    else{
+      //TODO: implement the rest of the function, write to db if other data elements are already present
+      //if the same element is mentioned, just overwrite the already existing item with new xp value
+    }
+  },
+
+  /**
    * @name ranks_set_up(...)
    * 
    * @description : set up ranks feature. How much XP is needed for a role. Utilizes the MessageCollector, Nodejs Event and node-psql to function.
@@ -20,7 +53,16 @@ module.exports = {
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;
 
+      msg.channel.startTyping();
+
       //pull latest db data to be written to
+      let db_pull_result;
+      try{
+        db_pull_result = await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [msg.guild.id]);
+        msg.channel.stopTyping();
+      }catch(err){
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
+      }
 
       //set up a message collector to track responses from user
       const msg_collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {
@@ -125,11 +167,20 @@ module.exports = {
 
             msg_collector.once('collect', async confirm_msg =>{
               if(confirm_msg.content.toLowerCase() == "y"){
-                //push to db
                 //delete the remainder
                 await third_msg.delete();
                 await confirm_msg.delete();
-                //if success send (Operation successful)
+
+                //fill out json for processing
+                let ranks_json = db_pull_result.rows[0].ranks_feature;
+
+                //send data to assist function to process and then update the db
+                //if operation is successful, it will send a msg to chat notifying of success, if not
+                // will send a message notifying of failure.
+                const role_data = role_name + ";" + role_xp;
+                module.exports.ranks_setUp_assist(msg, role_data, ranks_json, pool);
+
+                return msg_collector.stop();
               }
               else if(confirm_msg.content.toLowerCase() == "n"){
                 (await msg.channel.send(embed.setDescription("`Operation Cancelled`"))).delete(1000);
