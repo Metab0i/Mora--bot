@@ -231,6 +231,10 @@ module.exports = {
 
   },
 
+  ranks_remove_role: function(prefix, msg, pool){
+    //similar to ranks_set_up(...), however no prompt for xp;
+  },
+
   ranks_exp_msg: function(msg, pool){
 
   },
