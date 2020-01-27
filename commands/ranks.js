@@ -23,11 +23,11 @@ module.exports = {
       try{
         await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [fin_json, msg.guild.id]);
       }catch(err){
-        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(2000);
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(5000);
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
       }
       
-      (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(2000);
+      (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(7000);
     }
     else{
       //TODO: implement the rest of the function, write to db if other data elements are already present
@@ -140,7 +140,7 @@ module.exports = {
         const just_numb = new RegExp("^[0-9]+$");
 
         msg_collector.once('collect', async xp_message => {
-          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%ranksetup")){
+          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%ranksetup")){
             msg_collector.stop();
 
             await second_msg.delete();
@@ -151,6 +151,16 @@ module.exports = {
 
           //an if-else statement if successful, proceed to prompt for confirmation, if not let the user know they entered the wrong value
           if(just_numb.test(xp_message.content)){
+            //check if number isn't too big
+            if(Number(xp_message.content) >= 50000000){
+              const warning_msg = await msg.channel.send(embed.setDescription("Number is too high. Try a different one."));
+              await warning_msg.delete(2000);
+              await second_msg.delete();
+              await xp_message.delete();
+  
+              return expRoleCollector_loop();
+            }
+
             role_xp = xp_message.content;
 
             embed.setDescription("Would you like to confirm? [Y/N]")
@@ -206,7 +216,9 @@ module.exports = {
           //else statement that notifies user of their error input
           else{
             const warning_msg = await msg.channel.send(embed.setDescription("Your Message contains symbols and/or letters, has to be just numbers (int). Try Again."));
-            await warning_msg.delete(3000);
+            await warning_msg.delete(2500);
+            await second_msg.delete();
+            await xp_message.delete();
 
             return expRoleCollector_loop();
           }
