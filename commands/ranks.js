@@ -332,14 +332,15 @@ module.exports = {
       const embed = new Discord.RichEmbed()
                         .setTitle("Rep info")
                         .setDescription(desc_str)
-                        .setFooter("Your rep xp: " + user_xp);
+                        .setFooter("Your rep xp: " + user_xp)
+                        .setColor(assist_func.random_hex_colour);
 
       msg.channel.send(embed);
       
     }
 
     else if(ranks_members.test(msg.content.toLowerCase().trim())){
-
+      //todo
     }
 
     
