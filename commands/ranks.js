@@ -9,12 +9,12 @@ module.exports = {
    * @param {json} ranks_json 
    */
   rep_setUp_assist: async function(msg, role_data, ranks_json, pool){
-    if(JSON.stringify(ranks_json.roles).includes("\"role\":\"0\"")){
+    if(JSON.stringify(ranks_json.roles).trim() === "{\"\":\"\"}"){
       const role_name = role_data.split(";")[0];
       const role_xp = role_data.split(";")[1];
 
       //template verified, proceed to remove it and substitute it with real data
-      delete ranks_json.roles.role
+      delete ranks_json.roles[""]
       ranks_json.roles[role_name] = role_xp
 
       const fin_json = ranks_json;
@@ -107,7 +107,7 @@ module.exports = {
         }
 
         msg_collector.once('collect', async r_message => {
-          if(r_message.content.toLowerCase() == "cancel" || r_message.content.toLowerCase().includes("%repsetup")){
+          if(r_message.content.toLowerCase() == "cancel" || r_message.content.toLowerCase().includes("%r.setup")){
             msg_collector.stop();
 
             await first_msg.delete();
@@ -155,7 +155,7 @@ module.exports = {
         const just_numb = new RegExp("^[0-9]+$");
 
         msg_collector.once('collect', async xp_message => {
-          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%repsetup")){
+          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%r.setup")){
             msg_collector.stop();
 
             await second_msg.delete();
@@ -300,15 +300,41 @@ module.exports = {
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
       }
 
+      const roles = db_pull_result.rows[0].ranks_feature.roles;
+      const users = db_pull_result.rows[0].users;
+
+      let user_xp = 0;
+      let desc_str = "";
+      let range_array = [];
+
+      for(let user in users){
+        if(user == msg.member.id) user_xp = users[user].xp
+      }
+
+      for(let role in roles){
+        if(roles[role] == "") desc_str = "```No ranks to display.```"
+        
+        else range_array.push(roles[role])
+        
+      }
+
+      //sort in ascending order
+      range_array.sort(function(a, b){return a-b});
+
+      for(let i = 0; i < range_array.length; i++){
+        for(let role in roles){
+          if(range_array[i] == roles[role]){
+            desc_str += `\`${i}\.\` 「 **${role}** : *${range_array[i]}* 」 \n`
+          }
+        }
+      }
+
       const embed = new Discord.RichEmbed()
                         .setTitle("Rep info")
-                        .setFooter("Your rep xp: " + 0)
+                        .setDescription(desc_str)
+                        .setFooter("Your rep xp: " + user_xp);
 
-      console.log(db_pull_result.rows[0].users);
-      
-      for(let user in db_pull_result.rows[0].users){
-        console.log(user);
-      }
+      msg.channel.send(embed);
       
     }
 
