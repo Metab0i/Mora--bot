@@ -153,7 +153,7 @@ module.exports = {
         .addField("Online desktop users:", desktop, true)
         .addField("Online web users:", web, true)
         .addField("Total Uptime:" , uptime, true)
-        .addField("Errors during Runtime:", errors, true)
+        .addField("Exceptions thrown during Runtime:", errors, true)
         .addField("Total commands called during runtime:", assist_func.get_commands(), true)
         .setFooter("🐍")
 
