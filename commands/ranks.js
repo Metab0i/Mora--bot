@@ -167,7 +167,7 @@ module.exports = {
           //an if-else statement if successful, proceed to prompt for confirmation, if not let the user know they entered the wrong value
           if(just_numb.test(xp_message.content)){
             //check if number isn't too big
-            if(Number(xp_message.content) >= 50000000){
+            if(Number(xp_message.content) >= 999999999){
               const warning_msg = await msg.channel.send(embed.setDescription("Number is too high. Try a different one."));
               await warning_msg.delete(2000);
               await second_msg.delete();
