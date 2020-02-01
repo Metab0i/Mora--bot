@@ -294,7 +294,7 @@ module.exports = {
       //pull latest db data to be written to
       let db_pull_result;
       try{
-        db_pull_result = await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [msg.guild.id]);
+        db_pull_result = await pool.query('SELECT users, ranks_feature FROM guilds WHERE (gid = $1)', [msg.guild.id]);
         msg.channel.stopTyping();
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
@@ -302,10 +302,12 @@ module.exports = {
 
       const embed = new Discord.RichEmbed()
                         .setTitle("Rep info")
-                        .setFooter("")
+                        .setFooter("Your rep xp: " + 0)
 
-      for(let role in db_pull_result[roles]){
-
+      console.log(db_pull_result.rows[0].users);
+      
+      for(let user in db_pull_result.rows[0].users){
+        console.log(user);
       }
       
     }
