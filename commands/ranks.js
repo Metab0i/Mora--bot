@@ -8,7 +8,7 @@ module.exports = {
    * @description : processes a json arg, and updates db appropriately
    * @param {json} ranks_json 
    */
-  ranks_setUp_assist: async function(msg, role_data, ranks_json, pool){
+  rep_setUp_assist: async function(msg, role_data, ranks_json, pool){
     if(JSON.stringify(ranks_json.roles).includes("\"role\":\"0\"")){
       const role_name = role_data.split(";")[0];
       const role_xp = role_data.split(";")[1];
@@ -30,13 +30,28 @@ module.exports = {
       (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(7000);
     }
     else{
-      //TODO: implement the rest of the function, write to db if other data elements are already present
       //if the same element is mentioned, just overwrite the already existing item with new xp value
+      const role_name = role_data.split(";")[0];
+      const role_xp = role_data.split(";")[1];
+
+      ranks_json.roles[role_name] = role_xp
+
+      const fin_json = ranks_json;
+
+      //update the DB
+      try{
+        await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [fin_json, msg.guild.id]);
+      }catch(err){
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(5000);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
+      }
+      
+      (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(7000);
     }
   },
 
   /**
-   * @name ranks_set_up(...)
+   * @name rep_set_up(...)
    * 
    * @description : set up ranks feature. How much XP is needed for a role. Utilizes the MessageCollector, Nodejs Event and node-psql to function.
    *                MessageCollector - to keep track of user's messages, Events - integration as a part of MessageCollector, node-psql - for db interaction. 
@@ -45,8 +60,8 @@ module.exports = {
    * @param {MESSAGE} msg 
    * @param {PSQL-POOL} pool 
    */
-  ranks_set_up: async function(prefix, msg, pool, client){
-    const ranks_exp = new RegExp("^" + prefix + "ranksetup");
+  rep_set_up: async function(prefix, msg, pool, client){
+    const ranks_exp = new RegExp("^" + prefix + "r.setup");
 
     //check that the one who runs the command is admin of the server. 
     if(ranks_exp.test(msg.content.toLowerCase().trim()) && msg.member.hasPermission("ADMINISTATOR") == true){
@@ -76,7 +91,7 @@ module.exports = {
       let role_xp = "";
 
       const embed = new Discord.RichEmbed()
-        .setTitle("Ranks set-up page:")
+        .setTitle("Rep set-up page:")
         .setDescription("Specify a role name you want to track or type cancel.")
         .setColor(assist_func.random_hex_colour())
         .setFooter("Operation will last for 2 minutes.");
@@ -92,7 +107,7 @@ module.exports = {
         }
 
         msg_collector.once('collect', async r_message => {
-          if(r_message.content.toLowerCase() == "cancel" || r_message.content.toLowerCase().includes("%ranksetup")){
+          if(r_message.content.toLowerCase() == "cancel" || r_message.content.toLowerCase().includes("%repsetup")){
             msg_collector.stop();
 
             await first_msg.delete();
@@ -140,7 +155,7 @@ module.exports = {
         const just_numb = new RegExp("^[0-9]+$");
 
         msg_collector.once('collect', async xp_message => {
-          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%ranksetup")){
+          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%repsetup")){
             msg_collector.stop();
 
             await second_msg.delete();
@@ -188,7 +203,7 @@ module.exports = {
                 //if operation is successful, it will send a msg to chat notifying of success, if not
                 // will send a message notifying of failure.
                 const role_data = role_name + ";" + role_xp;
-                module.exports.ranks_setUp_assist(msg, role_data, ranks_json, pool);
+                module.exports.rep_setUp_assist(msg, role_data, ranks_json, pool);
 
                 return msg_collector.stop();
               }
@@ -225,38 +240,80 @@ module.exports = {
         })
       }
 
+      //initiate the loop
       roleCollector_loop();
 
     }
 
   },
 
-  ranks_remove_role: function(prefix, msg, pool){
+  rep_remove_role: function(prefix, msg, pool){
     //similar to ranks_set_up(...), however no prompt for xp;
   },
 
-  ranks_exp_msg: function(msg, pool){
+  rep_exp_msg: function(msg, pool){
+    //feature that keeps track of messages with 1% chance of firing off (considering 0.5 % chance)
+  },
+
+  rep_grant_xp: function(prefix, msg, pool){
 
   },
 
-  ranks_grant_xp: function(prefix, msg, pool){
+  rep_remove_xp: function(prefix, msg, pool){
 
   },
 
-  ranks_remove_xp: function(prefix, msg, pool){
-
-  },
-
-  ranks_onoff_user: function(prefix, msg, pool){
+  rep_onoff_user: function(prefix, msg, pool){
     //pull db data
     //check if it contains a template or holds actual data
     //if former, then proceed to prompt for rank-set-up function from a user with message collector
     //only admins can have access to this command.
   },
 
-  ranks_board: function(prefix, msg, pool){
-    //shows a board of all roles and requires xp to obtain them
-    //shows a board of people from highest xp to lowest
-    //shows people for whom feature is disabled (still shows their xp);
+  /**
+   * @name rep_board(...)
+   * 
+   * @description : Shows a board of roles and required xp to obtain them
+   *                Shows board of people from highest xp to lowest
+   *                Shows people for whom feature is disabled
+   * 
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   * @param {PSQL} pool 
+   */
+  rep_board: async function(prefix, msg, pool){
+    const ranks_board = new RegExp("^" + prefix + "r.roles");
+    const ranks_members = new RegExp("^" + prefix + "r.xpboard"); // show top 10 
+
+    if(ranks_board.test(msg.content.toLowerCase().trim())){
+      //User timer
+      if(assist_func.userTimeOut(msg) == true) return;
+
+      msg.channel.startTyping();
+
+      //pull latest db data to be written to
+      let db_pull_result;
+      try{
+        db_pull_result = await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [msg.guild.id]);
+        msg.channel.stopTyping();
+      }catch(err){
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
+      }
+
+      const embed = new Discord.RichEmbed()
+                        .setTitle("Rep info")
+                        .setFooter("")
+
+      for(let role in db_pull_result[roles]){
+
+      }
+      
+    }
+
+    else if(ranks_members.test(msg.content.toLowerCase().trim())){
+
+    }
+
+    
   }
 }

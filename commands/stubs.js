@@ -550,8 +550,8 @@ module.exports = {
           assist_func.populateChannelJSON(json_count, msg.guild, pool);
 
           //create 2 filters, one for forwards the other one for backwards
-          const backwardsFilter = (reaction, usr) => reaction.emoji.name === '⏪' && usr.id === msg.author.id;
-          const forwardsFilter = (reaction, usr) => reaction.emoji.name === '⏩' && usr.id === msg.author.id;
+          const backwardsFilter = (reaction, usr) => reaction.emoji.name === '➖' && usr.id === msg.author.id;
+          const forwardsFilter = (reaction, usr) => reaction.emoji.name === '➕' && usr.id === msg.author.id;
           
           if(msg.content.toLowerCase() === (prefix + "stubstats")){
             let str = "";
@@ -588,13 +588,13 @@ module.exports = {
               .setAuthor(`@${msg.author.username} - Current Table User;`, msg.author.avatarURL)
               .setColor(12269369)
               .setFooter(`Page ${page} of ${pages.length}`)
-              .setDescription("\nPress ⏪ or ⏩ twice to list through, you only have 120s to interact with the table. If you wish to see more details for a channel, use --showstats current.\nTo Initiate the table, press ⏩.\n\n__Only one user at a time may use the list.__\n\n *Current Table User is displayed above ^.*");
+              .setDescription("\nPress ➖ or ➕ twice to list through, you only have 120s to interact with the table. If you wish to see more details for a channel, use" + prefix + " stubstats this.\nTo Initiate the table, press ➕.\n\n__Only one user at a time may use the list.__\n\n *Current Table User is displayed above ^.*");
             
             //send the created embed, afterwards leave reactions on a current message
             //instead of this, pass an array of things, for example, 0 would be title, 1 would be descriptin and etc etc.
             msg.channel.send(embed).then(message =>{
-              message.react('⏪').then( r => {
-                message.react('⏩');
+              message.react('➖').then( r => {
+                message.react('➕');
 
                 //create 2 collectors of reactions, set filters ^
                 const backwards = message.createReactionCollector(backwardsFilter, { time: 120000 });
@@ -667,8 +667,8 @@ module.exports = {
               .setDescription(pages[page-1]+ "\n");
 
             msg.channel.send(diffEmbed).then(message =>{
-              message.react('⏪').then( r => {
-                message.react('⏩');
+              message.react('➖').then( r => {
+                message.react('➕');
                 
                 //create 2 collectors of reactions, set filters ^
                 const backwards = message.createReactionCollector(backwardsFilter, { time: 120000 });

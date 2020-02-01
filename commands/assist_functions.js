@@ -128,12 +128,12 @@ module.exports = {
 
     msg.channel.stopTyping();
     msg.channel.send(pages[0]).then(msg_pages =>{
-      msg_pages.react('⏪').then( r => {
-        msg_pages.react('⏩');
+      msg_pages.react('➖').then( r => {
+        msg_pages.react('➕');
 
         //create 2 filters
-        const backwardsFilter = (reaction, usr) => reaction.emoji.name === '⏪' && usr.id === msg.author.id;
-        const forwardsFilter = (reaction, usr) => reaction.emoji.name === '⏩' && usr.id === msg.author.id;
+        const backwardsFilter = (reaction, usr) => reaction.emoji.name === '➖' && usr.id === msg.author.id;
+        const forwardsFilter = (reaction, usr) => reaction.emoji.name === '➕' && usr.id === msg.author.id;
 
         //create 2 collectors of reactions, set filters ^
         const backwards = msg_pages.createReactionCollector(backwardsFilter, { time: 120000 });
