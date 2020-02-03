@@ -246,8 +246,8 @@ module.exports = {
    * @param {MESSAGE} msg 
    */
   id_to_user: async function(str, client, msg){
-    if(/<@.?[0-9]+>/.test(str)){
-      let user_id = str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'');
+    if(/<@.?[0-9]+>/.test(str) || /[0-9]+/.test(str)){
+      let user_id = /<@.?[0-9]+/.test(str) ? str.slice(str.indexOf("@")+1, str.indexOf(">")).replace(/\D/g,'') : str;
       let user;
 
       try{

@@ -263,7 +263,7 @@ module.exports = {
 
   },
 
-  rep_onoff_user: function(prefix, msg, pool){
+  rep_onoff_user: function(prefix, msg, client, pool){
     //pull db data
     //check if it contains a template or holds actual data
     //if former, then proceed to prompt for rank-set-up function from a user with message collector
@@ -281,11 +281,11 @@ module.exports = {
    * @param {MESSAGE} msg 
    * @param {PSQL} pool 
    */
-  rep_board: async function(prefix, msg, pool){
+  rep_board: async function(prefix, msg, client, pool){
     const ranks_board = new RegExp("^" + prefix + "r.roles");
     const ranks_members = new RegExp("^" + prefix + "r.xpboard"); // show top 10 
 
-    if(ranks_board.test(msg.content.toLowerCase().trim())){
+    if(ranks_board.test(msg.content.toLowerCase().trim()) || ranks_members.test(msg.content.toLowerCase().trim())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;
 
@@ -302,47 +302,78 @@ module.exports = {
 
       const roles = db_pull_result.rows[0].ranks_feature.roles;
       const users = db_pull_result.rows[0].users;
+      const range_array = [];
 
-      let user_xp = 0;
       let desc_str = "";
-      let range_array = [];
-
+      let title = "";
+      let user_xp = 0;
+        
       for(let user in users){
         if(user == msg.member.id) user_xp = users[user].xp
       }
 
-      for(let role in roles){
-        if(roles[role] == "") desc_str = "```No ranks to display.```"
-        
-        else range_array.push(roles[role])
-        
-      }
+      //sequence for r.role
+      if(ranks_board.test(msg.content.toLowerCase().trim())){
+        title = "Rep info";
 
-      //sort in ascending order
-      range_array.sort(function(a, b){return a-b});
-
-      for(let i = 0; i < range_array.length; i++){
         for(let role in roles){
-          if(range_array[i] == roles[role]){
-            desc_str += `\`${i}\.\` 「 **${role}** : *${range_array[i]}* 」 \n`
+          if(roles[role] == "") desc_str = "```No ranks to display.```"
+          
+          else range_array.push(roles[role])
+        }
+
+        //sort in ascending order
+        range_array.sort(function(a, b){return a-b});
+
+        for(let i = 0; i < range_array.length; i++){
+          for(let role in roles){
+            if(range_array[i] == roles[role]){
+              desc_str += `\`${i}\.\` 「 **${role}** : *${range_array[i]}* 」 \n`
+            }
           }
         }
       }
 
+      //sequence for r.xpboard
+      else if(JSON.stringify(users) != "{\"users\":{}}"){
+        title = "Rep xp board:"
+
+        for(let user in users){
+          range_array.push(users[user].xp)
+        }
+
+        //sort in ascending order
+        range_array.sort(function(a, b){return b-a})
+        
+        if(range_array.length > 10) range_array.splice(10, range_array.length);
+
+        let count = 0;
+
+        for(let user in users){
+          for(let i = 1; i < 10; i++){
+            if(users[user].xp == range_array[i]){
+              const user_name = await assist_func.id_to_user(String(user), client, msg);
+
+              desc_str += `\`${count}\` -「 **${user_name}** = { **rep_xp** : *${range_array[i]}* } 」\n  \n`;
+              count++
+            }
+          }
+        }
+      }
+
+      //in case of a template
+      else{
+        title = "Rep xp board:"
+        desc_str = "```No active participants of this feature currently available```"
+      }
+
       const embed = new Discord.RichEmbed()
-                        .setTitle("Rep info")
+                        .setTitle(title)
                         .setDescription(desc_str)
                         .setFooter("Your rep xp: " + user_xp)
-                        .setColor(assist_func.random_hex_colour);
 
       msg.channel.send(embed);
       
-    }
-
-    else if(ranks_members.test(msg.content.toLowerCase().trim())){
-      //todo
-    }
-
-    
+    }    
   }
 }

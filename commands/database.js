@@ -76,11 +76,12 @@ module.exports = {
   removeGuild: function(guild_1, pool){
     pool.query('DELETE FROM words WHERE(words.uugid = (SELECT uugid FROM guilds WHERE(guilds.gid = $1))) ',[guild_1.id])
       .then((result)=>{
-
+        
         pool.query('DELETE FROM guilds WHERE(guilds.gid = $1)',[guild_1.id])
           .catch((err)=>{
             return console.error('on removeGuild db function;', err.stack);
           });
+
       })
       .catch((err)=>{
         return console.error('on removeGuild db function;', err.stack);
