@@ -1,6 +1,15 @@
 const Discord = require('discord.js');
 const assist_func = require('./assist_functions');
 
+
+//TODO:
+/**
+ * 1. When a role is being displayed in rep.board be sure to verify that it still exists (implement an assistance function for that.)
+ * 2. When a role is deleted and it's on a list, be sure to remove it
+ * 3. %rep.help - sends an outline of how to use the feature 
+ * 4. %rep - sends a list of possible commands to DMs.
+ */
+
 module.exports = {
   /**
    * @name ranks_setUp_assist(...)
@@ -77,10 +86,10 @@ module.exports = {
    * @param {PSQL-POOL} pool 
    */
   rep_set_up: async function(prefix, msg, pool, client){
-    const ranks_exp = new RegExp("^" + prefix + "r.setup");
+    const rep_xp = new RegExp("^" + prefix + "rep.setup");
 
     //check that the one who runs the command is admin of the server. 
-    if(ranks_exp.test(msg.content.toLowerCase().trim()) && msg.member.hasPermission("ADMINISTATOR") == true){
+    if(rep_xp.test(msg.content.toLowerCase().trim()) && msg.member.hasPermission("ADMINISTATOR") == true){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;
 
@@ -264,7 +273,7 @@ module.exports = {
   },
 
   rep_remove_role: function(prefix, msg, pool){
-    const ranks_exp = new RegExp("^" + prefix + "r.remrole ");
+    const ranks_exp = new RegExp("^" + prefix + "rep.remrole ");
   },
 
   rep_exp_msg: function(msg, pool){
@@ -298,10 +307,10 @@ module.exports = {
    * @param {PSQL} pool 
    */
   rep_board: async function(prefix, msg, client, pool){
-    const ranks_board = new RegExp("^" + prefix + "r.repboard");
-    const ranks_members = new RegExp("^" + prefix + "r.xpboard"); // show top 10 
+    const rep_board = new RegExp("^" + prefix + "rep.board");
+    const rep_members = new RegExp("^" + prefix + "rep.xpboard"); // show top 10 
 
-    if(ranks_board.test(msg.content.toLowerCase().trim()) || ranks_members.test(msg.content.toLowerCase().trim())){
+    if(rep_board.test(msg.content.toLowerCase().trim()) || rep_members.test(msg.content.toLowerCase().trim())){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;
 
@@ -329,7 +338,7 @@ module.exports = {
       }
 
       //sequence for r.role
-      if(ranks_board.test(msg.content.toLowerCase().trim())){
+      if(rep_board.test(msg.content.toLowerCase().trim())){
         title = "Rep info";
 
         for(let role in roles){
@@ -344,7 +353,9 @@ module.exports = {
         for(let i = 0; i < range_array.length; i++){
           for(let role in roles){
             if(range_array[i] == roles[role]){
+              //find a corresponding role
               const role_name = msg.guild.roles.find(val => val.id === role).name
+
               desc_str += `\`${i}\.\` 「 **${role_name}** : *${range_array[i]}* 」 \n`
             }
 
