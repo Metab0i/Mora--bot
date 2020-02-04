@@ -17,8 +17,8 @@ module.exports = {
    * @description : processes a json arg, and updates db appropriately
    * @param {json} ranks_json 
    */
-  rep_setUp_assist: async function(msg, role_data, ranks_json, pool){
-    if(JSON.stringify(ranks_json.roles).trim() === "{\"\":\"\"}"){
+  rep_setUp_assist: async function(msg, role_data, rep_json, pool){
+    if(JSON.stringify(rep_json.roles).trim() === "{\"\":\"\"}"){
       const role_name = role_data.split(";")[0];
       const role_xp = role_data.split(";")[1];
       let role_id = "";
@@ -31,10 +31,10 @@ module.exports = {
       })
 
       //template verified, proceed to remove it and substitute it with real data
-      delete ranks_json.roles[""]
-      ranks_json.roles[role_id] = role_xp
+      delete rep_json.roles[""]
+      rep_json.roles[role_id] = role_xp
 
-      const fin_json = ranks_json;
+      const fin_json = rep_json;
 
       //update the DB
       try{
@@ -59,9 +59,9 @@ module.exports = {
         }
       })
 
-      ranks_json.roles[role_id] = role_xp
+      rep_json.roles[role_id] = role_xp
 
-      const fin_json = ranks_json;
+      const fin_json = rep_json;
 
       //update the DB
       try{
@@ -222,13 +222,13 @@ module.exports = {
                 await confirm_msg.delete();
 
                 //fill out json for processing
-                let ranks_json = db_pull_result.rows[0].ranks_feature;
+                let rep_json = db_pull_result.rows[0].ranks_feature;
 
                 //send data to assist function to process and then update the db
                 //if operation is successful, it will send a msg to chat notifying of success, if not
                 // will send a message notifying of failure.
                 const role_data = role_name + ";" + role_xp;
-                module.exports.rep_setUp_assist(msg, role_data, ranks_json, pool);
+                module.exports.rep_setUp_assist(msg, role_data, rep_json, pool);
 
                 return msg_collector.stop();
               }
