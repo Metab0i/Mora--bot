@@ -363,7 +363,7 @@ module.exports = {
 
       //in case of a template
       else{
-        title = "Rep xp board:"
+        title = "Top users - xp board:"
         desc_str = "```No active participants of this feature currently available```"
       }
 
