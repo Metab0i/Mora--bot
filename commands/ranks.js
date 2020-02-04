@@ -337,6 +337,9 @@ module.exports = {
                                          .setTitle(title)
                                          .setDescription(desc_str)
                                          .setFooter("Your rep xp: " + user_xp)
+
+              await msg.channel.send(embed_fallback);
+              
               desc_str = "";
             }
           }
