@@ -330,6 +330,15 @@ module.exports = {
             if(range_array[i] == roles[role]){
               desc_str += `\`${i}\.\` 「 **${role}** : *${range_array[i]}* 」 \n`
             }
+
+            //in case the number of total characters exceeds 1950, send current info, wipe the const, keep doing it until there are no more roles
+            if(desc_str.length >= 1950){
+              const embed_fallback = new Discord.RichEmbed()
+                                         .setTitle(title)
+                                         .setDescription(desc_str)
+                                         .setFooter("Your rep xp: " + user_xp)
+              desc_str = "";
+            }
           }
         }
       }
