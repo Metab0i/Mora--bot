@@ -23,7 +23,7 @@ const ascii_image = require('./commands/ascii_image');
 const comments = require('./commands/dev_comments');
 const funny_ad = require('./commands/generate_ad');
 const fortune_teller = require('./commands/fortune_teller');
-const rep = require('./commands/ranks');
+const rep = require('./commands/reputation');
 
 //prefix
 const prefix = "%";
