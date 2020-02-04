@@ -12,10 +12,18 @@ module.exports = {
     if(JSON.stringify(ranks_json.roles).trim() === "{\"\":\"\"}"){
       const role_name = role_data.split(";")[0];
       const role_xp = role_data.split(";")[1];
+      let role_id = "";
+
+      //grab role's ID
+      msg.guild.roles.forEach(role => {
+        if(role.name.toLowerCase() === role_name){
+          role_id = role.id;
+        }
+      })
 
       //template verified, proceed to remove it and substitute it with real data
       delete ranks_json.roles[""]
-      ranks_json.roles[role_name] = role_xp
+      ranks_json.roles[role_id] = role_xp
 
       const fin_json = ranks_json;
 
@@ -33,8 +41,16 @@ module.exports = {
       //if the same element is mentioned, just overwrite the already existing item with new xp value
       const role_name = role_data.split(";")[0];
       const role_xp = role_data.split(";")[1];
+      let role_id = "";
 
-      ranks_json.roles[role_name] = role_xp
+      //grab role's ID
+      msg.guild.roles.forEach(role => {
+        if(role.name.toLowerCase() === role_name){
+          role_id = role.id;
+        }
+      })
+
+      ranks_json.roles[role_id] = role_xp
 
       const fin_json = ranks_json;
 
@@ -248,7 +264,7 @@ module.exports = {
   },
 
   rep_remove_role: function(prefix, msg, pool){
-    //similar to ranks_set_up(...), however no prompt for xp;
+    const ranks_exp = new RegExp("^" + prefix + "r.remrole ");
   },
 
   rep_exp_msg: function(msg, pool){
@@ -282,7 +298,7 @@ module.exports = {
    * @param {PSQL} pool 
    */
   rep_board: async function(prefix, msg, client, pool){
-    const ranks_board = new RegExp("^" + prefix + "r.roles");
+    const ranks_board = new RegExp("^" + prefix + "r.repboard");
     const ranks_members = new RegExp("^" + prefix + "r.xpboard"); // show top 10 
 
     if(ranks_board.test(msg.content.toLowerCase().trim()) || ranks_members.test(msg.content.toLowerCase().trim())){
@@ -328,7 +344,8 @@ module.exports = {
         for(let i = 0; i < range_array.length; i++){
           for(let role in roles){
             if(range_array[i] == roles[role]){
-              desc_str += `\`${i}\.\` 「 **${role}** : *${range_array[i]}* 」 \n`
+              const role_name = msg.guild.roles.find(val => val.id === role).name
+              desc_str += `\`${i}\.\` 「 **${role_name}** : *${range_array[i]}* 」 \n`
             }
 
             //in case the number of total characters exceeds 1950, send current info, wipe the const, keep doing it until there are no more roles
@@ -339,7 +356,7 @@ module.exports = {
                                          .setFooter("Your rep xp: " + user_xp)
 
               await msg.channel.send(embed_fallback);
-              
+
               desc_str = "";
             }
           }
