@@ -117,6 +117,54 @@ module.exports = {
 
   },
 
+  /**
+   * @name user_exists(...);
+   * 
+   * @description : verifies whether user exists within the guild and DB, if user exists in DB but not in guild, proceed to remove the item from db.
+   * 
+   * @param {Int} user_id 
+   * @param {PSQL} pool 
+   * @param {GUILD} guild 
+   */
+  user_exists: async function(user_id, pool, guild){
+    const check_guild = await guild.members.find(val => val.id == user_id);
+    let check_db = false;
+    
+    //pull latest db data to be written to
+    let users_g;
+    try{
+      users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].users;
+    }catch(err){
+      return console.error('on [ user_exists function ]\n', err.stack);
+    }
+
+    if(users_g.users[user_id] != undefined && check_guild == null){
+      delete users_g.users[user_id]
+
+      //update db with latest data
+      try{
+        await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [users_g, guild.id]);
+      }catch(err){
+        return console.error('on [ role_exist function ]\n', err.stack);
+      }
+    }
+
+  },
+
+  /**
+   * @name user_rep_xp(...)
+   * 
+   * @description : adds xp to the associated user within the external PSQL db. 
+   * 
+   * @param {Int} user_id 
+   * @param {PSQL} pool 
+   * @param {GUILD} guild 
+   * @param {Int} amount 
+   */
+  user_add_xp: async function(user_id, pool, guild, amount){
+    
+  },
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - Main functions - - - - - - - - - - - - - - - - - - - - - - - - -
 
   /**
@@ -130,7 +178,7 @@ module.exports = {
    * @param {PSQL-POOL} pool 
    */
   rep_set_up: async function(prefix, msg, pool, client){
-    const rep_xp = new RegExp("^" + prefix + "rep.setup");
+    const rep_xp = new RegExp("^" + prefix + "rep\.setup");
 
     //check that the one who runs the command is admin of the server. 
     if(rep_xp.test(msg.content.toLowerCase().trim()) && msg.member.hasPermission("ADMINISTATOR") == true){
@@ -317,7 +365,7 @@ module.exports = {
   },
 
   rep_remove_role: function(prefix, msg, pool){
-    const ranks_exp = new RegExp("^" + prefix + "rep.remrole ");
+    const ranks_exp = new RegExp("^" + prefix + "rep\.remrole ");
   },
 
   rep_exp_msg: function(msg, pool){
@@ -325,7 +373,20 @@ module.exports = {
   },
 
   rep_grant_xp: function(prefix, msg, pool){
+    const rep_xp_ref = new RegExp("^" + prefix + "rep\.grantxp .*? [0-9]+");
+    const rep_xp_id = new RegExp("^" + prefix + "rep\.grantxp [0-9]+ [0-9]+")
+    const check_admin = msg.member.hasPermission("ADMINISTATOR") == true;
 
+    //ensure that the command is being ran by an admin 
+    if(rep_xp_id.test(msg.content.toLowerCase().trim()) && check_admin == true){
+
+    }
+
+    else if(rep_xp_ref.test(msg.content.toLowerCase().trim()) && check_admin == true){
+      const user_id = msg.mentions.members.array()[0].id;
+
+      module.exports.user_exists(user_id, pool, msg.guild);
+    }
   },
 
   rep_remove_xp: function(prefix, msg, pool){
@@ -351,8 +412,8 @@ module.exports = {
    * @param {PSQL} pool 
    */
   rep_board: async function(prefix, msg, client, pool){
-    const rep_board = new RegExp("^" + prefix + "rep.board");
-    const rep_members = new RegExp("^" + prefix + "rep.xpboard"); // show top 10 
+    const rep_board = new RegExp("^" + prefix + "rep\.board");
+    const rep_members = new RegExp("^" + prefix + "rep\.xpboard"); // show top 10 
 
     if(rep_board.test(msg.content.toLowerCase().trim()) || rep_members.test(msg.content.toLowerCase().trim())){
       //User timer
@@ -421,7 +482,7 @@ module.exports = {
         }
       }
 
-      //sequence for r.xpboard
+      //sequence for rep.board
       else if(JSON.stringify(users) != "{\"users\":{}}"){
         title = "Rep xp board:"
 
