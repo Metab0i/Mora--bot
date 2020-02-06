@@ -128,7 +128,6 @@ module.exports = {
    */
   user_exists: async function(user_id, pool, guild){
     const check_guild = await guild.members.find(val => val.id == user_id);
-    let check_db = false;
     
     //pull latest db data to be written to
     let users_g;
@@ -152,7 +151,7 @@ module.exports = {
   },
 
   /**
-   * @name user_rep_xp(...)
+   * @name user_add_xp(...)
    * 
    * @description : adds xp to the associated user within the external PSQL db. 
    * 
@@ -162,7 +161,16 @@ module.exports = {
    * @param {Int} amount 
    */
   user_add_xp: async function(user_id, pool, guild, amount){
-    
+    //pull latest db data to be written to
+    let users_g;
+    try{
+      users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].users;
+    }catch(err){
+      return console.error('on [ user_exists function ]\n', err.stack);
+    }
+
+    //todo: check if user is a part of the json, if they are, proceed to add ${amount} on top of already existing value. If member isn't a part of the json, just add them with amount as value. 
+    //      Finally, write to db.
   },
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - Main functions - - - - - - - - - - - - - - - - - - - - - - - - -
