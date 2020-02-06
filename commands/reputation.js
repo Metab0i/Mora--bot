@@ -18,6 +18,7 @@ module.exports = {
    * @name ranks_setUp_assist(...)
    * 
    * @description : processes a json arg, and updates db appropriately
+   * 
    * @param {json} ranks_json 
    */
   rep_setUp_assist: async function(msg, role_data, rep_json, pool){
@@ -271,7 +272,7 @@ module.exports = {
                 //if operation is successful, it will send a msg to chat notifying of success, if not
                 // will send a message notifying of failure.
                 const role_data = role_name + ";" + role_xp;
-                module.exports.rep_setUp_assist(msg, role_data, rep_json, pool);
+                await module.exports.rep_setUp_assist(msg, role_data, rep_json, pool);
 
                 return msg_collector.stop();
               }
