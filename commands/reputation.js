@@ -5,7 +5,7 @@ const assist_func = require('./assist_functions');
 //TODO:
 /**
  * 1. When a role is being displayed in rep.board be sure to verify that it still exists (implement an assistance function for that.)
- * 2. When a role is deleted and it's on a list, be sure to remove it
+ * 2. Every time a user gets granted xp, check if the roles in db are consistent with guild
  * 3. %rep.help - sends an outline of how to use the feature 
  * 4. %rep - sends a list of possible commands to DMs.
  */
