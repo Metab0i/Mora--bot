@@ -11,6 +11,9 @@ const assist_func = require('./assist_functions');
  */
 
 module.exports = {
+
+  //- - - - - - - - - - - - - - - - - - - - - - - - - Assist functions - - - - - - - - - - - - - - - - - - - - - - - - -
+
   /**
    * @name ranks_setUp_assist(...)
    * 
@@ -73,6 +76,44 @@ module.exports = {
       
       (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(7000);
     }
+  },
+
+  /**
+   * @name role_exists(...);
+   * 
+   * @description : checks if role exists or not, if it does, return true, if it does, don't do anything. If it doesn't proceed to remove it from the DB
+   * 
+   * @param {String} role_id 
+   * @param {PSQL} pool 
+   * @param {GUILD} guild 
+   */
+  role_exists: async function(role_id, pool, guild){
+    const q_result = await guild.roles.find(val => val.id == role_id);
+
+    if(q_result == null){
+      //pull latest db data to be written to
+      let ranks_rep;
+      try{
+        ranks_rep = (await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].ranks_feature;
+      }catch(err){
+        return console.error('on [ role_exist function ]\n', err.stack);
+      }
+
+      delete ranks_rep.roles[role_id]
+
+      //update db with latest data
+      try{
+        await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [ranks_rep, guild.id]);
+      }catch(err){
+        return console.error('on [ role_exist function ]\n', err.stack);
+      }
+
+      return false;
+      
+    }
+
+    return true;
+
   },
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - Main functions - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -339,15 +380,18 @@ module.exports = {
         if(user == msg.member.id) user_xp = users[user].xp
       }
 
-      //sequence for r.role
+      //sequence for rep.board
       if(rep_board.test(msg.content.toLowerCase().trim())){
         title = "Rep info";
 
         for(let role in roles){
-          if(roles[role] == "") desc_str = "```No ranks to display.```"
-          
-          else range_array.push(roles[role])
+          if((await module.exports.role_exists(role, pool, msg.guild)) == true){
+            range_array.push(roles[role])
+          }
         }
+
+        //if array is empty, add a desc as the following:
+        if(range_array.length == 0) desc_str = "```No ranks to display.```";
 
         //sort in ascending order
         range_array.sort(function(a, b){return a-b});
