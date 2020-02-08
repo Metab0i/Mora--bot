@@ -146,7 +146,16 @@ module.exports = {
       }catch(err){
         return console.error('on [ role_exist function ]\n', err.stack);
       }
+
+      return false;
+
     }
+
+    else if(check_guild == null){
+      return false;
+    }
+
+    return true;
 
   },
 
@@ -169,8 +178,24 @@ module.exports = {
       return console.error('on [ user_exists function ]\n', err.stack);
     }
 
-    //todo: check if user is a part of the json, if they are, proceed to add ${amount} on top of already existing value. If member isn't a part of the json, just add them with amount as value. 
-    //      Finally, write to db.
+    if(Number(users_g.users[user_id]) > 999999999){
+      return guild.owner.send("`-" + user_id + "-'s rep xp exceeds 999,999,999. They cannot earn any more xp.`")
+    }
+
+    if(users_g.users[user_id] == undefined){
+      users_g.users[user_id] = amount;
+    }
+
+    else{
+      users_g.users[user_id] = Number(users_g.users[user_id]) + Number(amount);
+    }
+
+    //update db with latest data
+    try{
+      await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [users_g, guild.id]);
+    }catch(err){
+      return console.error('on [ role_exist function ]\n', err.stack);
+    }
   },
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - Main functions - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -380,20 +405,50 @@ module.exports = {
     //feature that keeps track of messages with 1% chance of firing off (considering 0.5 % chance)
   },
 
-  rep_grant_xp: function(prefix, msg, pool){
+  rep_grant_xp: async function(prefix, msg, client, pool){
     const rep_xp_ref = new RegExp("^" + prefix + "rep\.grantxp .*? [0-9]+");
     const rep_xp_id = new RegExp("^" + prefix + "rep\.grantxp [0-9]+ [0-9]+")
-    const check_admin = msg.member.hasPermission("ADMINISTATOR") == true;
+    const check_admin = msg.member.hasPermission("ADMINISTRATOR") == true;
+    const query = msg.content.toLowerCase().trim();
 
     //ensure that the command is being ran by an admin 
-    if(rep_xp_id.test(msg.content.toLowerCase().trim()) && check_admin == true){
+    if((rep_xp_id.test(query) || rep_xp_ref.test(query)) && check_admin == true){
+      //User timer
+      if(assist_func.userTimeOut(msg) == true) return;
 
-    }
+      msg.channel.startTyping();
 
-    else if(rep_xp_ref.test(msg.content.toLowerCase().trim()) && check_admin == true){
-      const user_id = msg.mentions.members.array()[0].id;
+      let user_info;
 
-      module.exports.user_exists(user_id, pool, msg.guild);
+      //check if it's id or user reference
+      if(rep_xp_id.test(query)) user_info = (msg.content.replace(prefix + "rep.grantxp ", "")).split(" ");
+      else if(rep_xp_ref.test(query)){
+        user_info = (msg.content.replace(prefix + "rep.grantxp ", "")).split(" ");
+
+        //check if it's a reference and not a string
+        if(!/^<.*?[0-9]>/.test(user_info[0])) return msg.channel.send("`Invalid user reference, try again.`");
+
+        user_info[0] = msg.mentions.members.array()[0].id;
+      }
+      
+      //user verification
+      if(module.exports.user_exists(user_info[0], pool, msg.guild) == false){
+        return msg.channel.send("`User isn't a part of the guild or broken user.`");
+      }
+
+      //check so that the number doesn't exceed 999999999
+      if(user_info[1] > 999999999){
+        return msg.channel.send("`cannot award xp above 999,999,999. Try again.`")
+      }
+
+      //add xp and do additional checks
+      await module.exports.user_add_xp(user_info[0], pool, msg.guild, user_info[1]);
+
+      msg.channel.stopTyping();
+
+      const name = (await assist_func.id_to_user(user_info[0], client, msg)).username;
+
+      msg.channel.send("`Operation complete. User: -" + name + "- got awarded -" + user_info[1] + "- rep xp.`")
     }
   },
 
@@ -446,8 +501,8 @@ module.exports = {
       let title = "";
       let user_xp = 0;
         
-      for(let user in users){
-        if(user == msg.member.id) user_xp = users[user].xp
+      for(let user in users.users){
+        if(user == msg.member.id) user_xp = users.users[user]
       }
 
       //sequence for rep.board
@@ -490,12 +545,12 @@ module.exports = {
         }
       }
 
-      //sequence for rep.board
+      //sequence for rep.xpboard
       else if(JSON.stringify(users) != "{\"users\":{}}"){
         title = "Rep xp board:"
 
-        for(let user in users){
-          range_array.push(users[user].xp)
+        for(let user in users.users){
+          range_array.push(users.users[user])
         }
 
         //sort in ascending order
@@ -505,13 +560,18 @@ module.exports = {
 
         let count = 0;
 
-        for(let user in users){
-          for(let i = 1; i < 10; i++){
-            if(users[user].xp == range_array[i]){
+        for(let i = 0; i < 10; i++){
+          for(let user in users.users){
+            if(users.users[user] == range_array[i]){
               const user_name = await assist_func.id_to_user(String(user), client, msg);
 
               desc_str += `\`${count}\` -「 **${user_name}** = { **rep_xp** : *${range_array[i]}* } 」\n  \n`;
               count++
+            }
+
+            //prevent loop running for more than necessary
+            if(i > range_array.length){
+              break;
             }
           }
         }

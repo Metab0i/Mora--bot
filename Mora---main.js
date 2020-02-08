@@ -94,6 +94,8 @@ client.on("channelCreate", function(channel){
  * Functionality: Proceeds to produce an output every time an appropriate command was executed in a text chat. 
  */
 client.on('message', async msg => {
+  if(msg.member == null || msg.author.bot == true) return;
+
   //db force gather
   if(msg.author == '<@360790875560869889>' && msg.content == '%reload') {
     msg.channel.send("`Reloading data...`");
@@ -150,7 +152,7 @@ client.on('message', async msg => {
   //ranks
   rep.rep_set_up(prefix, msg, pool, client);
   rep.rep_exp_msg(msg, pool);
-  rep.rep_grant_xp(prefix, msg, pool);
+  rep.rep_grant_xp(prefix, msg, client, pool);
   rep.rep_remove_xp(prefix, msg, pool);
   rep.rep_onoff_user(prefix, msg, pool);
   rep.rep_board(prefix, msg, client, pool);
