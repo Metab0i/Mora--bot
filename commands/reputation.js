@@ -179,7 +179,8 @@ module.exports = {
     }
 
     if(Number(users_g.users[user_id]) > 999999999){
-      return guild.owner.send("`-" + user_id + "-'s rep xp exceeds 999,999,999. They cannot earn any more xp.`")
+      guild.owner.send("`-" + user_id + "-'s rep xp exceeds 999,999,999. They cannot earn any more xp.`")
+      return false;
     }
 
     if(users_g.users[user_id] == undefined){
@@ -196,6 +197,8 @@ module.exports = {
     }catch(err){
       return console.error('on [ role_exist function ]\n', err.stack);
     }
+
+    return true;
   },
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - Main functions - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -442,9 +445,13 @@ module.exports = {
       }
 
       //add xp and do additional checks
-      await module.exports.user_add_xp(user_info[0], pool, msg.guild, user_info[1]);
+      const result = await module.exports.user_add_xp(user_info[0], pool, msg.guild, user_info[1]);
 
       msg.channel.stopTyping();
+
+      if(result == false){
+        return msg.channel.send(`\`Unable to grant any rep xp to\` -<@${user_info[0]}>-. \`Try Again.\``)
+      }
 
       const name = (await assist_func.id_to_user(user_info[0], client, msg)).username;
 
