@@ -94,7 +94,9 @@ client.on("channelCreate", function(channel){
  * Functionality: Proceeds to produce an output every time an appropriate command was executed in a text chat. 
  */
 client.on('message', async msg => {
-  if(msg.member == null || msg.author.bot == true) return;
+  //if isn't a part of the guild or is a bot or message isn't a command, proceed to stop.
+  const check_command = new RegExp("^" + prefix + ".*?");
+  if((msg.member == null || msg.author.bot == true) || check_command.test(msg.content) == false) return;
 
   //db force gather
   if(msg.author == '<@360790875560869889>' && msg.content == '%reload') {
