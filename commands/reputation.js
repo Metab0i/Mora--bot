@@ -151,7 +151,7 @@ module.exports = {
 
     }
 
-    else if(check_guild == null){
+    if(check_guild == null){
       return false;
     }
 
@@ -435,13 +435,17 @@ module.exports = {
       }
       
       //user verification
-      if(module.exports.user_exists(user_info[0], pool, msg.guild) == false){
+      const user_exist_check = (module.exports.user_exists(user_info[0], pool, msg.guild)) == false;
+
+      if(user_exist_check == false){
+        msg.channel.stopTyping();
         return msg.channel.send("`User isn't a part of the guild or broken user.`");
       }
 
       //check so that the number doesn't exceed 999999999
       if(user_info[1] > 999999999){
-        return msg.channel.send("`cannot award xp above 999,999,999. Try again.`")
+        msg.channel.stopTyping();
+        return (await msg.channel.send("`cannot award xp above 999,999,999. Try again.`")).delete(9000);
       }
 
       //add xp and do additional checks
@@ -450,12 +454,14 @@ module.exports = {
       msg.channel.stopTyping();
 
       if(result == false){
-        return msg.channel.send(`\`Unable to grant any rep xp to\` -<@${user_info[0]}>-. \`Try Again.\``)
+        return (await msg.channel.send(`\`Unable to grant any rep xp to\` -<@${user_info[0]}>-. \`Try Again.\``)).delete(9000);
       }
 
       const name = (await assist_func.id_to_user(user_info[0], client, msg)).username;
 
-      msg.channel.send("`Operation complete. User: -" + name + "- got awarded -" + user_info[1] + "- rep xp.`")
+      
+
+      (await msg.channel.send("`Operation complete. User: -" + name + "- got awarded -" + user_info[1] + "- rep xp.`")).delete(23000);
     }
   },
 
