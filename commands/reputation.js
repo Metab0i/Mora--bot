@@ -151,7 +151,7 @@ module.exports = {
 
     }
 
-    if(check_guild == null){
+    if(check_guild == undefined){
       return false;
     }
 
@@ -408,6 +408,19 @@ module.exports = {
     //feature that keeps track of messages with 1% chance of firing off (considering 0.5 % chance)
   },
 
+  /**
+   * @name rep_grant_xp(...)
+   * 
+   * @description : adds xp to any user currently present within the guild. Can only be done by the Admin. 
+   *                Does variety of checks to ensure that operation is safe and sound
+   * 
+   * @notes : [1] Broken user meaning that a user's record exists within the DB but the user themselves are absent from the guild
+   * 
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   * @param {CLIENT} client 
+   * @param {PSQL} pool 
+   */
   rep_grant_xp: async function(prefix, msg, client, pool){
     const rep_xp_ref = new RegExp("^" + prefix + "rep\.grantxp .*? [0-9]+");
     const rep_xp_id = new RegExp("^" + prefix + "rep\.grantxp [0-9]+ [0-9]+")
@@ -429,15 +442,16 @@ module.exports = {
         user_info = (msg.content.replace(prefix + "rep.grantxp ", "")).split(" ");
 
         //check if it's a reference and not a string
-        if(!/^<.*?[0-9]>/.test(user_info[0])) return msg.channel.send("`Invalid user reference, try again.`");
-
+        if(!(/^<.*?[0-9]>/.test(user_info[0]))){
+          msg.channel.stopTyping();
+          return msg.channel.send("`Invalid user reference, try again.`");
+        }
+         
         user_info[0] = msg.mentions.members.array()[0].id;
       }
-      
-      //user verification
-      const user_exist_check = (module.exports.user_exists(user_info[0], pool, msg.guild)) == false;
 
-      if(user_exist_check == false){
+      //check if user exists within the guild or if it's a broken user[1]
+      if(await module.exports.user_exists(user_info[0], pool, msg.guild) == false){
         msg.channel.stopTyping();
         return msg.channel.send("`User isn't a part of the guild or broken user.`");
       }
@@ -458,8 +472,6 @@ module.exports = {
       }
 
       const name = (await assist_func.id_to_user(user_info[0], client, msg)).username;
-
-      
 
       (await msg.channel.send("`Operation complete. User: -" + name + "- got awarded -" + user_info[1] + "- rep xp.`")).delete(23000);
     }
