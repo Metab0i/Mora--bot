@@ -201,6 +201,42 @@ module.exports = {
     return true;
   },
 
+  /**
+   * @name user_deduct_xp(...);
+   * 
+   * @description : pulls latest data from db, makes necessary changes, pushes data back into db
+   * 
+   * @param {Int} user_id 
+   * @param {PSQL} pool 
+   * @param {GUILD} guild 
+   * @param {Int} amount 
+   */
+  user_deduct_xp: async function(user_id, pool, guild, amount){
+    //pull latest db data to be written to
+    let users_g;
+    try{
+      users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].users;
+    }catch(err){
+      return console.error('on [ user_exists function ]\n', err.stack);
+    }
+
+    //prevent negative numbers
+    if((Number(users_g.users[user_id]) - amount) < 0){
+      users_g.users[user_id] = 0;
+    }
+
+    else{
+      users_g.users[user_id] = Number(users_g.users[user_id]) - Number(amount);
+    }
+
+    //update db with latest data
+    try{
+      await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [users_g, guild.id]);
+    }catch(err){
+      return console.error('on [ role_exist function ]\n', err.stack);
+    }
+  },
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - Main functions - - - - - - - - - - - - - - - - - - - - - - - - -
 
   /**
@@ -477,8 +513,49 @@ module.exports = {
     }
   },
 
-  rep_remove_xp: function(prefix, msg, pool){
+  rep_remove_xp: async function(prefix, msg, client, pool){
+    const rep_xp_ref = new RegExp("^" + prefix + "rep\.deductxp .*? [0-9]+");
+    const rep_xp_id = new RegExp("^" + prefix + "rep\.deductxp [0-9]+ [0-9]+")
+    const check_admin = msg.member.hasPermission("ADMINISTRATOR") == true;
+    const query = msg.content.toLowerCase().trim();
 
+    //ensure that the command is being ran by an admin 
+    if((rep_xp_id.test(query) || rep_xp_ref.test(query)) && check_admin == true){
+      //User timer
+      if(assist_func.userTimeOut(msg) == true) return;
+
+      msg.channel.startTyping();
+
+      let user_info;
+
+      //check if it's id or user reference
+      if(rep_xp_id.test(query)) user_info = (msg.content.replace(prefix + "rep.deductxp ", "")).split(" ");
+      else if(rep_xp_ref.test(query)){
+        user_info = (msg.content.replace(prefix + "rep.deductxp ", "")).split(" ");
+
+        //check if it's a reference and not a string
+        if(!(/^<.*?[0-9]>/.test(user_info[0]))){
+          msg.channel.stopTyping();
+          return msg.channel.send("`Invalid user reference, try again.`");
+        }
+         
+        user_info[0] = msg.mentions.members.array()[0].id;
+      }
+
+      //check if user exists within the guild or if it's a broken user[1]
+      if(await module.exports.user_exists(user_info[0], pool, msg.guild) == false){
+        msg.channel.stopTyping();
+        return msg.channel.send("`User isn't a part of the guild or broken user.`");
+      }
+
+      await module.exports.user_deduct_xp(user_info[0], pool, msg.guild, user_info[1])
+
+      const name = (await assist_func.id_to_user(user_info[0], client, msg)).username;
+
+      msg.channel.stopTyping();
+
+      (await msg.channel.send("`Operation complete. User: -" + name + "- got deducted -" + user_info[1] + "- rep xp.`")).delete(23000);
+    }
   },
 
   rep_onoff_user: function(prefix, msg, client, pool){

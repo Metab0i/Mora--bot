@@ -155,7 +155,7 @@ client.on('message', async msg => {
   rep.rep_set_up(prefix, msg, pool, client);
   rep.rep_exp_msg(msg, pool);
   rep.rep_grant_xp(prefix, msg, client, pool);
-  rep.rep_remove_xp(prefix, msg, pool);
+  rep.rep_remove_xp(prefix, msg, client, pool);
   rep.rep_onoff_user(prefix, msg, pool);
   rep.rep_board(prefix, msg, client, pool);
 
