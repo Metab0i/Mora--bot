@@ -152,12 +152,13 @@ client.on('message', async msg => {
   little_features.help_mora(prefix, msg, client);
 
   //ranks
-  rep.rep_set_up(prefix, msg, pool, client);
+  rep.rep_add_role(prefix, msg, pool, client);
   rep.rep_exp_msg(msg, pool);
   rep.rep_grant_xp(prefix, msg, client, pool);
   rep.rep_remove_xp(prefix, msg, client, pool);
   rep.rep_onoff_user(prefix, msg, pool);
   rep.rep_board(prefix, msg, client, pool);
+  rep.rep_remove_role(prefix, msg, pool);
 
   //images
   images.hug(prefix, msg, client);

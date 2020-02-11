@@ -19,9 +19,12 @@ module.exports = {
    * 
    * @description : processes a json arg, and updates db appropriately
    * 
-   * @param {json} ranks_json 
+   * @param {MESSAGE} msg 
+   * @param {Array} role_data 
+   * @param {JSON} rep_json 
+   * @param {PSQL} pool 
    */
-  rep_setUp_assist: async function(msg, role_data, rep_json, pool){
+  rep_addRole_assist: async function(msg, role_data, rep_json, pool){
     if(JSON.stringify(rep_json.roles).trim() === "{\"\":\"\"}"){
       const role_name = role_data.split(";")[0];
       const role_xp = role_data.split(";")[1];
@@ -76,6 +79,50 @@ module.exports = {
       }
       
       (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(7000);
+    }
+  },
+
+  /**
+   * @name rep_remRole_assist(...)
+   * 
+   * @description : removes a role form a db
+   * 
+   * @param {MESSAGE} msg 
+   * @param {String} role_name 
+   * @param {Json} rep_json 
+   * @param {PSQL} pool 
+   */
+  rep_remRole_assist: async function(msg, role_name, rep_json, pool){
+    if(JSON.stringify(rep_json.roles).trim() === "{\"\":\"\"}"){;
+      (await msg.channel.send("`No records, nothing to remove.`")).delete(10000);
+    }
+
+    else{
+      //if the same element is mentioned, just overwrite the already existing item with new xp value
+      let role_id = "";
+
+      //grab role's ID
+      msg.guild.roles.forEach(role => {
+        if(role.name.toLowerCase() === role_name){
+          role_id = role.id;
+        }
+      })
+
+      if(rep_json.roles[role_id] == undefined) return (await msg.channel.send("`This role is not included in records, nothing to remove.`")).delete(10000);
+
+      //remvoe a role from the json
+      delete rep_json.roles[role_id];
+      const fin_json = rep_json;
+
+      //update the DB
+      try{
+        await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [fin_json, msg.guild.id]);
+      }catch(err){
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(5000);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
+      }
+      
+      (await msg.channel.send("`Operation was a success, removed: *" + role_name + "*`")).delete(7000);
     }
   },
 
@@ -249,8 +296,8 @@ module.exports = {
    * @param {MESSAGE} msg 
    * @param {PSQL-POOL} pool 
    */
-  rep_set_up: async function(prefix, msg, pool, client){
-    const rep_xp = new RegExp("^" + prefix + "rep\.setup");
+  rep_add_role: async function(prefix, msg, pool, client){
+    const rep_xp = new RegExp("^" + prefix + "rep\.addrole");
 
     //check that the one who runs the command is admin of the server. 
     if(rep_xp.test(msg.content.toLowerCase().trim()) && msg.member.hasPermission("ADMINISTATOR") == true){
@@ -280,7 +327,7 @@ module.exports = {
       let role_xp = "";
 
       const embed = new Discord.RichEmbed()
-        .setTitle("Rep set-up page:")
+        .setTitle("Rep add role page:")
         .setDescription("Specify a role name you want to track or type cancel.")
         .setColor(assist_func.random_hex_colour())
         .setFooter("Operation will last for 2 minutes.");
@@ -296,7 +343,7 @@ module.exports = {
         }
 
         msg_collector.once('collect', async r_message => {
-          if(r_message.content.toLowerCase() == "cancel" || r_message.content.toLowerCase().includes("%r.setup")){
+          if(r_message.content.toLowerCase() == "cancel" || r_message.content.toLowerCase().includes("%rep.addrole")){
             msg_collector.stop();
 
             await first_msg.delete();
@@ -344,7 +391,7 @@ module.exports = {
         const just_numb = new RegExp("^[0-9]+$");
 
         msg_collector.once('collect', async xp_message => {
-          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%r.setup")){
+          if(xp_message.content.toLowerCase() == "cancel" || xp_message.content.toLowerCase().includes("%rep.addrole")){
             msg_collector.stop();
 
             await second_msg.delete();
@@ -392,7 +439,7 @@ module.exports = {
                 //if operation is successful, it will send a msg to chat notifying of success, if not
                 // will send a message notifying of failure.
                 const role_data = role_name + ";" + role_xp;
-                await module.exports.rep_setUp_assist(msg, role_data, rep_json, pool);
+                await module.exports.rep_addRole_assist(msg, role_data, rep_json, pool);
 
                 return msg_collector.stop();
               }
@@ -436,8 +483,146 @@ module.exports = {
 
   },
 
-  rep_remove_role: function(prefix, msg, pool){
-    const ranks_exp = new RegExp("^" + prefix + "rep\.remrole ");
+  rep_remove_role: async function(prefix, msg, pool){
+    const rep_role_rm = new RegExp("^" + prefix + "rep\.remrole");
+
+    if(rep_role_rm.test(msg.content.toLowerCase().trim()) && msg.member.hasPermission("ADMINISTRATOR") == true){
+      //User timer
+      if(assist_func.userTimeOut(msg) == true) return;
+
+      msg.channel.startTyping();
+
+      //pull latest db data to be written to
+      let db_pull_result;
+      try{
+        db_pull_result = await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [msg.guild.id]);
+        msg.channel.stopTyping();
+      }catch(err){
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
+      }
+
+      //set up a message collector to track responses from user
+      const msg_collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {
+        time: 60000,
+        max: 1000,
+        maxMatches: 3000
+      })
+
+      //Essential Variable definition
+      let role_name = "";
+
+      const embed = new Discord.RichEmbed()
+        .setTitle("Rep set-up page:")
+        .setDescription("Specify a role name you want to stop from tracking or type cancel.")
+        .setColor(assist_func.random_hex_colour())
+        .setFooter("Operation will last for 2 minutes.");
+
+      let first_msg = await msg.channel.send(embed);
+       
+             //loop to initiate a role collection
+      const roleCollector_loop = async function(){
+        if(embed.description.toLowerCase() == "wrong input. try again"){
+          embed.setDescription("Specify a role name you want to stop from tracking or type cancel.")
+
+          first_msg = await msg.channel.send(embed);
+        }
+
+        msg_collector.once('collect', async r_message => {
+          if(r_message.content.toLowerCase() == "cancel" || r_message.content.toLowerCase().includes("%rep.remrole")){
+            msg_collector.stop();
+
+            await first_msg.delete();
+            await r_message.delete();
+
+            return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
+          }
+
+          let match_check = false;
+
+          //if exists, proceed to query for how much xp is required to achieve said role and loop again to see if they want to set up another role
+          r_message.guild.roles.forEach(role => {
+            if(role.name.toLowerCase() == r_message.content.toLowerCase()){
+              match_check = true;
+
+              role_name = r_message.content.toLowerCase();
+
+              remRoleCollector_loop();
+            }
+          });
+
+          if(match_check == false){
+            const warning_msg = await msg.channel.send(embed.setDescription("Wrong Input. Try again"));
+            await warning_msg.delete(1000);
+            await first_msg.delete();
+            await r_message.delete();
+
+            return roleCollector_loop();
+          }
+
+          //delete the remainder
+          await first_msg.delete();
+          await r_message.delete();
+
+        });
+      }
+
+      const remRoleCollector_loop = async function(){
+        embed.setDescription("Would you like to confirm? [Y/N]")
+                 .addField("`Role to Remove:`", role_name, true)
+
+        const second_msg = await msg.channel.send(embed);
+
+        msg_collector.once('collect', async confirm_msg => {
+          if(confirm_msg.content.toLowerCase() == "cancel" || confirm_msg.content.toLowerCase().includes("%rep.addrole")){
+            msg_collector.stop();
+
+            await second_msg.delete();
+            await confirm_msg.delete();
+
+            return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
+          }
+
+          if(confirm_msg.content.toLowerCase() == "y"){
+            //delete the remainder
+            await second_msg.delete();
+            await confirm_msg.delete();
+
+            //fill out json for processing
+            let rep_json = db_pull_result.rows[0].ranks_feature;
+
+            //send data to assist function to process and then update the db
+            //if operation is successful, it will send a msg to chat notifying of success, if not
+            // will send a message notifying of failure.
+            const role_data = role_name;
+            await module.exports.rep_remRole_assist(msg, role_data, rep_json, pool);
+
+            return msg_collector.stop();
+          }
+          else if(confirm_msg.content.toLowerCase() == "n"){
+            (await msg.channel.send(embed.setDescription("`Operation Cancelled`"))).delete(1000);
+
+            //delete the remainder
+            await second_msg.delete();
+            await confirm_msg.delete();
+
+            return msg_collector.stop();
+          }
+          else{
+            (await msg.channel.send(embed.setDescription("`Unknown entry. Operation Cancelled`"))).delete(1000);
+
+            //delete the remainder
+            await second_msg.delete();
+            await confirm_msg.delete();
+
+            return msg_collector.stop();
+          }
+        })
+      }
+
+      //initiate the loop
+      roleCollector_loop();
+
+    }
   },
 
   rep_exp_msg: function(msg, pool){
@@ -513,6 +698,16 @@ module.exports = {
     }
   },
 
+  /**
+   * @name rep_remove_xp(...)
+   * 
+   * @description : deducts xp from a specified amount of xp from a guild member
+   * 
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   * @param {CLIENT} client 
+   * @param {PSQL} pool 
+   */
   rep_remove_xp: async function(prefix, msg, client, pool){
     const rep_xp_ref = new RegExp("^" + prefix + "rep\.deductxp .*? [0-9]+");
     const rep_xp_id = new RegExp("^" + prefix + "rep\.deductxp [0-9]+ [0-9]+")
