@@ -67,7 +67,7 @@ module.exports = {
           const announce_embed = new Discord.RichEmbed()
             .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL)
             .setColor(assist_func.random_hex_colour())
-            .setDescription("**The winner is:** \"" + `${winner.emoji}\"\n\n` + "`" + poll_array[text_index].trim() + "`")
+            .setDescription("**The winner is:** \"" + `${winner.emoji}\"\n\n` + "-" + poll_array[text_index].trim() + "-")
           
           msg.channel.send(announce_embed);
         }else{

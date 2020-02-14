@@ -754,10 +754,7 @@ module.exports = {
   },
 
   rep_onoff_user: function(prefix, msg, client, pool){
-    //pull db data
-    //check if it contains a template or holds actual data
-    //if former, then proceed to prompt for rank-set-up function from a user with message collector
-    //only admins can have access to this command.
+    
   },
 
   /**
