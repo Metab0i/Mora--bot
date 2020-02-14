@@ -231,18 +231,23 @@ module.exports = {
     }
 
     if(users_g.users[user_id] == undefined){
-      users_g.users[user_id] = amount;
+      users_g.users[user_id] = {
+        "xp" : {
+          "xp_amount" : amount,
+          "xp_switch" : false
+        }
+      }
     }
 
     else{
-      users_g.users[user_id] = Number(users_g.users[user_id]) + Number(amount);
+      users_g.users[user_id]["xp"]["xp_amount"] = Number(users_g.users[user_id]["xp"]["xp_amount"]) + Number(amount);
     }
 
     //update db with latest data
     try{
       await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [users_g, guild.id]);
     }catch(err){
-      return console.error('on [ role_exist function ]\n', err.stack);
+      return console.error('on [ user_add_xp function ]\n', err.stack);
     }
 
     return true;
@@ -264,23 +269,23 @@ module.exports = {
     try{
       users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].users;
     }catch(err){
-      return console.error('on [ user_exists function ]\n', err.stack);
+      return console.error('on [ user_deduct_xp function ]\n', err.stack);
     }
 
     //prevent negative numbers
     if((Number(users_g.users[user_id]) - amount) < 0){
-      users_g.users[user_id] = 0;
+      users_g.users[user_id]["xp"] = 0;
     }
 
     else{
-      users_g.users[user_id] = Number(users_g.users[user_id]) - Number(amount);
+      users_g.users[user_id]["xp"] = Number(users_g.users[user_id]["xp"]) - Number(amount);
     }
 
     //update db with latest data
     try{
       await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [users_g, guild.id]);
     }catch(err){
-      return console.error('on [ role_exist function ]\n', err.stack);
+      return console.error('on [ user_deduct_xp function ]\n', err.stack);
     }
   },
 
@@ -753,8 +758,65 @@ module.exports = {
     }
   },
 
-  rep_onoff_user: function(prefix, msg, client, pool){
-    
+  /**
+   * @name rep_onoff_user
+   * 
+   * @description : turn on/off user's ability to participate in obtaining a role through xp
+   * 
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   * @param {CLIENT} client 
+   * @param {PSQL} pool 
+   */
+  rep_onoff_user: async function(prefix, msg, client, pool){
+    const rep_user_onoff = new RegExp("^" + prefix + "rep\.useronoff .*?");
+    const rep_id_onoff = new RegExp("^" + prefix + "rep\.useronoff [0-9]+");
+    const check_admin = msg.member.hasPermission("ADMINISTRATOR") == true;
+    const query = msg.content.toLowerCase().trim();
+
+    //ensure that the command is being ran by an admin 
+    if((rep_user_onoff.test(query) || rep_id_onoff.test(query)) && check_admin == true){
+      //User timer
+      if(assist_func.userTimeOut(msg) == true) return;
+
+      msg.channel.startTyping();
+
+      let user_info;
+
+      //check if it's id or user reference
+      if(rep_id_onoff.test(query)) {
+        user_info = (msg.content.replace(prefix + "rep.useronoff ", "")); 
+      }
+      else if(rep_user_onoff.test(query)){
+        user_info = (msg.content.replace(prefix + "rep.useronoff ", "")).trim();
+
+        //check if it's a reference and not a string
+        if(!(/^<.*?[0-9]>/.test(user_info))){
+          msg.channel.stopTyping();
+          return msg.channel.send("`Invalid user reference, try again.`");
+        }
+         
+        user_info = msg.mentions.members.array()[0].id;
+      }
+
+      let users_g;
+      try{
+        users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [msg.guild.id])).rows[0].users;
+      }catch(err){
+        return console.error('on [ rep_onoff_user function ]\n', err.stack);
+      }
+
+      console.log(users_g.users)
+
+      // //update db with latest data
+      // try{
+      //   await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [users_g, guild.id]);
+      // }catch(err){
+      //   return console.error('on [ role_exist function ]\n', err.stack);
+      // }
+
+    }
+
   },
 
   /**
@@ -796,7 +858,7 @@ module.exports = {
       let user_xp = 0;
         
       for(let user in users.users){
-        if(user == msg.member.id) user_xp = users.users[user]
+        if(user == msg.member.id) user_xp = users.users[user]["xp"]["xp_amount"]
       }
 
       //sequence for rep.board
@@ -844,7 +906,7 @@ module.exports = {
         title = "Rep xp board:"
 
         for(let user in users.users){
-          range_array.push(users.users[user])
+          range_array.push(users.users[user]["xp"]["xp_amount"])
         }
 
         //sort in ascending order
@@ -856,7 +918,7 @@ module.exports = {
 
         for(let i = 0; i < 10; i++){
           for(let user in users.users){
-            if(users.users[user] == range_array[i]){
+            if(users.users[user]["xp"]["xp_amount"] == range_array[i]){
               const user_name = await assist_func.id_to_user(String(user), client, msg);
 
               desc_str += `\`${count}\` -「 **${user_name}** = { **rep_xp** : *${range_array[i]}* } 」\n  \n`;
