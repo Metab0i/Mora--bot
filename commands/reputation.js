@@ -799,6 +799,12 @@ module.exports = {
         user_info = msg.mentions.members.array()[0].id;
       }
 
+      //check if user exists within the guild or if it's a broken user[1]
+      if(await module.exports.user_exists(user_info, pool, msg.guild) == false){
+        msg.channel.stopTyping();
+        return msg.channel.send("`User isn't a part of the guild or broken user.`");
+      }
+
       let users_g;
       try{
         users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [msg.guild.id])).rows[0].users;
@@ -806,14 +812,18 @@ module.exports = {
         return console.error('on [ rep_onoff_user function ]\n', err.stack);
       }
 
-      console.log(users_g.users)
+      users_g.users[user_info].xp["xp_switch"] = users_g.users[user_info].xp["xp_switch"] == true ? false : true;
 
-      // //update db with latest data
-      // try{
-      //   await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [users_g, guild.id]);
-      // }catch(err){
-      //   return console.error('on [ role_exist function ]\n', err.stack);
-      // }
+      // update db with latest data
+      try{
+        await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [users_g, msg.guild.id]);
+      }catch(err){
+        msg.channel.send("`Something went wrong...`");
+        return console.error('on [ role_exist function ]\n', err.stack);
+      }
+
+      msg.channel.stopTyping();
+      msg.channel.send("`Operation was successful, `<@" + user_info + ">` receives xp: " + users_g.users[user_info].xp["xp_switch"] + "`")
 
     }
 
