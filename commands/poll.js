@@ -52,10 +52,12 @@ module.exports = {
         let tie_status = false;
 
         message.reactions.array().forEach(reaction => {
-          if(reaction.count > score) {
-            score = reaction.count;
-            winner = reaction
-            tie_status = false;
+          for(var em_id in poll_emojis){
+            if(reaction.emoji.id == poll_emojis[em_id] && reaction.count > score){
+              score = reaction.count;
+              winner = reaction
+              tie_status = false;
+            }
           }
 
           if(reaction.count == winner.count && reaction.emoji.id != winner.emoji.id) tie_status = true;
@@ -63,8 +65,6 @@ module.exports = {
 
         if(tie_status != true){
           const text_index = poll_emojis.indexOf(winner.emoji.id)
-
-          console.log(poll_array[text_index]);
 
           const announce_embed = new Discord.RichEmbed()
             .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL)
