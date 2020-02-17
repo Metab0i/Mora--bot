@@ -958,4 +958,15 @@ module.exports = {
       
     }    
   }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - Interactive functions - - - - - - - - - - - - - - - - - - - - - - - - -
+//TODO: 
+/**
+ * 1. Ability to Purchase roles with the rep XP members have
+ * 2. Ability to Gain XP through activities
+ * 3. Loose xp once a purchase is made and a role is assigned
+ * 4. some other items that would let you interact with the server like, ability to mute someone once 
+ * 5. Ability to kick someone, once 
+ */
+
 }

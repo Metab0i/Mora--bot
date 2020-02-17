@@ -64,6 +64,8 @@ module.exports = {
         .catch((err) =>{
           return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
         })
+      
+      
     }
   },
 

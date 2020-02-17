@@ -27,6 +27,8 @@ module.exports = {
 
       let user_pfp;
 
+      
+
       try{
         let user = await assist_func.id_to_user(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
         user_pfp = await Jimp.read(user.avatarURL);
