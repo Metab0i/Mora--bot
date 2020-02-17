@@ -64,6 +64,8 @@ module.exports = {
         if(tie_status != true){
           const text_index = poll_emojis.indexOf(winner.emoji.id)
 
+          console.log(poll_array[text_index]);
+
           const announce_embed = new Discord.RichEmbed()
             .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL)
             .setColor(assist_func.random_hex_colour())

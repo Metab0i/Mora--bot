@@ -305,7 +305,7 @@ module.exports = {
     const rep_xp = new RegExp("^" + prefix + "rep\.addrole");
 
     //check that the one who runs the command is admin of the server. 
-    if(rep_xp.test(msg.content.toLowerCase().trim()) && msg.member.hasPermission("ADMINISTATOR") == true){
+    if(rep_xp.test(msg.content.toLowerCase().trim()) && msg.member.hasPermission("ADMINISTRATOR") == true){
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;
 
