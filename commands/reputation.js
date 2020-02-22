@@ -219,7 +219,7 @@ module.exports = {
       users_g.users[user_id] = {
         "xp" : {
           "xp_amount" : amount,
-          "xp_switch" : false
+          "xp_switch" : true
         }
       }
     }
@@ -646,11 +646,23 @@ module.exports = {
     }
   },
 
-  rep_exp_msg: function(msg, pool){
+  /**
+   * @name rep_exp_msg(...);
+   * 
+   * @description : 0.5% chance of a user getting xp by random.
+   * 
+   * @param {MESSAGE} msg 
+   * @param {PSQL} pool 
+   */
+  rep_exp_msg: async function(msg, pool){
     const random_xp = assist_func.random_number(0, 200);
-
+    
     if(random_xp == 1){
-      
+      const rep_data = await module.exports.rep_ranks_query(msg.guild, pool);
+
+      if(rep_data.status == 'TRUE'){
+        await module.exports.user_add_xp(msg.author.id, pool, msg.guild, 10);
+      }
     }
   },
 
