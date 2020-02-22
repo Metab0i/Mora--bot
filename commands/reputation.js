@@ -140,12 +140,7 @@ module.exports = {
 
     if(q_result == null){
       //pull latest db data to be written to
-      let ranks_rep;
-      try{
-        ranks_rep = (await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].ranks_feature;
-      }catch(err){
-        return console.error('on [ role_exist function ]\n', err.stack);
-      }
+      const ranks_rep = await module.exports.rep_ranks_query(guild, pool);
 
       delete ranks_rep.roles[role_id]
 
@@ -177,12 +172,7 @@ module.exports = {
     const check_guild = await guild.members.find(val => val.id == user_id);
     
     //pull latest db data to be written to
-    let users_g;
-    try{
-      users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].users;
-    }catch(err){
-      return console.error('on [ user_exists function ]\n', err.stack);
-    }
+    const users_g = await module.exports.rep_users_query(guild, pool);
 
     if(users_g.users[user_id] != undefined && check_guild == null){
       delete users_g.users[user_id]
@@ -218,12 +208,7 @@ module.exports = {
    */
   user_add_xp: async function(user_id, pool, guild, amount){
     //pull latest db data to be written to
-    let users_g;
-    try{
-      users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].users;
-    }catch(err){
-      return console.error('on [ user_exists function ]\n', err.stack);
-    }
+    const users_g = await module.exports.rep_users_query(guild, pool)
 
     if(Number(users_g.users[user_id]) > 999999999){
       guild.owner.send("`-" + user_id + "-'s rep xp exceeds 999,999,999. They cannot earn any more xp.`")
@@ -240,6 +225,8 @@ module.exports = {
     }
 
     else{
+      if(users_g.users[user_id]["xp"].xp_switch == false) return;
+      
       users_g.users[user_id]["xp"]["xp_amount"] = Number(users_g.users[user_id]["xp"]["xp_amount"]) + Number(amount);
     }
 
@@ -265,12 +252,7 @@ module.exports = {
    */
   user_deduct_xp: async function(user_id, pool, guild, amount){
     //pull latest db data to be written to
-    let users_g;
-    try{
-      users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].users;
-    }catch(err){
-      return console.error('on [ user_deduct_xp function ]\n', err.stack);
-    }
+    const users_g = await module.exports.rep_users_query(guild, pool)
 
     //prevent negative numbers
     if((Number(users_g.users[user_id]) - amount) < 0){
@@ -278,6 +260,8 @@ module.exports = {
     }
 
     else{
+      if(users_g.users[user_id]["xp"].xp_switch == false) return;
+      
       users_g.users[user_id]["xp"] = Number(users_g.users[user_id]["xp"]) - Number(amount);
     }
 
@@ -289,10 +273,50 @@ module.exports = {
     }
   },
 
+  /**
+   * @name rep_ranks_query(...)
+   * 
+   * @description : pulls rep_ranks data from the db and returns it
+   * 
+   * @param {GuILD} guild 
+   * @param {POOL} pool 
+   */
+  rep_ranks_query: async function(guild, pool){
+    //pull latest db data to be written to
+    let ranks_rep;
+    try{
+      ranks_rep = (await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].ranks_feature;
+    }catch(err){
+      return console.error('on [ role_exist function ]\n', err.stack);
+    }
+
+    return ranks_rep;
+  },
+  
+   /**
+   * @name rep_users_query(...)
+   * 
+   * @description : pulls user data from the db and returns it
+   * 
+   * @param {GuILD} guild 
+   * @param {POOL} pool 
+   */
+  rep_users_query: async function(guild, pool){
+    //pull latest db data to be written to
+    let users_g;
+    try{
+      users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [guild.id])).rows[0].users;
+    }catch(err){
+      return console.error('on [ user_deduct_xp function ]\n', err.stack);
+    }
+
+    return users_g;
+  },
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - Main functions - - - - - - - - - - - - - - - - - - - - - - - - -
 
   /**
-   * @name rep_set_up(...)
+   * @name rep_add_role(...)
    * 
    * @description : set up ranks feature. How much XP is needed for a role. Utilizes the MessageCollector, Nodejs Event and node-psql to function.
    *                MessageCollector - to keep track of user's messages, Events - integration as a part of MessageCollector, node-psql - for db interaction. 
@@ -312,13 +336,7 @@ module.exports = {
       msg.channel.startTyping();
 
       //pull latest db data to be written to
-      let db_pull_result;
-      try{
-        db_pull_result = await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [msg.guild.id]);
-        msg.channel.stopTyping();
-      }catch(err){
-        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
-      }
+      let db_pull_result = await module.exports.rep_ranks_query(guild, pool);
 
       //set up a message collector to track responses from user
       const msg_collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {
@@ -437,14 +455,11 @@ module.exports = {
                 await third_msg.delete();
                 await confirm_msg.delete();
 
-                //fill out json for processing
-                let rep_json = db_pull_result.rows[0].ranks_feature;
-
                 //send data to assist function to process and then update the db
                 //if operation is successful, it will send a msg to chat notifying of success, if not
                 // will send a message notifying of failure.
                 const role_data = role_name + ";" + role_xp;
-                await module.exports.rep_addRole_assist(msg, role_data, rep_json, pool);
+                await module.exports.rep_addRole_assist(msg, role_data, db_pull_result, pool);
 
                 return msg_collector.stop();
               }
@@ -488,6 +503,16 @@ module.exports = {
 
   },
 
+  /**
+   * @name rep_remove_role(...)
+   * 
+   * @description : Remove a role from being tracked by the feature by the same principal as add role 
+   *                however, instead of adding data to the db, it removes data from json and updates db with new json
+   * 
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   * @param {PSQL} pool 
+   */
   rep_remove_role: async function(prefix, msg, pool){
     const rep_role_rm = new RegExp("^" + prefix + "rep\.remrole");
 
@@ -498,13 +523,7 @@ module.exports = {
       msg.channel.startTyping();
 
       //pull latest db data to be written to
-      let db_pull_result;
-      try{
-        db_pull_result = await pool.query('SELECT ranks_feature FROM guilds WHERE (gid = $1)', [msg.guild.id]);
-        msg.channel.stopTyping();
-      }catch(err){
-        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
-      }
+      const db_pull_result = await module.exports.rep_ranks_query(guild, pool);
 
       //set up a message collector to track responses from user
       const msg_collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {
@@ -592,14 +611,11 @@ module.exports = {
             await second_msg.delete();
             await confirm_msg.delete();
 
-            //fill out json for processing
-            let rep_json = db_pull_result.rows[0].ranks_feature;
-
             //send data to assist function to process and then update the db
             //if operation is successful, it will send a msg to chat notifying of success, if not
             // will send a message notifying of failure.
             const role_data = role_name;
-            await module.exports.rep_remRole_assist(msg, role_data, rep_json, pool);
+            await module.exports.rep_remRole_assist(msg, role_data, db_pull_result, pool);
 
             return msg_collector.stop();
           }
@@ -631,7 +647,11 @@ module.exports = {
   },
 
   rep_exp_msg: function(msg, pool){
-    //feature that keeps track of messages with 1% chance of firing off (considering 0.5 % chance)
+    const random_xp = assist_func.random_number(0, 200);
+
+    if(random_xp == 1){
+      
+    }
   },
 
   /**
@@ -758,6 +778,13 @@ module.exports = {
     }
   },
 
+  rep_onoff: async function(prefix, msg, pool){
+    if(msg.content.toLowerCase() == (prefix + "rep.onoff")){
+      console.log(await module.exports.rep_ranks_query(msg.guild, pool));
+      console.log(await module.exports.rep_users_query(msg.guild, pool));
+    }
+  },
+
   /**
    * @name rep_onoff_user
    * 
@@ -805,12 +832,7 @@ module.exports = {
         return msg.channel.send("`User isn't a part of the guild or broken user.`");
       }
 
-      let users_g;
-      try{
-        users_g = (await pool.query('SELECT users FROM guilds WHERE (gid = $1)', [msg.guild.id])).rows[0].users;
-      }catch(err){
-        return console.error('on [ rep_onoff_user function ]\n', err.stack);
-      }
+      const users_g = await module.exports.rep_users_query(guild, pool)
 
       users_g.users[user_info].xp["xp_switch"] = users_g.users[user_info].xp["xp_switch"] == true ? false : true;
 
@@ -952,7 +974,7 @@ module.exports = {
       const embed = new Discord.RichEmbed()
                         .setTitle(title)
                         .setDescription(desc_str)
-                        .setFooter("Your rep xp: " + user_xp)
+                        .setFooter("Your rep xp: " + user_xp + "\nRep feature active: " + db_pull_result.rows[0].ranks_feature.status)
 
       msg.channel.send(embed);
       

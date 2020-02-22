@@ -94,6 +94,9 @@ client.on("channelCreate", function(channel){
  * Functionality: Proceeds to produce an output every time an appropriate command was executed in a text chat. 
  */
 client.on('message', async msg => {
+  //functions that aren't dependant onto strict syntax of prefix + command;
+  rep.rep_exp_msg(msg, pool)
+
   //if isn't a part of the guild or is a bot or message isn't a command, proceed to stop.
   const check_command = new RegExp("^" + prefix + ".*?");
   if((msg.member == null || msg.author.bot == true) || check_command.test(msg.content) == false) return;
@@ -153,12 +156,12 @@ client.on('message', async msg => {
 
   //ranks
   rep.rep_add_role(prefix, msg, pool, client);
-  rep.rep_exp_msg(msg, pool);
   rep.rep_grant_xp(prefix, msg, client, pool);
   rep.rep_remove_xp(prefix, msg, client, pool);
   rep.rep_onoff_user(prefix, msg, client, pool);
   rep.rep_board(prefix, msg, client, pool);
   rep.rep_remove_role(prefix, msg, pool);
+  rep.rep_onoff(prefix, msg, pool);
 
   //images
   images.hug(prefix, msg, client);
