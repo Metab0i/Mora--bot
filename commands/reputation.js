@@ -780,8 +780,25 @@ module.exports = {
 
   rep_onoff: async function(prefix, msg, pool){
     if(msg.content.toLowerCase() == (prefix + "rep.onoff")){
-      console.log(await module.exports.rep_ranks_query(msg.guild, pool));
-      console.log(await module.exports.rep_users_query(msg.guild, pool));
+      //User timer and verification that user isn't a bot
+      if(assist_func.userTimeOut(msg) == true) return;
+
+      msg.channel.startTyping();
+
+      const rep_ranks = await module.exports.rep_ranks_query(msg.guild, pool);
+
+      rep_ranks.status = rep_ranks.status == 'FALSE' ? 'TRUE' : 'FALSE';
+
+      try{
+        await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [rep_ranks, msg.guild.id]);
+      }catch(err){
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(5000);
+        return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
+      }
+      
+      msg.channel.stopTyping();
+      msg.channel.send("`Operation successful, feature status changed to:` " + rep_ranks.status);
+
     }
   },
 
