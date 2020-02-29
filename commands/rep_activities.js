@@ -11,6 +11,7 @@ module.exports = {
 
             msg.channel.startTyping();
 
+            const user_id = msg.author.id;
             const rep_ranks = await rep_base.rep_ranks_query(msg.guild, pool);
             const rep_users = await rep_base.rep_users_query(msg.guild, pool);
             const role_name = msg.content.toLowerCase().trim().replace(prefix + "rep.purole ", "");
@@ -22,9 +23,7 @@ module.exports = {
 
             let match_check = false;
             let role_id = 0;
-            
-            console.log(rep_ranks);
-            console.log(rep_users);
+        
             //check if role exists within the guild
             msg.guild.roles.forEach(role =>{
                 if(role.name.toLowerCase() == role_name && rep_ranks.roles[role.id] != undefined){
@@ -42,14 +41,22 @@ module.exports = {
             //proceed to inquire if the user is sure about moving on
             const embed = new Discord.RichEmbed()
                                 .setTitle("Are you sure?")
-                                .addField("You are purchasing:", "```" + (role_name.charAt(0).toUpperCase() + role_name.slice(1)) + " for - " + rep_ranks.roles[role_id] + "xp```")
+                                .addField("-You are purchasing:-", "```" + (role_name.charAt(0).toUpperCase() + role_name.slice(1)) + " for - " + rep_ranks.roles[role_id] + "xp```")
+                                .addField("-Your current xp balance:-", "```" + rep_users.users[user_id].xp.xp_amount + "```")
                                 .setFooter("Do you wish to proceed? [Y/N].");
 
+            msg.channel.stopTyping();
             msg.channel.send(embed);
 
             msg_collector.once('collect', async r_message => {
                 if(r_message.content.toLowerCase() == "y"){
-                    console.log(rep_users.users[msg.member.id]);
+
+                    if((Number(rep_users.users[user_id].xp.xp_amount) - Number(rep_ranks.roles[role_id])) >= 0){
+
+                    }else{
+                        msg.channel.send("`Insufficient amount of xp. You have: " + (rep_users.users[user_id].xp.xp_amount == undefined ? 0 : rep_users.users[user_id].xp.xp_amount) + ", Required amount: " + rep_ranks.roles[role_id] + "`")
+                    }
+
                 }
                 else{
                     msg.channel.send("`Operation Cancelled.`");
@@ -57,8 +64,6 @@ module.exports = {
 
                 msg_collector.stop();
             })
-
-            msg.channel.stopTyping();
         }
     }
 }
