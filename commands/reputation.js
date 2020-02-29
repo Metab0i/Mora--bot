@@ -969,7 +969,7 @@ module.exports = {
 
       //sequence for rep.xpboard
       else if(JSON.stringify(users) != "{\"users\":{}}"){
-        title = "Rep xp board:"
+        title = "Top 11 users - xp board:"
 
         for(let user in users.users){
           range_array.push(users.users[user]["xp"]["xp_amount"])
@@ -983,27 +983,33 @@ module.exports = {
         let count = 0;
 
         for(let i = 0; i < 10; i++){
+
           for(let user in users.users){
+
+            //prevent loop running for more than necessary
+            if(count == range_array.length){
+
+              break;
+            }
+
             if(users.users[user]["xp"]["xp_amount"] == range_array[i]){
               const user_name = await assist_func.id_to_user(String(user), client, msg);
 
               desc_str += `\`${count}\` -「 **${user_name}** = { **rep_xp** : *${range_array[i]}* } 」\n  \n`;
               count++
             }
-
-            //prevent loop running for more than necessary
-            if(i > range_array.length){
-              break;
-            }
           }
+
         }
       }
 
       //in case of a template
       else{
-        title = "Top users - xp board:"
+        title = "Top 11 users - xp board:"
         desc_str = "```No active participants of this feature currently available```"
       }
+
+      msg.channel.stopTyping();
 
       const embed = new Discord.RichEmbed()
                         .setTitle(title)

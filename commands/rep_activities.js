@@ -22,7 +22,9 @@ module.exports = {
 
             let match_check = false;
             let role_id = 0;
-
+            
+            console.log(rep_ranks);
+            console.log(rep_users);
             //check if role exists within the guild
             msg.guild.roles.forEach(role =>{
                 if(role.name.toLowerCase() == role_name && rep_ranks.roles[role.id] != undefined){
@@ -32,10 +34,29 @@ module.exports = {
             })
 
             //check if status is on for the feature to be used
-            if(rep_ranks.status != 'TRUE') msg.channel.send("`Feature isn't enabled for this server, please enable the Reputation feature first. [rep.onoff]`");
+            if(rep_ranks.status != 'TRUE') return msg.channel.send("`Feature isn't enabled for this server, please enable the Reputation feature first. [rep.onoff]`");
 
-            //check if role is a part of the guild
-            if(!match_check) msg.channel.send("`Role doesn't exist in this guild or within database, please try again.`");
+            //check if role was validated
+            if(!match_check) return msg.channel.send("`Role doesn't exist in this guild or within database, please try again.`");
+
+            //proceed to inquire if the user is sure about moving on
+            const embed = new Discord.RichEmbed()
+                                .setTitle("Are you sure?")
+                                .addField("You are purchasing:", "```" + (role_name.charAt(0).toUpperCase() + role_name.slice(1)) + " for - " + rep_ranks.roles[role_id] + "xp```")
+                                .setFooter("Do you wish to proceed? [Y/N].");
+
+            msg.channel.send(embed);
+
+            msg_collector.once('collect', async r_message => {
+                if(r_message.content.toLowerCase() == "y"){
+                    console.log(rep_users.users[msg.member.id]);
+                }
+                else{
+                    msg.channel.send("`Operation Cancelled.`");
+                }
+
+                msg_collector.stop();
+            })
 
             msg.channel.stopTyping();
         }
