@@ -24,6 +24,7 @@ const comments = require('./commands/dev_comments');
 const funny_ad = require('./commands/generate_ad');
 const fortune_teller = require('./commands/fortune_teller');
 const rep = require('./commands/reputation');
+const rep_activities = require('./commands/rep_activities');
 
 //prefix
 const prefix = "%";
@@ -162,6 +163,8 @@ client.on('message', async msg => {
   rep.rep_board(prefix, msg, client, pool);
   rep.rep_remove_role(prefix, msg, pool);
   rep.rep_onoff(prefix, msg, pool);
+
+  rep_activities.obtain_role(prefix, msg, pool);
 
   //images
   images.hug(prefix, msg, client);

@@ -225,7 +225,7 @@ module.exports = {
     }
 
     else{
-      if(users_g.users[user_id]["xp"].xp_switch == false) return;
+      if(users_g.users[user_id]["xp"].xp_switch == false) return false;
       
       users_g.users[user_id]["xp"]["xp_amount"] = Number(users_g.users[user_id]["xp"]["xp_amount"]) + Number(amount);
     }
@@ -325,7 +325,7 @@ module.exports = {
    * @param {MESSAGE} msg 
    * @param {PSQL-POOL} pool 
    */
-  rep_add_role: async function(prefix, msg, pool, client){
+  rep_add_role: async function(prefix, msg, pool){
     const rep_xp = new RegExp("^" + prefix + "rep\.addrole");
 
     //check that the one who runs the command is admin of the server. 
@@ -336,7 +336,7 @@ module.exports = {
       msg.channel.startTyping();
 
       //pull latest db data to be written to
-      let db_pull_result = await module.exports.rep_ranks_query(guild, pool);
+      let db_pull_result = await module.exports.rep_ranks_query(msg.guild, pool);
 
       //set up a message collector to track responses from user
       const msg_collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {
@@ -496,6 +496,8 @@ module.exports = {
         })
       }
 
+      msg.channel.stopTyping();
+
       //initiate the loop
       roleCollector_loop();
 
@@ -523,7 +525,7 @@ module.exports = {
       msg.channel.startTyping();
 
       //pull latest db data to be written to
-      const db_pull_result = await module.exports.rep_ranks_query(guild, pool);
+      const db_pull_result = await module.exports.rep_ranks_query(msg.guild, pool);
 
       //set up a message collector to track responses from user
       const msg_collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id, {
@@ -640,6 +642,8 @@ module.exports = {
         })
       }
 
+      msg.channel.stopTyping();
+
       //initiate the loop
       roleCollector_loop();
 
@@ -661,6 +665,7 @@ module.exports = {
       const rep_data = await module.exports.rep_ranks_query(msg.guild, pool);
 
       if(rep_data.status == 'TRUE'){
+        //add xp, if feature is disabled for a user, xp wont be added.
         await module.exports.user_add_xp(msg.author.id, pool, msg.guild, 10);
       }
     }
@@ -861,7 +866,7 @@ module.exports = {
         return msg.channel.send("`User isn't a part of the guild or broken user.`");
       }
 
-      const users_g = await module.exports.rep_users_query(guild, pool)
+      const users_g = await module.exports.rep_users_query(msg.guild, pool)
 
       users_g.users[user_info].xp["xp_switch"] = users_g.users[user_info].xp["xp_switch"] == true ? false : true;
 

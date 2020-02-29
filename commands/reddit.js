@@ -12,7 +12,7 @@ module.exports = {
    * @param {String} prefix 
    * @param {Message} msg 
    * 
-   * @description : posts a random copypasta from r/copypasta sub-reddit.
+   * @description : posts a random post from a specified sub-reddit.
    */
   serve_reddit: async function(prefix, msg){
     let pasta = new RegExp("^" + prefix + "r .*? ");
