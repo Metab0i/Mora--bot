@@ -43,7 +43,10 @@ module.exports = {
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       }
 
-      if(result.items.length == 0) return msg.channel.send("`Invalid search, try again.`");
+      if(result.items.length == 0) { 
+        msg.channel.stopTyping();
+        return msg.channel.send("`Invalid search, try again.`");
+      }
       
       let link = "https://www.youtube.com/watch?v=";
 

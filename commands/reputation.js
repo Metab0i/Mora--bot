@@ -795,6 +795,14 @@ module.exports = {
     }
   },
 
+  /**
+   * @name rep_onoff(...)
+   * 
+   * @description : updates a status of a feature 
+   * @param {String} prefix 
+   * @param {Message} msg 
+   * @param {PSQL} pool 
+   */
   rep_onoff: async function(prefix, msg, pool){
     if(msg.content.toLowerCase() == (prefix + "rep.onoff")){
       //User timer and verification that user isn't a bot

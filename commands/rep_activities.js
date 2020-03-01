@@ -32,11 +32,23 @@ module.exports = {
                 }
             })
 
+            //check if user already has the role
+            if(msg.member.roles.find(val => val.id === role_id) != undefined) {
+                msg.channel.stopTyping();
+                return msg.channel.send("`You already own this role, try a different one.`");
+            }
+
             //check if status is on for the feature to be used
-            if(rep_ranks.status != 'TRUE') return msg.channel.send("`Feature isn't enabled for this server, please enable the Reputation feature first. [rep.onoff]`");
+            if(rep_ranks.status != 'TRUE') {
+                msg.channel.stopTyping();
+                return msg.channel.send("`Feature isn't enabled for this server, please enable the Reputation feature first. [rep.onoff]`");
+            }
 
             //check if role was validated
-            if(!match_check) return msg.channel.send("`Role doesn't exist in this guild or within database, please try again.`");
+            if(!match_check) {
+                msg.channel.stopTyping();
+                return msg.channel.send("`Role doesn't exist in this guild or within database, please try again.`");
+            }
 
             //proceed to inquire if the user is sure about moving on
             const embed = new Discord.RichEmbed()
@@ -46,20 +58,39 @@ module.exports = {
                                 .setFooter("Do you wish to proceed? [Y/N].");
 
             msg.channel.stopTyping();
-            msg.channel.send(embed);
+
+            const msg_prompt = await msg.channel.send(embed);
 
             msg_collector.once('collect', async r_message => {
                 if(r_message.content.toLowerCase() == "y"){
 
                     if((Number(rep_users.users[user_id].xp.xp_amount) - Number(rep_ranks.roles[role_id])) >= 0){
+                        msg_prompt.delete(5000);
+
+                        //deduct xp from a user xp total
+                        rep_users.users[user_id].xp.xp_amount -= Number(rep_ranks.roles[role_id]);
+                        
+                        //update db with latest data
+                        try{
+                            await pool.query('UPDATE guilds SET users = $1 WHERE (gid = $2)', [rep_users, guild.id]);
+                        }catch(err){
+                            return console.error('on [ obtain_role function ]\n', err.stack);
+                        }
+
+                        //assign said role
+                        msg.member.addRole(role_id);
 
                     }else{
-                        msg.channel.send("`Insufficient amount of xp. You have: " + (rep_users.users[user_id].xp.xp_amount == undefined ? 0 : rep_users.users[user_id].xp.xp_amount) + ", Required amount: " + rep_ranks.roles[role_id] + "`")
+                        const msg_notif = await msg.channel.send("`Insufficient amount of xp. You have: " + (rep_users.users[user_id].xp.xp_amount == undefined ? 0 : rep_users.users[user_id].xp.xp_amount) + ", Required amount: " + rep_ranks.roles[role_id] + "`");
+                        msg_notif.delete(7000);
+                        msg_prompt.delete(7000);
                     }
 
                 }
                 else{
-                    msg.channel.send("`Operation Cancelled.`");
+                    const msg_notif = await msg.channel.send("`Operation Cancelled.`");
+                    msg_notif.delete(7000);
+                    msg_prompt.delete(7000);
                 }
 
                 msg_collector.stop();
