@@ -65,7 +65,7 @@ module.exports = {
             const embed = new Discord.RichEmbed()
                                 .setTitle("Are you sure?")
                                 .addField("-You are purchasing:-", "```" + (role_name.charAt(0).toUpperCase() + role_name.slice(1)) + " for - " + rep_ranks.roles[role_id] + "xp```")
-                                .addField("-Your current xp balance:-", "```" + rep_users.users[user_id].xp.xp_amount + "```")
+                                .addField("-Your current xp balance:-", "```" + rep_users.users[user_id].xp.xp_amount + "xp```")
                                 .setFooter("Do you wish to proceed? [Y/N].");
 
             msg.channel.stopTyping();
