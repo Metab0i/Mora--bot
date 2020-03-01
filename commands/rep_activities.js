@@ -3,6 +3,17 @@ const assist_func = require('./assist_functions');
 const rep_base = require('./reputation.js');
 
 module.exports = {
+    /**
+     * @name obtain_role(...)
+     * 
+     * @description : allows a user to obtain a role for a specific amount of xp. Validate pre-requisites, Prompt a user,
+     *                if successful, then proceed to deduct appropriate amount from their xp balance, if not successful,
+     *                proceed to notify a user about what went wrong.
+     * 
+     * @param {String} prefix 
+     * @param {Message} msg 
+     * @param {PSQL} pool 
+     */
     obtain_role: async function(prefix, msg, pool){
         const ob_role_regex = new RegExp(prefix + "rep.purole .*?");
 
@@ -96,5 +107,7 @@ module.exports = {
                 msg_collector.stop();
             })
         }
-    }
+    },
+
+
 }
