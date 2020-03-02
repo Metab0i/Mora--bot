@@ -952,6 +952,7 @@ module.exports = {
         range_array.sort(function(a, b){return a-b});
 
         for(let i = 0; i < range_array.length; i++){
+          // eslint-disable-next-line require-atomic-updates
           for(let role in roles){
             if(range_array[i] == roles[role]){
               //find a corresponding role
