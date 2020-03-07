@@ -133,7 +133,7 @@ module.exports = {
 
       let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
-        .setAuthor(msg.author.username + " asked a question...", msg.author.avatarURL)
+        .setAuthor(msg.author.username + " asked a question...", msg.author.avatarURL())
         .setDescription(eight_ball.magic_answers[Math.floor((Math.random() * eight_ball.magic_answers.length) + 0)])
         .setFooter("Only yes or no questions please. I am not that smart.");
 
@@ -163,7 +163,7 @@ module.exports = {
 
       let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
-        .setAuthor(msg.author.username + " asks me to pick...", msg.author.avatarURL)
+        .setAuthor(msg.author.username + " asks me to pick...", msg.author.avatarURL())
         .setDescription("I pick `" + final_pick + "`")
         .setFooter("-1 || 0 = " + Math.floor((Math.random() * 2) + 0) + "-");
 
@@ -173,7 +173,7 @@ module.exports = {
 
       let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
-        .setAuthor(msg.author.username + " wonders, 0 or 1?", msg.author.avatarURL)
+        .setAuthor(msg.author.username + " wonders, 0 or 1?", msg.author.avatarURL())
         .setDescription("I flip numbers and it's `*" + Math.floor((Math.random() * 2) + 0) + "*`");
 
       msg.channel.send(embed);
@@ -189,7 +189,7 @@ module.exports = {
     if(msg.content == prefix + "help") {
       let embed = new Discord.MessageEmbed()
         .setColor("#d65aa6")
-        .setThumbnail(client.user.avatarURL)
+        .setThumbnail(client.user.avatarURL())
         .setTitle("click me.")
         .setDescription("A list of commands for Mora.\nEnjoy.")
         .setURL("https://github.com/Metab0i/Mora--bot/blob/master/README.md")

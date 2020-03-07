@@ -26,9 +26,9 @@ module.exports = {
       if(voiceChannel != null){
         const connection = await voiceChannel.join()
 
-        let dispatcher = connection.playFile("../Mora bot/misc/sounds/" + file_names[assist_func.random_number(0, file_names.length-1)] + ".mp3");
+        let dispatcher = connection.play("../Mora bot/misc/sounds/" + file_names[assist_func.random_number(0, file_names.length-1)] + ".mp3");
 
-        dispatcher.on("end", end => {
+        dispatcher.on("finish", end => {
           voiceChannel.leave();
         })
       }

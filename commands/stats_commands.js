@@ -19,29 +19,29 @@ module.exports = {
       //record emojis
       let emoji_list = "";
 
-      msg.guild.emojis.array().forEach(emoji =>{
+      msg.guild.emojis.cache.array().forEach(emoji =>{
         if(emoji_list.length < 2000){
           emoji_list += `${emoji} `;
         }
       })
 
       //verification level of the server
-      let ver_level = "";
+      let ver_level = "s";
 
       switch(msg.guild.verificationLevel){
-        case 0:
+        case "NONE":
           ver_level = "None";
           break;
-        case 1: 
+        case "LOW": 
           ver_level = "Low";
           break;
-        case 2: 
+        case "MEDIUM": 
           ver_level = "Medium"
           break;
-        case 3: 
+        case "HIGH": 
           ver_level = "High (╯°□°）╯︵ ┻━┻"
           break;
-        case 4:
+        case "VERY_HIGH":
           ver_level = "Extreme ┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻"
           break;
       }
@@ -49,7 +49,7 @@ module.exports = {
       //count total online members
       let total_online = 0;
 
-      msg.guild.presences.array().forEach(presnece =>{
+      msg.guild.presences.cache.array().forEach(presnece =>{
         switch(presnece.status){
           case "online":
             total_online += 1;
@@ -66,18 +66,17 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.guild.name)
-        .setThumbnail(msg.guild.iconURL == null ? "" : msg.guild.iconURL.replace(".jpg", ".png?size=1024"))
+        .setThumbnail(msg.guild.iconURL({ format: 'png', dynamic: true, size: 1024 }) == null ? "" : msg.guild.iconURL({ format: 'png', dynamic: true, size: 1024 }))
         .setDescription(emoji_list)
         .addField("ID: " , msg.guild.id)
         .addField("Verification Level: ", ver_level)
-        .addField("Initial given role:", msg.guild.defaultRole, true)
         .addField("Region:" , msg.guild.region, true)
         .addField("Owner of the guild", msg.guild.owner, true)
-        .addField("Number of roles:", msg.guild.roles.size, true)
+        .addField("Number of roles:", msg.guild.roles.cache.size, true)
         .addField("Total members:" , msg.guild.memberCount, true)
         .addField("Members Online ATM:", total_online, true)
-        .addField("Number of Channels:", msg.guild.channels.size, true)
-        .setFooter("Server creation date: " + msg.guild.createdAt)
+        .addField("Number of Channels:", msg.guild.channels.cache.size, true)
+        .setFooter("Server creation date: " + msg.guild.createdAt);
 
       msg.channel.send(embed);
     }
@@ -146,7 +145,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor('#d65aa6')
         .setTitle(client.user.username)
-        .setThumbnail(client.user.avatarURL)
+        .setThumbnail(client.user.avatarURL())
         .addField("Total Server Count:", client.guilds.size, true)
         .addField("Total members across servers:", total_members, true)
         .addField("Online mobile users:", mobile, true)

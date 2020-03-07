@@ -24,7 +24,7 @@ module.exports = {
       let response = ""; 
       let check = false;
 
-      msg.channel.fetchMessages({"limit" : 100})
+      msg.channel.messages.fetch({"limit" : 100})
         .then(messages => {
 
           messages.array().forEach(message => {

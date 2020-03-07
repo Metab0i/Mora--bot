@@ -45,12 +45,6 @@ module.exports = {
                 }
             })
 
-            //check if user already has the role
-            if(msg.member.roles.cache.find(val => val.id === role_id) != undefined) {
-                msg.channel.stopTyping();
-                return msg.channel.send("`You already own this role, try a different one.`");
-            }
-
             //check if status is on for the feature to be used
             if(rep_ranks.status != 'TRUE') {
                 msg.channel.stopTyping();
@@ -61,6 +55,12 @@ module.exports = {
             if(!match_check) {
                 msg.channel.stopTyping();
                 return msg.channel.send("`Role doesn't exist in this guild or within database, please try again.`");
+            }
+
+            //check if user already has the role
+            if(msg.member.roles.cache.find(val => val.id === role_id) != undefined) {
+                msg.channel.stopTyping();
+                return msg.channel.send("`You already own this role, try a different one.`");
             }
 
             //proceed to inquire if the user is sure about moving on
@@ -92,6 +92,8 @@ module.exports = {
 
                         //assign said role
                         msg.member.roles.add(role_obj);
+
+                        msg.channel.send("`Operation successful, role bought for -" + Number(rep_ranks.roles[role_id]) + "xp-`");
 
                     }else{
                         const msg_notif = await msg.channel.send("`Insufficient amount of xp. You have: " + (rep_users.users[user_id].xp.xp_amount == undefined ? 0 : rep_users.users[user_id].xp.xp_amount) + ", Required amount: " + rep_ranks.roles[role_id] + "`");
@@ -150,12 +152,6 @@ module.exports = {
                 }
             })
 
-            //check if user already has the role
-            if(msg.member.roles.cache.find(val => val.id === role_id) == undefined) {
-                msg.channel.stopTyping();
-                return msg.channel.send("`You don't own this role for it to be sold, try the one you already own.`");
-            }
-
             //check if status is on for the feature to be used
             if(rep_ranks.status != 'TRUE') {
                 msg.channel.stopTyping();
@@ -166,6 +162,12 @@ module.exports = {
             if(!match_check) {
                 msg.channel.stopTyping();
                 return msg.channel.send("`Role doesn't exist in this guild or within database, please try again.`");
+            }
+
+            //check if user already has the role
+            if(msg.member.roles.cache.find(val => val.id === role_id) == undefined) {
+                msg.channel.stopTyping();
+                return msg.channel.send("`You don't own this role for it to be sold, try the one you already own.`");
             }
 
             //proceed to inquire if the user is sure about moving on
@@ -198,6 +200,8 @@ module.exports = {
                         //assign said role
                         msg.member.roles.remove(role_obj);
 
+                        msg.channel.send("`Operation successful, role sold for -" + Number(rep_ranks.roles[role_id]/2) + "xp-`");
+
                     }else{
                         const msg_notif = await msg.channel.send("`Cannot proceed with sale, your account will exceed 999,999,999`");
                         msg_notif.delete({ timeout: 7000 });
@@ -218,3 +222,9 @@ module.exports = {
 
 
 }
+
+
+//TODO
+/**
+ * a small issue regarding purchase and sale. If bot is assigned bellow a specific role it becomes unable to assign or remove roles from people. Therefore, it needs to be at the top (when activating a feature bot needs to inform admin of this.)
+ */

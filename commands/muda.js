@@ -32,7 +32,7 @@ module.exports = {
 
           try{
             let user = await assist_func.id_to_user(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
-            user_pfp = await Jimp.read(user.avatarURL);
+            user_pfp = await Jimp.read(user.avatarURL());
           }catch(err){
             msg.channel.stopTyping();
             message.edit("`something went wrong...`")

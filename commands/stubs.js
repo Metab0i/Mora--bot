@@ -585,7 +585,7 @@ module.exports = {
             //create and embed and set initial values
             const embed = new Discord.MessageEmbed() //new embed
               .setTitle(`How to use this table: `)
-              .setAuthor(`@${msg.author.username} - Current Table User;`, msg.author.avatarURL)
+              .setAuthor(`@${msg.author.username} - Current Table User;`, msg.author.avatarURL())
               .setColor(12269369)
               .setFooter(`Page ${page} of ${pages.length}`)
               .setDescription("\nPress ➖ or ➕ twice to list through, you only have 120s to interact with the table. If you wish to see more details for a channel, use" + prefix + " stubstats this.\nTo Initiate the table, press ➕.\n\n__Only one user at a time may use the list.__\n\n *Current Table User is displayed above ^.*");
@@ -661,7 +661,7 @@ module.exports = {
 
             const diffEmbed = new Discord.MessageEmbed()
               .setTitle("__*"+msg.channel.name + "*__ statistics: ")
-              .setAuthor(`@${msg.author.username} - Current Table User;`, msg.author.avatarURL)
+              .setAuthor(`@${msg.author.username} - Current Table User;`, msg.author.avatarURL())
               .setFooter(`Page ${page} of ${pages.length} --- Total on this channel: ${totalWords}`)
               .setColor(3564358)
               .setDescription(pages[page-1]+ "\n");

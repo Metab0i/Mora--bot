@@ -47,7 +47,7 @@ module.exports = {
       const invites = await channel.guild.fetchInvites();
       
       const embed = new Discord.MessageEmbed()
-        .setAuthor(msg.guild.name, msg.guild.iconURL == null ? channel.guild.iconURL.replace(".jpg", ".png?size=1024") :msg.guild.iconURL.replace(".jpg", ".png?size=1024"))
+        .setAuthor(msg.guild.name, msg.guild.iconURL({ format: 'png', dynamic: true, size: 1024 }) == null ? channel.guild.iconURL({ format: 'png', dynamic: true, size: 1024 }) :msg.guild.iconURL({ format: 'png', dynamic: true, size: 1024 }))
         .setDescription(dev_comment.length > 1900 ? "`" + dev_comment.slice(0, 1800) + "... `" : "`" + dev_comment + "`")
         .setFooter("🐍")
         .setColor('#d65aa6');

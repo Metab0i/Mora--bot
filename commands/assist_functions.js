@@ -223,7 +223,7 @@ module.exports = {
       let user;
 
       try{
-        user = await client.fetchUser(user_id);
+        user = await client.users.fetch(user_id);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }
@@ -251,7 +251,7 @@ module.exports = {
       let user;
 
       try{
-        user = await client.fetchUser(user_id);
+        user = await client.users.fetch(user_id);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }
@@ -273,7 +273,7 @@ module.exports = {
     let user;
 
     try{
-      user = await client.fetchUser(id);
+      user = await client.users.fetch(id);
     }catch(err){
       return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);  
     }

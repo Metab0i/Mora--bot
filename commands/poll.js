@@ -14,7 +14,7 @@ module.exports = {
       if(poll_array.length > 9) return msg.channel.send("`Exceeded the maximum number of poll items.`");
 
       let embed = new Discord.MessageEmbed()
-        .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL)
+        .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL())
         .setColor(assist_func.random_hex_colour())
         .setDescription("`Poll has been initiated. Be sure to cast your vote for an item of your preference.`")
         .setFooter("Poll will last for 60 seconds. After that the winner will be announced.")
@@ -23,13 +23,13 @@ module.exports = {
       
       for(var index = 0; index < poll_array.length; index++){
         if(poll_array[index].trim() != ""){
-          let emoji_index = assist_func.random_number(0, client.emojis.array().length-1);
+          let emoji_index = assist_func.random_number(0, client.emojis.cache.array().length-1);
           
-          while(poll_emojis.includes(client.emojis.array()[emoji_index].id)){
-            emoji_index = assist_func.random_number(0, client.emojis.array().length)
+          while(poll_emojis.includes(client.emojis.cache.array()[emoji_index].id)){
+            emoji_index = assist_func.random_number(0, client.emojis.cache.array().length)
           }
 
-          poll_emojis.push(client.emojis.array()[emoji_index].id)
+          poll_emojis.push(client.emojis.cache.array()[emoji_index].id)
           
           embed.addField(`"${client.emojis.get(poll_emojis[index])}"`, poll_array[index].length > 1000 ? poll_array[index].slice(0, 950) + "..." : poll_array[index], true);
         }
@@ -67,7 +67,7 @@ module.exports = {
           const text_index = poll_emojis.indexOf(winner.emoji.id)
 
           const announce_embed = new Discord.MessageEmbed()
-            .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL)
+            .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL())
             .setColor(assist_func.random_hex_colour())
             .setDescription("**The winner is:** \"" + `${winner.emoji}\"\n\n` + "-" + poll_array[text_index].trim() + "-")
           
