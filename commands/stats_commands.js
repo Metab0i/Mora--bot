@@ -63,7 +63,7 @@ module.exports = {
         }
       })
 
-      const embed = new Discord.RichEmbed()
+      const embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.guild.name)
         .setThumbnail(msg.guild.iconURL == null ? "" : msg.guild.iconURL.replace(".jpg", ".png?size=1024"))
@@ -143,7 +143,7 @@ module.exports = {
       const time = process.uptime();
       const uptime = (time + "").toDDHHMMSS();
 
-      const embed = new Discord.RichEmbed()
+      const embed = new Discord.MessageEmbed()
         .setColor('#d65aa6')
         .setTitle(client.user.username)
         .setThumbnail(client.user.avatarURL)

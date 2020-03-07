@@ -53,7 +53,6 @@ console.error = function(start_err, err_body) { //
  */
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  client.channels.get();
   client.user.setStatus("online");
   client.user.setActivity('for your commands.', { type: 'WATCHING' });
 });
@@ -165,6 +164,7 @@ client.on('message', async msg => {
   rep.rep_onoff(prefix, msg, pool);
 
   rep_activities.obtain_role(prefix, msg, pool);
+  rep_activities.sell_role(prefix, msg, pool);
 
   //images
   images.hug(prefix, msg, client);

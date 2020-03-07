@@ -22,7 +22,7 @@ module.exports = {
       const er_verbs = ad_resources.ergative_verbs[assist_func.random_number(0, ad_resources.ergative_verbs.length-1)] + " ";
       const date = assist_func.random_number(0,1) == 0 ? " days" : " months";
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setTitle("Your future tells me...")
         .setColor(assist_func.random_hex_colour())
         .setFooter("🥠")

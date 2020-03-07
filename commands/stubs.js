@@ -477,7 +477,7 @@ module.exports = {
           }else{
             let media_ar = [];
 
-            let embed = new Discord.RichEmbed()
+            let embed = new Discord.MessageEmbed()
               .setColor('#ef2d56')
               .setTitle("Stub: *" + msgStub + "*");
   
@@ -583,7 +583,7 @@ module.exports = {
             if(count <= 6 && str!= "") pages.push(str);
           
             //create and embed and set initial values
-            const embed = new Discord.RichEmbed() //new embed
+            const embed = new Discord.MessageEmbed() //new embed
               .setTitle(`How to use this table: `)
               .setAuthor(`@${msg.author.username} - Current Table User;`, msg.author.avatarURL)
               .setColor(12269369)
@@ -659,7 +659,7 @@ module.exports = {
 
             if(count <= 12 && str!= "") pages.push(str);
 
-            const diffEmbed = new Discord.RichEmbed()
+            const diffEmbed = new Discord.MessageEmbed()
               .setTitle("__*"+msg.channel.name + "*__ statistics: ")
               .setAuthor(`@${msg.author.username} - Current Table User;`, msg.author.avatarURL)
               .setFooter(`Page ${page} of ${pages.length} --- Total on this channel: ${totalWords}`)

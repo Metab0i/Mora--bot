@@ -23,7 +23,7 @@ module.exports = {
       let user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
       let item = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " gave -" + item + "- to " + user + ".")
         .setDescription("That makes them feel " + feelings.emotions[Math.floor((Math.random() * feelings.emotions.length) + 0)]);
@@ -54,7 +54,7 @@ module.exports = {
       let user = await assist_func.id_to_name(msg.content.slice(msg.content.indexOf("<"), msg.content.indexOf(">") + 1), client, msg);
       let how_query = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length).trim();
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " wonders how -" + how_query + "- is " + user + ".")
         .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
@@ -90,7 +90,7 @@ module.exports = {
       how = await assist_func.id_to_name(how, client, msg);
       something = await assist_func.id_to_name(something, client, msg);
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " wonders.. How -" + how + "- " + be + " -" + something + "- ?")
         .setDescription(something + " "+ be + " " + Math.floor((Math.random() * 100) + 0) + "% " + how + ".");
@@ -104,7 +104,7 @@ module.exports = {
       let how_query = msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim();
       how_query = await assist_func.id_to_name(how_query, client, msg);
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setTitle(msg.author.username + " ponders to themselves, how -" + how_query + "- are they?")
         .setDescription("They are " + Math.floor((Math.random() * 100) + 0) + "% " + how_query + ".");
@@ -131,7 +131,7 @@ module.exports = {
 
       msg.react('🎱');
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setAuthor(msg.author.username + " asked a question...", msg.author.avatarURL)
         .setDescription(eight_ball.magic_answers[Math.floor((Math.random() * eight_ball.magic_answers.length) + 0)])
@@ -161,7 +161,7 @@ module.exports = {
       let final_pick = await assist_func.id_to_name(pick_array[Math.floor((Math.random() * pick_array.length) + 0)], client, msg);
       final_pick = final_pick.replace("%pick", "").trim();
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setAuthor(msg.author.username + " asks me to pick...", msg.author.avatarURL)
         .setDescription("I pick `" + final_pick + "`")
@@ -171,7 +171,7 @@ module.exports = {
     }else if(msg.content.toLowerCase() == prefix + "pick"){
       if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
         .setAuthor(msg.author.username + " wonders, 0 or 1?", msg.author.avatarURL)
         .setDescription("I flip numbers and it's `*" + Math.floor((Math.random() * 2) + 0) + "*`");
@@ -187,7 +187,7 @@ module.exports = {
    */
   help_mora: function(prefix, msg, client){
     if(msg.content == prefix + "help") {
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor("#d65aa6")
         .setThumbnail(client.user.avatarURL)
         .setTitle("click me.")

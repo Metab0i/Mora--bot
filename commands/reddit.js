@@ -22,7 +22,7 @@ module.exports = {
       if(assist_func.userTimeOut(msg) == true) return;    
       msg.channel.startTyping();
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour());
 
       let reddit = "https://www.reddit.com";

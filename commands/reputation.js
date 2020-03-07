@@ -31,7 +31,7 @@ module.exports = {
       let role_id = "";
 
       //grab role's ID
-      msg.guild.roles.forEach(role => {
+      msg.guild.roles.cache.forEach(role => {
         if(role.name.toLowerCase() === role_name){
           role_id = role.id;
         }
@@ -60,7 +60,7 @@ module.exports = {
       let role_id = "";
 
       //grab role's ID
-      msg.guild.roles.forEach(role => {
+      msg.guild.roles.cache.forEach(role => {
         if(role.name.toLowerCase() === role_name){
           role_id = role.id;
         }
@@ -102,7 +102,7 @@ module.exports = {
       let role_id = "";
 
       //grab role's ID
-      msg.guild.roles.forEach(role => {
+      msg.guild.roles.cache.forEach(role => {
         if(role.name.toLowerCase() === role_name){
           role_id = role.id;
         }
@@ -210,8 +210,8 @@ module.exports = {
     //pull latest db data to be written to
     const users_g = await module.exports.rep_users_query(guild, pool)
 
-    if(Number(users_g.users[user_id]) > 999999999){
-      guild.owner.send("`-" + user_id + "-'s rep xp exceeds 999,999,999. They cannot earn any more xp.`")
+    if((Number(users_g.users[user_id]) + Number(amount)) > 999999999){
+      // guild.owner.send("`-" + user_id + "-'s rep xp exceeds 999,999,999. They cannot earn any more xp.`")
       return false;
     }
 
@@ -349,7 +349,7 @@ module.exports = {
       let role_name = "";
       let role_xp = "";
 
-      const embed = new Discord.RichEmbed()
+      const embed = new Discord.MessageEmbed()
         .setTitle("Rep add role page:")
         .setDescription("Specify a role name you want to track or type cancel.")
         .setColor(assist_func.random_hex_colour())
@@ -378,7 +378,7 @@ module.exports = {
           let match_check = false;
 
           //if exists, proceed to query for how much xp is required to achieve said role and loop again to see if they want to set up another role
-          r_message.guild.roles.forEach(role => {
+          r_message.guild.roles.cache.forEach(role => {
             if(role.name.toLowerCase() == r_message.content.toLowerCase()){
               match_check = true;
 
@@ -537,7 +537,7 @@ module.exports = {
       //Essential Variable definition
       let role_name = "";
 
-      const embed = new Discord.RichEmbed()
+      const embed = new Discord.MessageEmbed()
         .setTitle("Rep set-up page:")
         .setDescription("Specify a role name you want to stop from tracking or type cancel.")
         .setColor(assist_func.random_hex_colour())
@@ -566,7 +566,7 @@ module.exports = {
           let match_check = false;
 
           //if exists, proceed to query for how much xp is required to achieve said role and loop again to see if they want to set up another role
-          r_message.guild.roles.forEach(role => {
+          r_message.guild.roles.cache.forEach(role => {
             if(role.name.toLowerCase() == r_message.content.toLowerCase()){
               match_check = true;
 
@@ -664,7 +664,7 @@ module.exports = {
     if(random_xp == 1){
       const rep_data = await module.exports.rep_ranks_query(msg.guild, pool);
 
-      if(rep_data.status == 'TRUE'){
+      if(rep_data.status == 'TRUE' && msg.author.bot == false){
         //add xp, if feature is disabled for a user, xp wont be added.
         await module.exports.user_add_xp(msg.author.id, pool, msg.guild, 10);
       }
@@ -962,7 +962,7 @@ module.exports = {
 
             //in case the number of total characters exceeds 1950, send current info, wipe the const, keep doing it until there are no more roles
             if(desc_str.length >= 1950){
-              const embed_fallback = new Discord.RichEmbed()
+              const embed_fallback = new Discord.MessageEmbed()
                                          .setTitle(title)
                                          .setDescription(desc_str)
                                          .setFooter("Your rep xp: " + user_xp)
@@ -1019,7 +1019,7 @@ module.exports = {
 
       msg.channel.stopTyping();
 
-      const embed = new Discord.RichEmbed()
+      const embed = new Discord.MessageEmbed()
                         .setTitle(title)
                         .setDescription(desc_str)
                         .setFooter("Your rep xp: " + user_xp + "\nRep feature active: " + db_pull_result.rows[0].ranks_feature.status)

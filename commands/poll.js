@@ -13,7 +13,7 @@ module.exports = {
 
       if(poll_array.length > 9) return msg.channel.send("`Exceeded the maximum number of poll items.`");
 
-      let embed = new Discord.RichEmbed()
+      let embed = new Discord.MessageEmbed()
         .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL)
         .setColor(assist_func.random_hex_colour())
         .setDescription("`Poll has been initiated. Be sure to cast your vote for an item of your preference.`")
@@ -66,7 +66,7 @@ module.exports = {
         if(tie_status != true){
           const text_index = poll_emojis.indexOf(winner.emoji.id)
 
-          const announce_embed = new Discord.RichEmbed()
+          const announce_embed = new Discord.MessageEmbed()
             .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL)
             .setColor(assist_func.random_hex_colour())
             .setDescription("**The winner is:** \"" + `${winner.emoji}\"\n\n` + "-" + poll_array[text_index].trim() + "-")
