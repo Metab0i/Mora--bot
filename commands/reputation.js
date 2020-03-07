@@ -47,11 +47,11 @@ module.exports = {
       try{
         await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [fin_json, msg.guild.id]);
       }catch(err){
-        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(5000);
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete({ timeout: 5000 });
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
       }
       
-      (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(7000);
+      (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete({ timeout: 7000 });
     }
     else{
       //if the same element is mentioned, just overwrite the already existing item with new xp value
@@ -74,11 +74,11 @@ module.exports = {
       try{
         await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [fin_json, msg.guild.id]);
       }catch(err){
-        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(5000);
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete({ timeout: 5000 });
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
       }
       
-      (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete(7000);
+      (await msg.channel.send("`Operation was a success, added: *" + role_name + " : " + role_xp + "*`")).delete({ timeout: 7000 });
     }
   },
 
@@ -94,7 +94,7 @@ module.exports = {
    */
   rep_remRole_assist: async function(msg, role_name, rep_json, pool){
     if(JSON.stringify(rep_json.roles).trim() === "{\"\":\"\"}"){;
-      (await msg.channel.send("`No records, nothing to remove.`")).delete(10000);
+      (await msg.channel.send("`No records, nothing to remove.`")).delete({ timeout: 10000 });
     }
 
     else{
@@ -108,7 +108,7 @@ module.exports = {
         }
       })
 
-      if(rep_json.roles[role_id] == undefined) return (await msg.channel.send("`This role is not included in records, nothing to remove.`")).delete(10000);
+      if(rep_json.roles[role_id] == undefined) return (await msg.channel.send("`This role is not included in records, nothing to remove.`")).delete({ timeout: 10000 });
 
       //remvoe a role from the json
       delete rep_json.roles[role_id];
@@ -118,11 +118,11 @@ module.exports = {
       try{
         await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [fin_json, msg.guild.id]);
       }catch(err){
-        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(5000);
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete({ timeout: 5000 });
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
       }
       
-      (await msg.channel.send("`Operation was a success, removed: *" + role_name + "*`")).delete(7000);
+      (await msg.channel.send("`Operation was a success, removed: *" + role_name + "*`")).delete({ timeout: 7000 });
     }
   },
 
@@ -372,7 +372,7 @@ module.exports = {
             await first_msg.delete();
             await r_message.delete();
 
-            return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
+            return (await msg.channel.send("`Operation Cancelled`")).delete({ timeout: 7000 });
           }
 
           let match_check = false;
@@ -390,7 +390,7 @@ module.exports = {
 
           if(match_check == false){
             const warning_msg = await msg.channel.send(embed.setDescription("Wrong Input. Try again"));
-            await warning_msg.delete(1000);
+            await warning_msg.delete({ timeout: 7000 });
             await first_msg.delete();
             await r_message.delete();
 
@@ -420,7 +420,7 @@ module.exports = {
             await second_msg.delete();
             await xp_message.delete();
 
-            return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
+            return (await msg.channel.send("`Operation Cancelled`")).delete({ timeout: 7000 });
           }
 
           //an if-else statement if successful, proceed to prompt for confirmation, if not let the user know they entered the wrong value
@@ -428,7 +428,7 @@ module.exports = {
             //check if number isn't too big
             if(Number(xp_message.content) >= 999999999){
               const warning_msg = await msg.channel.send(embed.setDescription("Number is too high. Try a different one."));
-              await warning_msg.delete(2000);
+              await warning_msg.delete({ timeout: 7000 });
               await second_msg.delete();
               await xp_message.delete();
   
@@ -464,7 +464,7 @@ module.exports = {
                 return msg_collector.stop();
               }
               else if(confirm_msg.content.toLowerCase() == "n"){
-                (await msg.channel.send(embed.setDescription("`Operation Cancelled`"))).delete(1000);
+                (await msg.channel.send(embed.setDescription("`Operation Cancelled`"))).delete({ timeout: 7000 });
 
                 //delete the remainder
                 await third_msg.delete();
@@ -473,7 +473,7 @@ module.exports = {
                 return msg_collector.stop();
               }
               else{
-                (await msg.channel.send(embed.setDescription("`Unknown entry. Operation Cancelled`"))).delete(1000);
+                (await msg.channel.send(embed.setDescription("`Unknown entry. Operation Cancelled`"))).delete({ timeout: 1000 });
 
                 //delete the remainder
                 await third_msg.delete();
@@ -487,7 +487,7 @@ module.exports = {
           //else statement that notifies user of their error input
           else{
             const warning_msg = await msg.channel.send(embed.setDescription("Your Message contains symbols and/or letters, has to be just numbers (int). Try Again."));
-            await warning_msg.delete(2500);
+            await warning_msg.delete({ timeout: 7000 });
             await second_msg.delete();
             await xp_message.delete();
 
@@ -560,7 +560,7 @@ module.exports = {
             await first_msg.delete();
             await r_message.delete();
 
-            return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
+            return (await msg.channel.send("`Operation Cancelled`")).delete({ timeout: 7000 });
           }
 
           let match_check = false;
@@ -578,7 +578,7 @@ module.exports = {
 
           if(match_check == false){
             const warning_msg = await msg.channel.send(embed.setDescription("Wrong Input. Try again"));
-            await warning_msg.delete(1000);
+            await warning_msg.delete({ timeout: 7000 });
             await first_msg.delete();
             await r_message.delete();
 
@@ -605,7 +605,7 @@ module.exports = {
             await second_msg.delete();
             await confirm_msg.delete();
 
-            return (await msg.channel.send("`Operation Cancelled`")).delete(1000);
+            return (await msg.channel.send("`Operation Cancelled`")).delete({ timeout: 7000 });
           }
 
           if(confirm_msg.content.toLowerCase() == "y"){
@@ -622,7 +622,7 @@ module.exports = {
             return msg_collector.stop();
           }
           else if(confirm_msg.content.toLowerCase() == "n"){
-            (await msg.channel.send(embed.setDescription("`Operation Cancelled`"))).delete(1000);
+            (await msg.channel.send(embed.setDescription("`Operation Cancelled`"))).delete({ timeout: 7000 });
 
             //delete the remainder
             await second_msg.delete();
@@ -631,7 +631,7 @@ module.exports = {
             return msg_collector.stop();
           }
           else{
-            (await msg.channel.send(embed.setDescription("`Unknown entry. Operation Cancelled`"))).delete(1000);
+            (await msg.channel.send(embed.setDescription("`Unknown entry. Operation Cancelled`"))).delete({ timeout: 7000 });
 
             //delete the remainder
             await second_msg.delete();
@@ -722,7 +722,7 @@ module.exports = {
       //check so that the number doesn't exceed 999999999
       if(user_info[1] > 999999999){
         msg.channel.stopTyping();
-        return (await msg.channel.send("`cannot award xp above 999,999,999. Try again.`")).delete(9000);
+        return (await msg.channel.send("`cannot award xp above 999,999,999. Try again.`")).delete({ timeout: 9000 });
       }
 
       //add xp and do additional checks
@@ -731,12 +731,12 @@ module.exports = {
       msg.channel.stopTyping();
 
       if(result == false){
-        return (await msg.channel.send(`\`Unable to grant any rep xp to\` -<@${user_info[0]}>-. \`Try Again.\``)).delete(9000);
+        return (await msg.channel.send(`\`Unable to grant any rep xp to\` -<@${user_info[0]}>-. \`Try Again.\``)).delete({ timeout: 9000 });
       }
 
       const name = (await assist_func.id_to_user(user_info[0], client, msg)).username;
 
-      (await msg.channel.send("`Operation complete. User: -" + name + "- got awarded -" + user_info[1] + "- rep xp.`")).delete(23000);
+      (await msg.channel.send("`Operation complete. User: -" + name + "- got awarded -" + user_info[1] + "- rep xp.`")).delete({ timeout: 23000 });
     }
   },
 
@@ -791,7 +791,7 @@ module.exports = {
 
       msg.channel.stopTyping();
 
-      (await msg.channel.send("`Operation complete. User: -" + name + "- got deducted -" + user_info[1] + "- rep xp.`")).delete(23000);
+      (await msg.channel.send("`Operation complete. User: -" + name + "- got deducted -" + user_info[1] + "- rep xp.`")).delete({ timeout: 23000 });
     }
   },
 
@@ -817,7 +817,7 @@ module.exports = {
       try{
         await pool.query('UPDATE guilds SET ranks_feature = $1 WHERE (gid = $2)', [rep_ranks, msg.guild.id]);
       }catch(err){
-        (await msg.channel.send("`Something went wrong, operation failed.`")).delete(5000);
+        (await msg.channel.send("`Something went wrong, operation failed.`")).delete({ timeout: 5000 });
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);
       }
       
