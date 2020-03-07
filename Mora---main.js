@@ -70,6 +70,8 @@ client.on("guildCreate", function(guild){
       state = true;
     }
   })
+
+  guild.owner.send("Be sure to position my role above all other roles, otherwise -Reputation- feature wont work properly.");
 });
 
 client.on("guildDelete", function(guild){

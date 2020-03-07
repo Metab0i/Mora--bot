@@ -324,6 +324,8 @@ module.exports = {
    * @param {String} prefix 
    * @param {MESSAGE} msg 
    * @param {PSQL-POOL} pool 
+   * 
+   * @NOTE Be sure to check if the role is above or below Bot's Default role. If above, stop and notify that you cannot proceed
    */
   rep_add_role: async function(prefix, msg, pool){
     const rep_xp = new RegExp("^" + prefix + "rep\.addrole");
@@ -802,6 +804,8 @@ module.exports = {
    * @param {String} prefix 
    * @param {Message} msg 
    * @param {PSQL} pool 
+   * 
+   * @NOTE be sure to check if your current role position is at the top or 2nd top
    */
   rep_onoff: async function(prefix, msg, pool){
     if(msg.content.toLowerCase() == (prefix + "rep.onoff")){

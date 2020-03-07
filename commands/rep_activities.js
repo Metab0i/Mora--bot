@@ -226,5 +226,10 @@ module.exports = {
 
 //TODO
 /**
- * a small issue regarding purchase and sale. If bot is assigned bellow a specific role it becomes unable to assign or remove roles from people. Therefore, it needs to be at the top (when activating a feature bot needs to inform admin of this.)
+ * a small issue regarding purchase and sale.
+ * If bot is assigned bellow a specific role it becomes unable to assign or remove roles from people. 
+ * Therefore, it needs to be at the top (when activating a feature bot needs to inform admin of this.)
+ * 
+ * Check if a role that is being bought or sold is below bots original role, if not proceed to remove role from the DB
+ * notify user of an error.
  */
