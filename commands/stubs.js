@@ -558,7 +558,7 @@ module.exports = {
             let count = 0;
             
             for(let channel in json_count){
-              str += "```**" + msg.guild.channels.get(channel).name + ":** ```";
+              str += "```**" + msg.guild.channels.cache.get(channel).name + ":** ```";
 
               let total_stubCount = 0;
 
@@ -602,8 +602,8 @@ module.exports = {
 
                 //on action, change the values:
                 backwards.on('collect', r => { 
-                  message.reactions.forEach(function(value){
-                    value.remove(msg.author.id);
+                  message.reactions.cache.forEach(function(value){
+                    value.users.remove(msg.author.id);
                   })
 
                   if (page === 1) return; 
@@ -616,8 +616,8 @@ module.exports = {
                 
                 //on action change the values:
                 forwards.on('collect', r => { 
-                  message.reactions.forEach(function(value){
-                    value.remove(msg.author.id);
+                  message.reactions.cache.forEach(function(value){
+                    value.users.remove(msg.author.id);
                   })
                   
                   if (page === pages.length && pages.length != 1) return;
@@ -676,7 +676,7 @@ module.exports = {
 
                 //on action, change the values:
                 backwards.on('collect', r => { 
-                  message.reactions.forEach(function(value){
+                  message.reactions.cache.forEach(function(value){
                     value.remove(msg.author.id);
                   })
 
@@ -690,7 +690,7 @@ module.exports = {
                 
                 //on action change the values:
                 forwards.on('collect', r => { 
-                  message.reactions.forEach(function(value){
+                  message.reactions.cache.forEach(function(value){
                     value.remove(msg.author.id);
                   })
 

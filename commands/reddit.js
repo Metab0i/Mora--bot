@@ -133,8 +133,9 @@ module.exports = {
       let reddit = "https://www.reddit.com/api/v1/access_token";
 
       let channel_id = msg.content.slice(msg.content.indexOf("#")+1, msg.content.indexOf(">"));
+
       let title = msg.content.slice(msg.content.indexOf(">") + 2, msg.content.length);
-      
+
       let options = {
         method: 'POST',
         uri: reddit + "?" + reddit_auth.token_request_url,
@@ -161,7 +162,7 @@ module.exports = {
         }
 
         result = await rp(options);
-        invite_link = await msg.guild.channels.get(channel_id).createInvite({
+        invite_link = await msg.guild.channels.cache.get(channel_id).createInvite({
           maxAge: 0,
           maxUses: 0
         });

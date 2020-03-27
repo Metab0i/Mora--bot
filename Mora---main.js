@@ -64,7 +64,7 @@ client.on('ready', () => {
 client.on("guildCreate", function(guild){
   db_functions.gatherData(guild, pool);
   let state = false;
-  guild.channels.array().forEach(channel => {
+  guild.channels.cache.array().forEach(channel => {
     if(channel.type == "text" && state == false){
       channel.send("Hi, I am Mora. Type `%help` to get started.");
       state = true;
@@ -104,7 +104,7 @@ client.on('message', async msg => {
   if((msg.member == null || msg.author.bot == true) || check_command.test(msg.content) == false) return;
 
   //db force gather
-  if(msg.author == '<@360790875560869889>' && msg.content == '%reload') {
+  if(msg.author.id == '360790875560869889' && msg.content == '%reload') {
     msg.channel.send("`Reloading data...`");
 
     db_functions.gatherData(msg.guild, pool);
@@ -114,7 +114,7 @@ client.on('message', async msg => {
   }
 
   //db force gather all records
-  if(msg.author == '<@360790875560869889>' && msg.content == '%reload all') {
+  if(msg.author.id == '360790875560869889' && msg.content == '%reload all') {
     msg.channel.send("`Reloading db...`");
 
     client.guilds.forEach(async guild =>{
@@ -126,14 +126,14 @@ client.on('message', async msg => {
   }
 
   //send an error to app owner
-  if(msg.author == '<@360790875560869889>' && msg.content.includes("%errlog")){
+  if(msg.author.id == '360790875560869889' && msg.content.includes("%errlog")){
     msg.react("👨‍💻")
     assist_func.notify_of_error("360790875560869889", client, "../Mora Bot/error.log");
     msg.delete(6500);
   }
 
   //reddit ad update
-  if(msg.author == '<@360790875560869889>') reddit.update_ad(prefix, msg, client.user.id);
+  if(msg.author.id == '360790875560869889') reddit.update_ad(prefix, msg, client.user.id);
 
   comments.set_channel(prefix, msg);
   comments.leave_comment(prefix, msg);

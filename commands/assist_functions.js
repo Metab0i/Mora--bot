@@ -21,9 +21,9 @@ module.exports = {
     let count_channels = 0;
     let channels_str = "|";
 
-    for(let i = 1; i < guild.channels.size; i++){
-      if(guild.channels.array()[i].type == "text"){
-        channels_str += guild.channels.array()[i].id + "|";
+    for(let i = 1; i < guild.channels.cache.size; i++){
+      if(guild.channels.cache.array()[i].type == "text"){
+        channels_str += guild.channels.cache.array()[i].id + "|";
         count_channels++;
       }
     }
@@ -36,10 +36,10 @@ module.exports = {
       check = true;
     }
 
-    for(let i = 0; i < guild.channels.size; i++){
-      if(!JSON.stringify(json_channels).includes(guild.channels.array()[i].id) && guild.channels.array()[i].type == "text"){
+    for(let i = 0; i < guild.channels.cache.size; i++){
+      if(!JSON.stringify(json_channels).includes(guild.channels.cache.array()[i].id) && guild.channels.cache.array()[i].type == "text"){
         object["no_message"] = 0;
-        json_channels[guild.channels.array()[i].id] = object;
+        json_channels[guild.channels.cache.array()[i].id] = object;
         
         check = true;
       }
@@ -141,8 +141,8 @@ module.exports = {
 
         //on action, change the values:
         backwards.on('collect', r => { 
-          msg_pages.reactions.forEach(function(value){
-            value.remove(msg.author.id);
+          msg_pages.reactions.cache.forEach(function(value){
+            value.users.remove(msg.author.id);
           })
 
           if (page === 1) return; 
@@ -154,8 +154,8 @@ module.exports = {
         
         //on action change the values:
         forwards.on('collect', r => { 
-          msg_pages.reactions.forEach(function(value){
-            value.remove(msg.author.id);
+          msg_pages.reactions.cache.forEach(function(value){
+            value.users.remove(msg.author.id);
           })
           
           if (page === pages.length && pages.length != 1) return;
