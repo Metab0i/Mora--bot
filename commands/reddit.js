@@ -166,8 +166,6 @@ module.exports = {
           maxAge: 0,
           maxUses: 0
         })).url;
-
-        console.log(invite_link);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       }
