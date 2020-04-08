@@ -162,10 +162,12 @@ module.exports = {
         }
 
         result = await rp(options);
-        invite_link = await msg.guild.channels.cache.get(channel_id).createInvite({
+        invite_link = (await msg.guild.channels.cache.get(channel_id).createInvite({
           maxAge: 0,
           maxUses: 0
-        });
+        })).url;
+
+        console.log(invite_link);
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
       }
