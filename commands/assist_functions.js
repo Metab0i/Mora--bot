@@ -1,6 +1,5 @@
 const path = require('path');
 const Discord = require('discord.js');
-const commands = require('../Mora---main');
 
 const usedCommand = new Set();
 let total_commands = 0;

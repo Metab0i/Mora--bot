@@ -32,7 +32,7 @@ module.exports = {
           message.edit(":fortune_cookie:")
         }, 1000);
 
-        message.delete(1500);
+        message.delete({timeout: 1500});
       })
 
 

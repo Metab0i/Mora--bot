@@ -79,12 +79,12 @@ module.exports = {
             if(json_content[msgRecord]['res_messages'].includes(msgResponse)){
               msg.channel.send("`This stubby already exists. Try again.`");
               msg.channel.stopTyping();
-              msg.delete(60000);
+              msg.delete({timeout: 60000});
               return;
             }else if(msg.attachments.size <= 0 && msg.embeds.length <= 0){
               msg.channel.send("`Something is wrong with this stubby. Try again.`");
               msg.channel.stopTyping();
-              msg.delete(60000);
+              msg.delete({timeout: 60000});
               return;
             } 
             
@@ -109,7 +109,7 @@ module.exports = {
           if(media_present) {
             msg.channel.send("`Url already exists. Try a different one`");
             msg.channel.stopTyping();
-            msg.delete(60000);
+            msg.delete({timeout: 60000});
             return;
           }
 
@@ -151,7 +151,7 @@ module.exports = {
             .then((result) =>{
               msg.channel.send("`Logging was successful. Added data to: \'" + msgRecord + "\'. You have " + (stubMax - json_userLimit[msg.author.id].length) + " stubs left.`");
               msg.channel.stopTyping();
-              msg.delete(60000);
+              msg.delete({timeout: 60000});
             })
             .catch((err)=>{
               return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
@@ -256,7 +256,7 @@ module.exports = {
             .then((result) =>{
               msg.channel.send("`\'" + msgRecord + "\' was successfully removed. You now have " + (stubMax - json_userLimit[msg.author.id].length) + " stub spaces to use.`");
               msg.channel.stopTyping();
-              msg.delete(60000);
+              msg.delete({timeout: 60000});
             })
             .catch((err)=>{
               return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 
@@ -310,7 +310,7 @@ module.exports = {
             .then((result) =>{
               msg.channel.send("`All stubs were successfully removed from your list. You now have " + (stubMax - json_userLimit[msg.author.id].length) + " stub spaces.`");
               msg.channel.stopTyping();
-              msg.delete(60000);
+              msg.delete({timeout: 60000});
             })
             .catch((err)=>{
               return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);  
@@ -421,7 +421,7 @@ module.exports = {
             .then((result) =>{
               msg.channel.send("`\'" + msgResponse + "\' - stubby was successfully removed.`");
               msg.channel.stopTyping();
-              msg.delete(60000);
+              msg.delete({timeout: 60000});
             })
             .catch((err)=>{
               return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack); 

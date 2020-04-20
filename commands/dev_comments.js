@@ -12,14 +12,14 @@ module.exports = {
    * @param {String} msg 
    */
   set_channel: function(prefix, msg){
-    if(msg.author == '<@360790875560869889>' && msg.content == prefix + "set_commChannel"){
+    if(msg.author.id == '360790875560869889' && msg.content == prefix + "set_commChannel"){
       channel == null ? channel = msg.channel : msg.channel.send("`Channel already set.`").then(message =>{
-        message.delete(5000);
+        message.delete({timeout: 5000});
         return;
       })
       
       msg.react("👨‍💻");
-      msg.delete(5000);
+      msg.delete({timeout: 5000});
     }
   },
 
@@ -40,7 +40,7 @@ module.exports = {
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;
       if(channel == null) {
-        msg.delete(5000);
+        msg.delete({timeout: 5000});
         return msg.react("🦷")
       }
 
@@ -56,14 +56,14 @@ module.exports = {
       // msg.channel.send(invites.array()[0].url).then(message => {
       //   message.delete(5000);
       //   msg.react("👁");
-      //   msg.delete(5000);
+      //   msg.delete({timeout: 5000});
 
       //   channel.send(embed);
       // })
       
       await msg.react("👁");
       await msg.react("👂");
-      msg.delete(5000);
+      msg.delete({timeout: 5000});
 
       channel.send(embed);
 

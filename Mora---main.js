@@ -23,8 +23,6 @@ const ascii_image = require('./commands/ascii_image');
 const comments = require('./commands/dev_comments');
 const funny_ad = require('./commands/generate_ad');
 const fortune_teller = require('./commands/fortune_teller');
-const rep = require('./commands/reputation');
-const rep_activities = require('./commands/rep_activities');
 
 //prefix
 const prefix = "%";
@@ -96,8 +94,6 @@ client.on("channelCreate", function(channel){
  * Functionality: Proceeds to produce an output every time an appropriate command was executed in a text chat. 
  */
 client.on('message', async msg => {
-  //functions that aren't dependant onto strict syntax of prefix + command;
-  rep.rep_exp_msg(msg, pool)
 
   //if isn't a part of the guild or is a bot or message isn't a command, proceed to stop.
   const check_command = new RegExp("^" + prefix + ".*?");
@@ -129,7 +125,7 @@ client.on('message', async msg => {
   if(msg.author.id == '360790875560869889' && msg.content.includes("%errlog")){
     msg.react("👨‍💻")
     assist_func.notify_of_error("360790875560869889", client, "../Mora Bot/error.log");
-    msg.delete(6500);
+    msg.delete({timeout: 6500});
   }
 
   //reddit ad update
@@ -155,18 +151,6 @@ client.on('message', async msg => {
   little_features.eight_ball(prefix, msg);
   little_features.this_or(prefix, msg, client);
   little_features.help_mora(prefix, msg, client);
-
-  //ranks
-  rep.rep_add_role(prefix, msg, pool, client);
-  rep.rep_grant_xp(prefix, msg, client, pool);
-  rep.rep_remove_xp(prefix, msg, client, pool);
-  rep.rep_onoff_user(prefix, msg, client, pool);
-  rep.rep_board(prefix, msg, client, pool);
-  rep.rep_remove_role(prefix, msg, pool);
-  rep.rep_onoff(prefix, msg, pool);
-
-  rep_activities.obtain_role(prefix, msg, pool);
-  rep_activities.sell_role(prefix, msg, pool);
 
   //images
   images.hug(prefix, msg, client);
