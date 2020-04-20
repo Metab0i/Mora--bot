@@ -31,7 +31,8 @@ module.exports = {
 
         hug_image = msg.content.slice(msg.content.indexOf(">") + 1).includes("2") ? await Jimp.read('../Mora bot/misc/anime-hug.png') : await Jimp.read('../Mora bot/misc/anime-hug2.png');
         canvas = await Jimp.read('../Mora bot/misc/canvas.png');
-        user_pfp = await Jimp.read(user.avatarURL());
+
+        user_pfp = await Jimp.read(user.avatarURL({format: "png"}));
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
       }
@@ -94,7 +95,7 @@ module.exports = {
 
       try{
         supaHot = await Jimp.read('../Mora bot/misc/too-hot.png');
-        user_pfp = await Jimp.read(msg.author.avatarURL());
+        user_pfp = await Jimp.read(msg.author.avatarURL({format: "png"}));
         messages = await msg.channel.messages.fetch({"limit" : 100})
         font = await Jimp.loadFont(Jimp.FONT_SANS_16_WHITE)
       }catch(err){
@@ -146,7 +147,7 @@ module.exports = {
 
       try{
         supaHot = await Jimp.read('../Mora bot/misc/too-hot.png');
-        user_pfp = await Jimp.read(msg.author.avatarURL());
+        user_pfp = await Jimp.read(msg.author.avatarURL({format: "png"}));
         messages = await msg.channel.messages.fetch({"limit" : 100})
         font = await Jimp.loadFont(Jimp.FONT_SANS_16_WHITE)
       }catch(err){

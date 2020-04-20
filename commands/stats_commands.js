@@ -145,7 +145,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor('#d65aa6')
         .setTitle(client.user.username)
-        .setThumbnail(client.user.avatarURL())
+        .setThumbnail(client.user.avatarURL({format: "png"}))
         .addField("Total Server Count:", client.guilds.size, true)
         .addField("Total members across servers:", total_members, true)
         .addField("Online mobile users:", mobile, true)

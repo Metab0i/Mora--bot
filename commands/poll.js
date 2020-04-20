@@ -14,7 +14,7 @@ module.exports = {
       if(poll_array.length > 9) return msg.channel.send("`Exceeded the maximum number of poll items.`");
 
       let embed = new Discord.MessageEmbed()
-        .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL())
+        .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL({format: "png"}))
         .setColor(assist_func.random_hex_colour())
         .setDescription("`Poll has been initiated. Be sure to cast your vote for an item of your preference.`")
         .setFooter("Poll will last for 60 seconds. After that the winner will be announced.")
@@ -67,7 +67,7 @@ module.exports = {
           const text_index = poll_emojis.indexOf(winner.emoji.id)
 
           const announce_embed = new Discord.MessageEmbed()
-            .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL())
+            .setAuthor(`@${msg.author.username} - Poll initiator`, msg.author.avatarURL({format: "png"}))
             .setColor(assist_func.random_hex_colour())
             .setDescription("**The winner is:** \"" + `${winner.emoji}\"\n\n` + "-" + poll_array[text_index].trim() + "-")
           

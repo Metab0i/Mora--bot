@@ -47,7 +47,7 @@ module.exports = {
             for(i = 0; i < inputGif.frames.length; i++) {
               let frame_edit = GifUtil.shareAsJimp(Jimp, inputGif.frames[i]);
               let canvas_mod = await Jimp.read('../Mora bot/misc/canvas_wide.png');
-              let user_pfp = await Jimp.read(user.avatarURL());
+              let user_pfp = await Jimp.read(user.avatarURL({format: "png"}));
               let frame_final;
               
 
