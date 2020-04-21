@@ -76,7 +76,7 @@ module.exports = {
       
         const codec = new GifCodec()
       
-        codec.encodeGif(inputGif.frames, {loops: 0}).then(async outputGif => {
+        codec.encodeGif(inputGif.frames, {loops: 0}).then(outputGif => {
 
           msg.channel.stopTyping();  
           msg.channel.send({files: [{
