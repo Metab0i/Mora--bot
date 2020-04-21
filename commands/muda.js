@@ -49,7 +49,7 @@ module.exports = {
 
             message.edit("`it's gonna take a few seconds \\`")
 
-            for(i = 0; i < inputGif.frames.length; i++) {
+            for(let i = 0; i < inputGif.frames.length; i++) {
               let frame_edit = GifUtil.shareAsJimp(Jimp, inputGif.frames[i]);
               let canvas_mod = await Jimp.read('../Mora bot/misc/canvas_wide.png');
               let frame_final;

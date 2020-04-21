@@ -106,7 +106,7 @@ module.exports = {
       let msgArray = response.match(/.{1,41}/g);
       let msgFinal = "";
 
-      for(i = 0; i < msgArray.length; i++){
+      for(let i = 0; i < msgArray.length; i++){
         msgFinal += msgArray[i] + " ";
       }
 
@@ -134,7 +134,7 @@ module.exports = {
       let msgArray = supahotMessage.match(/.{1,41}/g);
       let msgFinal = "";
 
-      for(i = 0; i < msgArray.length; i++){
+      for(let i = 0; i < msgArray.length; i++){
         msgFinal += msgArray[i] + " ";
       }
 

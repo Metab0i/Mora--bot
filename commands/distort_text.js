@@ -33,7 +33,7 @@ module.exports = {
             if(usr_id.includes(message.author.id) && (message.content != msg.content) && !check && message.content != ""){
               check = true;
 
-              for(i = 0; i < message.content.length; i++){                
+              for(let i = 0; i < message.content.length; i++){                
                 if((Math.floor(Math.random() * 3) + 1) == 1){                  
                   response += message.content.charAt(i).toUpperCase();
                 }else{
@@ -57,7 +57,7 @@ module.exports = {
       if(assist_func.userTimeOut(msg) == true) return;  
       msg.channel.startTyping();
 
-      for(i = 0; i < disMessage.length; i++){                
+      for(let i = 0; i < disMessage.length; i++){                
         if((Math.floor(Math.random() * 3) + 1) == 1){                  
           msg_send += disMessage.charAt(i).toUpperCase();
         }else{

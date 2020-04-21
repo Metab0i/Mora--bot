@@ -32,7 +32,7 @@ module.exports = {
               check = true;
               response = message.content.toLowerCase().replace("r", "w").replace("l","w").replace("s", "th").replace("oh", "oww").replace("oo", "owo") + ". uwu";
 
-              for(i = 0; i < response.length; i++){
+              for(let i = 0; i < response.length; i++){
                 response = response.toLowerCase().replace("r", "w").replace("l","w").replace("s", "th").replace("oh", "oww").replace("oo", "owo");
               }
 
@@ -53,7 +53,7 @@ module.exports = {
 
       msg_send = uwuMessage.toLowerCase().replace("r", "w").replace("l","w").replace("s", "th").replace("oh", "oww").replace("oo", "owo") + ". uwu";
 
-      for(i = 0; i < uwuMessage.length; i++){
+      for(let i = 0; i < uwuMessage.length; i++){
         msg_send = msg_send.toLowerCase().replace("r", "w").replace("l","w").replace("s", "th").replace("oh", "oww").replace("oo", "owo");
       }     
 
