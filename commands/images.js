@@ -53,19 +53,10 @@ module.exports = {
 
         canvas.composite(user_pfp, 240, 250);
         canvas.composite(hug_image, 0, 0);
-      }
-      
-      canvas.write('fin.png');
+      }      
 
       msg.channel.stopTyping();  
-      msg.channel.send({files: ["fin.png"]})
-        .then((res) =>{
-          fs.unlinkSync('fin.png')
-        })
-        .catch((err) =>{
-          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
-        })
-      
+      msg.channel.send({files: [await canvas.getBufferAsync(Jimp.MIME_PNG)]});
       
     }
   },
@@ -120,35 +111,20 @@ module.exports = {
       }
 
       supaHot.print(font, 30, 640, msgFinal, 380, 100)
-      
-      //supaHot.print(font, 40, 650, response);
-      supaHot.write('supahot.png');
 
       msg.channel.stopTyping();  
-      msg.channel.send({files: ["supahot.png"]})
-        .then((res) =>{
-          fs.unlinkSync('supahot.png')
-        })
-        .catch((err) =>{
-          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
-        })
+      msg.channel.send({files: [await supaHot.getBufferAsync(Jimp.MIME_PNG)]})
     }
 
     else if(supahot_sentence.test(msg.content.toLowerCase())){
-      let usr_id = msg.content.slice(msg.content.indexOf(" "), msg.content.length).trim();
       let supaHot;
-      let user_pfp;
       let font;
-      let messages;
-
       //User timer
       if(assist_func.userTimeOut(msg) == true) return;  
       msg.channel.startTyping();
 
       try{
         supaHot = await Jimp.read('../Mora bot/misc/too-hot.png');
-        user_pfp = await Jimp.read(msg.author.avatarURL({format: "png"}));
-        messages = await msg.channel.messages.fetch({"limit" : 100})
         font = await Jimp.loadFont(Jimp.FONT_SANS_16_WHITE)
       }catch(err){
         return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);         
@@ -163,17 +139,9 @@ module.exports = {
       }
 
       supaHot.print(font, 30, 640, msgFinal, 380, 100)
-      
-      supaHot.write('supahot.png');
 
       msg.channel.stopTyping();  
-      msg.channel.send({files: ["supahot.png"]})
-        .then((res) =>{
-          fs.unlinkSync('supahot.png')
-        })
-        .catch((err) =>{
-          return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
-        })
+      msg.channel.send({files: [await supaHot.getBufferAsync(Jimp.MIME_PNG)]});
 
     }
   }

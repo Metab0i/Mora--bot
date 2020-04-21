@@ -1,7 +1,6 @@
 const assist_func = require('./assist_functions');
 const Jimp = require('jimp');
-const fs = require('fs');
-const { BitmapImage, GifUtil, GifFrame } = require('gifwrap');
+const {GifCodec, GifUtil, GifFrame, Gif } = require('gifwrap');
 
 module.exports = {
 
@@ -75,12 +74,15 @@ module.exports = {
           GifUtil.quantizeSorokin(frame, 256);
         });
       
-        GifUtil.write("stomp_fin.gif", inputGif.frames, inputGif).then(outputGif => {
+        const codec = new GifCodec()
+      
+        codec.encodeGif(inputGif.frames, {loops: 0}).then(async outputGif => {
+
           msg.channel.stopTyping();  
-          msg.channel.send({files: ["stomp_fin.gif"]})
-            .then((res) =>{
-              fs.unlinkSync('stomp_fin.gif')
-            })
+          msg.channel.send({files: [{
+            attachment: outputGif.buffer,
+            name: 'file.gif'
+          }]})
             .catch((err) =>{
               return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
             })
