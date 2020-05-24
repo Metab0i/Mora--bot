@@ -120,7 +120,7 @@ module.exports = {
           if(err) return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.content);
         });
 
-        //txt version
+        //txt version (make it in buffer)
         fs.writeFile(__dirname + '/ascii_big.txt', ascii_img, function(err){
           if(err) return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.content);
         });
