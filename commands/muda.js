@@ -72,7 +72,7 @@ module.exports = {
             GifUtil.write("muda_fin.gif", frames_mod, {loop: 0}).then(function() {
               msg.channel.stopTyping();
               message.edit("`it's gonna take a few seconds ✓`")
-              message.delete(300);
+              message.delete({timeout: 300});
               msg.channel.send("",{files: ["muda_fin.gif"]})
                 .then((res) =>{ 
                   fs.unlinkSync('muda_fin.gif')

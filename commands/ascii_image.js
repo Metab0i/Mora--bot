@@ -114,25 +114,18 @@ module.exports = {
             ascii_mini += "\n"
           }
         }
-        
-        //html version
-        fs.writeFile(__dirname + '/ascii_big.html', "<code><span style=\"display:block;line-height:8px; font-size: 8px; font-weight:bold;white-space:pre;font-family: monospace;color: black; background: white;\">" + ascii_img + "</span></code>", function(err){
-          if(err) return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.content);
-        });
 
-        //txt version (make it in buffer)
-        fs.writeFile(__dirname + '/ascii_big.txt', ascii_img, function(err){
-          if(err) return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.content);
-        });
+        //html version
+        const html_buff = new Buffer.alloc(ascii_img.length);
+        html_buff.fill(`<code><span style="display:block;line-height:8px; font-size: 8px; font-weight:bold;white-space:pre;font-family: monospace;color: black; background: white;\">${ascii_img}</span></code>`);
 
         //giving operation extra 2s to insure no hiccups occur
         await new Promise(r => setTimeout(r, 2000));
 
-        msg.channel.send("`full scale ascii`:", {files: ['../Mora bot/commands/ascii_big.html', '../Mora bot/commands/ascii_big.txt']})
-          .then((res) =>{
-            fs.unlinkSync('../Mora bot/commands/ascii_big.html')
-            fs.unlinkSync('../Mora bot/commands/ascii_big.txt')
-          })
+        msg.channel.send("`full scale ascii`:", {files: [{
+          attachment: html_buff,
+          name: 'file.html'
+        }]})
           .catch((err) =>{
             return console.error('on [' + msg.content + ']\nBy <@' + msg.author.id + ">", err.stack);                 
           })

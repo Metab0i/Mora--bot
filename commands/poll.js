@@ -31,7 +31,7 @@ module.exports = {
 
           poll_emojis.push(client.emojis.cache.array()[emoji_index].id)
           
-          embed.addField(`"${client.emojis.get(poll_emojis[index])}"`, poll_array[index].length > 1000 ? poll_array[index].slice(0, 950) + "..." : poll_array[index], true);
+          embed.addField(`"${client.emojis.cache.get(poll_emojis[index])}"`, poll_array[index].length > 1000 ? poll_array[index].slice(0, 950) + "..." : poll_array[index], true);
         }
         
         else{
@@ -43,7 +43,7 @@ module.exports = {
       const message = await msg.channel.send(embed);
       
       for(var index = 0; index < poll_emojis.length; index++){
-        await message.react(client.emojis.get(poll_emojis[index]));
+        await message.react(client.emojis.cache.get(poll_emojis[index]));
       }
 
       setTimeout(() => {
@@ -51,11 +51,11 @@ module.exports = {
         let score = 0;
         let tie_status = false;
 
-        message.reactions.array().forEach(reaction => {
+        message.reactions.cache.array().forEach(reaction => {
           for(var em_id in poll_emojis){
             if(reaction.emoji.id == poll_emojis[em_id] && reaction.count > score){
               score = reaction.count;
-              winner = reaction
+              winner = reaction;
               tie_status = false;
             }
           }
@@ -76,7 +76,7 @@ module.exports = {
           msg.channel.send("`It was a tie between some items. Poll is deemed invalid.`")
         }
 
-        message.delete(0);
+        message.delete();
       
       }, 60000);
 
