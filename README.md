@@ -65,7 +65,7 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
     
 `pick` : 1 or 0?
     
-`ranum <number> <number> x<number>` : generates a random number or set of numbers proceeding from given values. First 2 numbers are what define range, last number with "x" prefix is how many random numbers in a given range a user would like to receive.    
+`ranum <number> <number> x<number>` : generates a random number or set of numbers proceeding from given values. First 2 numbers are what define range, last number with "x" prefix is how many random numbers in a given range a user would like to receive. Maximum total of generated numbers is 9
 
 `bruh` : for real bruh moments   
     
