@@ -159,7 +159,7 @@ module.exports = {
       if(assist_func.userTimeOut(msg) == true || msg.content.slice(msg.content.indexOf(" ") + 1, msg.content.length).trim() == "") return;
 
       let final_pick = await assist_func.id_to_name(pick_array[Math.floor((Math.random() * pick_array.length) + 0)], client, msg);
-      final_pick = final_pick.replace("%pick", "").trim();
+      final_pick = final_pick.replace(prefix + "pick", "").trim();
 
       let embed = new Discord.MessageEmbed()
         .setColor(assist_func.random_hex_colour())
@@ -175,6 +175,40 @@ module.exports = {
         .setColor(assist_func.random_hex_colour())
         .setAuthor(msg.author.username + " wonders, 0 or 1?", msg.author.avatarURL({format: "png"}))
         .setDescription("I flip numbers and it's `*" + Math.floor((Math.random() * 2) + 0) + "*`");
+
+      msg.channel.send(embed);
+    }
+  },
+
+  /**
+   * @name random_number(...)
+   * 
+   * @description : Generates a random number between x and y a given number of times
+   *                Example : prefix ranum 1 10 x2 returns 2 numbers 
+   * 
+   * @param {String} prefix 
+   * @param {MESSAGE} msg 
+   */
+  ranum_feature: function(prefix, msg){
+    let ranum = new RegExp("^" + prefix + "ranum [0-9]+ [0-9]+ x[0-9]$");
+
+    if(ranum.test(msg.content.toLowerCase())){
+      const numb_range = msg.content.toLowerCase().replace(prefix + "ranum", "").split(" ");
+
+      let number_str = "";
+      const loop_times = Number(numb_range[3].replace("x", ""))
+      const num_min = Number(numb_range[1]) < Number(numb_range[2]) ? Number(numb_range[1]) : Number(numb_range[2]);
+      const num_max = Number(numb_range[1]) < Number(numb_range[2]) ? Number(numb_range[2]) : Number(numb_range[1]);
+      
+      for(var i=0; i < loop_times; i++){
+        number_str += assist_func.random_number(num_min, num_max) + " ";
+      }
+
+      let embed = new Discord.MessageEmbed()
+        .setColor(assist_func.random_hex_colour())
+        .setAuthor(msg.author.username + " asks me to generate some numbers...", msg.author.avatarURL({format: "png"}))
+        .setDescription("Number(s) are: `" + number_str.trim() + "`")
+        .setFooter("Range: " + num_min + " - " + num_max + " | " + loop_times + " number(s)");
 
       msg.channel.send(embed);
     }

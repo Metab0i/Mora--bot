@@ -151,6 +151,7 @@ client.on('message', async msg => {
   little_features.eight_ball(prefix, msg);
   little_features.this_or(prefix, msg, client);
   little_features.help_mora(prefix, msg, client);
+  little_features.ranum_feature(prefix,msg);
 
   //images
   images.hug(prefix, msg, client);
