@@ -64,7 +64,9 @@ Any essential arguments are surrounded by **<>** and optional arguments by **[]*
 `pick <this .or that .or this ...> ` : picks one of many given items e.g. %pick this or that or this 2 or that 2 -> picks this
     
 `pick` : 1 or 0?
-   
+    
+`ranum <number> <number> x<number>` : generates a random number or set of numbers proceeding from given values. First 2 numbers are what define range, last number with "x" prefix is how many random numbers in a given range a user would like to receive.    
+
 `bruh` : for real bruh moments   
     
 `oof` : oof sounds   
