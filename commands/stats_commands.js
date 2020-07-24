@@ -75,7 +75,7 @@ module.exports = {
         .addField("Number of roles:", msg.guild.roles.cache.size, true)
         .addField("Total members:" , msg.guild.memberCount, true)
         .addField("Members Online ATM:", total_online, true)
-        .addField("Number of Channels:", msg.guild.channels.cache.cache.size, true)
+        .addField("Number of Channels:", msg.guild.channels.cache.size, true)
         .setFooter("Server creation date: " + msg.guild.createdAt);
 
       msg.channel.send(embed);
